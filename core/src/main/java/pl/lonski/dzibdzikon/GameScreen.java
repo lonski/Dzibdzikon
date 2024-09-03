@@ -33,6 +33,7 @@ public class GameScreen implements Screen {
         textures.put(Glyph.PLAYER, new Texture("dzibdzik.png"));
         textures.put(Glyph.WALL, new Texture("wall_1.png"));
         textures.put(Glyph.FLOOR, new Texture("floor_1.png"));
+        textures.put(Glyph.ZOMBIE, new Texture("zombie.png"));
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);

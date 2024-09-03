@@ -1,10 +1,10 @@
 package pl.lonski.dzibdzikon.entity;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.HashMap;
 import java.util.Map;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.Action;
+import pl.lonski.dzibdzikon.action.NoOpAction;
 import pl.lonski.dzibdzikon.entity.features.EntityFeature;
 import pl.lonski.dzibdzikon.map.Glyph;
 
@@ -64,5 +64,8 @@ public class Entity {
 
     public void update(float delta, World world) {
         features.values().forEach(f -> f.update(delta, world));
+        if (getFeature(FeatureType.PLAYER) == null && currentAction == null) {
+            setCurrentAction(new NoOpAction());
+        }
     }
 }

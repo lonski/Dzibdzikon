@@ -7,7 +7,6 @@ import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
 import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.Position;
-import pl.lonski.dzibdzikon.map.RoomMapGeneratorV2;
 
 public class World {
 
@@ -17,7 +16,7 @@ public class World {
     private int currentEntityIdx = 0;
 
     public World() {
-        currentLevel = new Level(RoomMapGeneratorV2.generate(160, 48));
+        currentLevel = LevelFactory.generate();
         currentLevel.addEntity(player);
         player.<Position>getFeature(FeatureType.POSITION).setCoords(currentLevel.getMap().getRandomRoom().getCenter());
 
@@ -40,21 +39,24 @@ public class World {
 
     public void update(float delta) {
 
-        if (currentEntityIdx < currentLevel.getEntities().size()) {
+        while (currentEntityIdx < currentLevel.getEntities().size()) {
             var entity = currentLevel.getEntities().get(currentEntityIdx);
 
             if (entity.getCurrentAction() == null) {
                 entity.update(delta, this);
-                if (entity.getCurrentAction() == null) {
-                    currentEntityIdx = (currentEntityIdx + 1) % currentLevel.getEntities().size();
-                }
-            } else {
-                entity.getCurrentAction().update(delta);
-                if (entity.getCurrentAction().isDone()) {
-                    entity.setCurrentAction(null);
-                    currentEntityIdx = (currentEntityIdx + 1) % currentLevel.getEntities().size();
-                }
             }
+
+            if (entity.getCurrentAction() == null) {
+                break;
+            }
+
+            entity.getCurrentAction().update(delta, this);
+            if (!entity.getCurrentAction().isDone()) {
+                break;
+            }
+
+            entity.setCurrentAction(null);
+            currentEntityIdx = (currentEntityIdx + 1) % currentLevel.getEntities().size();
         }
 
         // update map visibility & fov

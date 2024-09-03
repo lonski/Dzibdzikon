@@ -4,6 +4,7 @@ import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
 import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
 
 import pl.lonski.dzibdzikon.Point;
+import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Position;
@@ -11,7 +12,7 @@ import pl.lonski.dzibdzikon.entity.features.Position;
 public class MoveAction implements Action {
 
     private static final float MOVE_TIME = 0.01f;
-    private static final int MOVE_SPEED = 4;
+    private static final int MOVE_SPEED = 3;
 
     private final Entity entity;
     private final Point target;
@@ -24,20 +25,32 @@ public class MoveAction implements Action {
     }
 
     @Override
-    public void update(float delta) {
+    public void update(float delta, World world) {
+        Position pos = entity.getFeature(FeatureType.POSITION);
+
+        // move instantly if not in player view
+        if (!world.getCurrentLevel().getVisible().contains(target) && !world.getCurrentLevel().getVisible().contains(pos.getCoords())) {
+            finishMove();
+            return;
+        }
+
         time += delta;
         if (time >= MOVE_TIME) {
             time = 0;
-            Position pos = entity.getFeature(FeatureType.POSITION);
             Point posDiff = getRenderPositionDiff(pos.getRenderPosition());
             pos.setRenderPosition(new Point(pos.getRenderPosition().x() + posDiff.x(),
                 pos.getRenderPosition().y() + posDiff.y()));
 
             if (pos.getRenderPosition().equals(new Point(target.x() * TILE_WIDTH, target.y() * TILE_HEIGHT))) {
-                done = true;
-                pos.setCoords(target);
+                finishMove();
             }
         }
+    }
+
+    private void finishMove() {
+        Position pos = entity.getFeature(FeatureType.POSITION);
+        pos.setCoords(target);
+        done = true;
     }
 
     private Point getRenderPositionDiff(Point currentPos) {

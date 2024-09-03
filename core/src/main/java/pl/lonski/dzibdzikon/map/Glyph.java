@@ -4,5 +4,6 @@ public enum Glyph {
 
     WALL,
     FLOOR,
-    PLAYER
+    PLAYER,
+    ZOMBIE,
 }
