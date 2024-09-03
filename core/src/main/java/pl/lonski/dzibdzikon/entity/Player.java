@@ -47,8 +47,13 @@ public class Player extends Entity {
             dpos = new Point(1, -1);
         }
 
-        Position pos = getFeature(FeatureType.POSITION);
-        setCurrentAction(new MoveAction(this, new Point(pos.getCoords().x() + dpos.x(), pos.getCoords().y() + dpos.y())));
+        if (!dpos.isZero()) {
+            Position pos = getFeature(FeatureType.POSITION);
+            Point targetPos = new Point(pos.getCoords().x() + dpos.x(), pos.getCoords().y() + dpos.y());
+            if (!world.getCurrentLevel().isObstacle(targetPos)) {
+                setCurrentAction(new MoveAction(this, new Point(pos.getCoords().x() + dpos.x(), pos.getCoords().y() + dpos.y())));
+            }
+        }
 
         super.update(delta, world);
     }

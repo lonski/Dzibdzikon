@@ -10,6 +10,7 @@ import java.security.SecureRandom;
  */
 public class Dzibdzikon extends Game {
 
+    public static boolean SHOW_WHOLE_LEVEL = false;
     public static final int TILE_WIDTH = 29;
     public static final int TILE_HEIGHT = 29;
 

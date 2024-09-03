@@ -11,7 +11,7 @@ import pl.lonski.dzibdzikon.entity.features.Position;
 public class MoveAction implements Action {
 
     private static final float MOVE_TIME = 0.01f;
-    private static final int MOVE_SPEED = 3;
+    private static final int MOVE_SPEED = 4;
 
     private final Entity entity;
     private final Point target;

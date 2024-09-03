@@ -2,6 +2,7 @@ package pl.lonski.dzibdzikon.map;
 
 import java.util.ArrayList;
 import java.util.List;
+import pl.lonski.dzibdzikon.Point;
 
 public class TileGrid {
     private final int width;
@@ -20,6 +21,10 @@ public class TileGrid {
         return x >= 0 && x < width && y >= 0 && y < height;
     }
 
+    public boolean inBounds(Point pos) {
+        return inBounds(pos.x(), pos.y());
+    }
+
     public int getWidth() {
         return width;
     }
@@ -36,12 +41,20 @@ public class TileGrid {
         return rooms;
     }
 
+    public Room getRandomRoom() {
+        return rooms.get((int) (Math.random() * rooms.size()));
+    }
+
     public void addRoom(Room room) {
         rooms.add(room);
     }
 
     public Glyph getTile(int x, int y) {
         return tiles[x][y];
+    }
+
+    public Glyph getTile(Point pos) {
+        return getTile(pos.x(), pos.y());
     }
 
     public void setTile(int x, int y, Glyph tile) {

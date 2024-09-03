@@ -22,7 +22,6 @@ public class RoomMapGeneratorV2 {
         }
 
         int maxRooms = 50;
-        var rooms = new ArrayList<Room>();
         // try place X rooms
         while (maxRooms-- > 0) {
             int roomWidth = random.nextInt(3, 14);
@@ -36,11 +35,11 @@ public class RoomMapGeneratorV2 {
                         map.setTile(rx + roomX, ry + roomY, Glyph.FLOOR);
                     }
                 }
-                rooms.add(new Room(roomX, roomY, roomWidth, roomHeight));
+                map.addRoom(new Room(roomX, roomY, roomWidth, roomHeight));
             }
         }
 
-        var unconnectedRooms = new ArrayList<>(rooms);
+        var unconnectedRooms = new ArrayList<>(map.getRooms());
         Collections.shuffle(unconnectedRooms);
         var currentRoom = unconnectedRooms.remove(0);
         while (!unconnectedRooms.isEmpty()) {

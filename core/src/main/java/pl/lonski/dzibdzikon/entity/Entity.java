@@ -1,5 +1,6 @@
 package pl.lonski.dzibdzikon.entity;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.HashMap;
 import java.util.Map;
 import pl.lonski.dzibdzikon.World;
@@ -13,6 +14,7 @@ public class Entity {
     private String name;
     private Glyph glyph;
     private int zLevel;
+    private boolean visibleInFog = false;
     private Action currentAction;
 
     public Entity(String name, Glyph glyph, int zLevel) {
@@ -37,8 +39,16 @@ public class Entity {
         return glyph;
     }
 
-    public int getzLevel() {
+    public int getZLevel() {
         return zLevel;
+    }
+
+    public boolean isVisibleInFog() {
+        return visibleInFog;
+    }
+
+    public void setVisibleInFog(boolean visibleInFog) {
+        this.visibleInFog = visibleInFog;
     }
 
     public <T> T getFeature(FeatureType type) {

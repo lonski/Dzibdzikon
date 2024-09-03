@@ -11,8 +11,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import java.util.HashMap;
 import java.util.Map;
 import pl.lonski.dzibdzikon.action.Action;
+import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
-import pl.lonski.dzibdzikon.entity.Player;
 import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.map.Glyph;
 
@@ -23,7 +23,6 @@ public class GameScreen implements Screen {
     private Map<Glyph, Texture> textures = new HashMap<>();
 
     private OrthographicCamera camera;
-    private Player player;
     private World world;
     private Action currentAction;
 
@@ -38,7 +37,6 @@ public class GameScreen implements Screen {
         camera.setToOrtho(false, 800, 480);
 
         world = new World();
-        player = new Player();
     }
 
     @Override
@@ -50,18 +48,9 @@ public class GameScreen implements Screen {
     public void render(float delta) {
 
         //update
-        if (currentAction == null) {
-            player.update(delta, world);
-            currentAction = player.getCurrentAction();
-        } else {
-            currentAction.update(delta);
-            if (currentAction.isDone()) {
-                currentAction = null;
-                player.setCurrentAction(null);
-            }
-        }
+        world.update(delta);
 
-        var playerPos = player.<Position>getFeature(FeatureType.POSITION);
+        var playerPos = world.getPlayer().<Position>getFeature(FeatureType.POSITION);
         camera.position.set(playerPos.getRenderPosition().x(), playerPos.getRenderPosition().y(), 0);
         camera.update();
 
@@ -69,14 +58,20 @@ public class GameScreen implements Screen {
         ScreenUtils.clear(0, 0, 0, 0);
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
-        for (int y = 0; y < world.getMap().getHeight(); y++) {
-            for (int x = 0; x < world.getMap().getWidth(); x++) {
-                Texture texture = textures.get(world.getMap().getTile(x, y));
+        for (int y = 0; y < world.getCurrentLevel().getMap().getHeight(); y++) {
+            for (int x = 0; x < world.getCurrentLevel().getMap().getWidth(); x++) {
+                Texture texture = textures.get(world.getCurrentLevel().getMap().getTile(x, y));
                 game.batch.draw(texture, x * TILE_WIDTH, y * TILE_HEIGHT);
             }
         }
 
-        game.batch.draw(textures.get(player.getGlyph()), playerPos.getRenderPosition().x(), playerPos.getRenderPosition().y());
+        for (Entity entity : world.getCurrentLevel().getEntities()) {
+            var pos = entity.<Position>getFeature(FeatureType.POSITION);
+            if (pos == null || !world.visible(entity)) {
+                continue;
+            }
+            game.batch.draw(textures.get(entity.getGlyph()), pos.getRenderPosition().x(), pos.getRenderPosition().y());
+        }
 
         game.batch.end();
     }
