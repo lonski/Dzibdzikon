@@ -6,6 +6,7 @@ import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.MoveAction;
 import pl.lonski.dzibdzikon.entity.features.EntityFeature;
+import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.map.Glyph;
 
@@ -16,7 +17,7 @@ public class Player extends Entity {
         addFeature(FeatureType.PLAYER, new EntityFeature() {
         });
         addFeature(FeatureType.POSITION, new Position(new Point(0, 0)));
-//        addFeature(FeatureType.FOV, new FieldOfView(this, 8));
+        addFeature(FeatureType.FOV, new FieldOfView(this, 8));
 //        addFeature(FeatureType.ATTACKABLE, new Attackable(20, 20, 5, 0));
     }
 

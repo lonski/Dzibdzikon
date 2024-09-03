@@ -71,7 +71,7 @@ public class Level {
     }
 
     public boolean isOpaque(Point pos) {
-        if (map.inBounds(pos)) {
+        if (!map.inBounds(pos)) {
             return true;
         }
 

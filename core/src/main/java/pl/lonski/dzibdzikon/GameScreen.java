@@ -1,5 +1,6 @@
 package pl.lonski.dzibdzikon;
 
+import static pl.lonski.dzibdzikon.Dzibdzikon.SHOW_WHOLE_LEVEL;
 import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
 import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
 
@@ -60,8 +61,15 @@ public class GameScreen implements Screen {
         game.batch.begin();
         for (int y = 0; y < world.getCurrentLevel().getMap().getHeight(); y++) {
             for (int x = 0; x < world.getCurrentLevel().getMap().getWidth(); x++) {
+                var pos = new Point(x, y);
                 Texture texture = textures.get(world.getCurrentLevel().getMap().getTile(x, y));
-                game.batch.draw(texture, x * TILE_WIDTH, y * TILE_HEIGHT);
+                if (SHOW_WHOLE_LEVEL || world.getCurrentLevel().getVisible().contains(pos)) {
+                    game.batch.draw(texture, x * TILE_WIDTH, y * TILE_HEIGHT);
+                }else if (world.getCurrentLevel().getVisited().contains(pos)) {
+                    game.batch.setColor(0.5f, 0.5f, 0.5f, 1);
+                    game.batch.draw(texture, x * TILE_WIDTH, y * TILE_HEIGHT);
+                    game.batch.setColor(1, 1, 1, 1);
+                }
             }
         }
 

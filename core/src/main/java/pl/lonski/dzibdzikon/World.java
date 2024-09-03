@@ -1,8 +1,11 @@
 package pl.lonski.dzibdzikon;
 
+import static pl.lonski.dzibdzikon.Dzibdzikon.SHOW_WHOLE_LEVEL;
+
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
+import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.map.RoomMapGeneratorV2;
 
@@ -30,10 +33,9 @@ public class World {
 
     public boolean visible(Entity entity) {
         var entityPos = entity.<Position>getFeature(FeatureType.POSITION).getCoords();
-        return true;
-//        return SHOW_WHOLE_LEVEL
-//            || getCurrentLevel().getVisible().contains(entityPos)
-//            || (getCurrentLevel().getVisited().contains(entityPos) && entity.isVisibleInFog());
+        return SHOW_WHOLE_LEVEL
+            || getCurrentLevel().getVisible().contains(entityPos)
+            || (getCurrentLevel().getVisited().contains(entityPos) && entity.isVisibleInFog());
     }
 
     public void update(float delta) {
@@ -54,5 +56,12 @@ public class World {
                 }
             }
         }
+
+        // update map visibility & fov
+        currentLevel.getVisible().clear();
+        player.<FieldOfView>getFeature(FeatureType.FOV).getVisible().forEach(p -> {
+            currentLevel.getVisited().add(p);
+            currentLevel.getVisible().add(p);
+        });
     }
 }
