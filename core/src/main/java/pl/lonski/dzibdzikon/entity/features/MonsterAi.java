@@ -17,6 +17,14 @@ public class MonsterAi implements EntityFeature {
 
     @Override
     public void update(float delta, World world) {
+        if (entity.getCurrentAction() != null) {
+            return;
+        }
+
+        mindlessWander(world);
+    }
+
+    protected void mindlessWander(World world) {
         var pos = entity.<Position>getFeature(FeatureType.POSITION);
 
         // wander
