@@ -1,10 +1,12 @@
 package pl.lonski.dzibdzikon.entity;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
+import pl.lonski.dzibdzikon.action.AttackAction;
 import pl.lonski.dzibdzikon.action.MoveAction;
+import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.EntityFeature;
 import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.Position;
@@ -12,48 +14,76 @@ import pl.lonski.dzibdzikon.map.Glyph;
 
 public class Player extends Entity {
 
+    private final InputListener input = new InputListener();
+
     public Player() {
         super("Dzibdzik", Glyph.PLAYER, 100);
         addFeature(FeatureType.PLAYER, new EntityFeature() {
         });
         addFeature(FeatureType.POSITION, new Position(new Point(0, 0)));
         addFeature(FeatureType.FOV, new FieldOfView(this, 8));
-//        addFeature(FeatureType.ATTACKABLE, new Attackable(20, 20, 5, 0));
+        addFeature(FeatureType.ATTACKABLE, new Attackable(20, 20, 5, 0));
+    }
+
+    public InputListener getInputListener() {
+        return input;
     }
 
     @Override
     public void update(float delta, World world) {
 
-        if (getCurrentAction() != null) {
+        if (getCurrentAction() != null || !alive()) {
             return;
         }
 
-        Point dpos = new Point(0, 0);
+        if (!input.empty()) {
 
-        if (Gdx.input.isKeyPressed(Input.Keys.NUMPAD_4)) {
-            dpos = new Point(-1, 0);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.NUMPAD_6)) {
-            dpos = new Point(1, 0);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.NUMPAD_8)) {
-            dpos = new Point(0, 1);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.NUMPAD_2)) {
-            dpos = new Point(0, -1);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.NUMPAD_7)) {
-            dpos = new Point(-1, 1);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.NUMPAD_9)) {
-            dpos = new Point(1, 1);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.NUMPAD_1)) {
-            dpos = new Point(-1, -1);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.NUMPAD_3)) {
-            dpos = new Point(1, -1);
-        }
+            Point dpos = new Point(0, 0);
 
-        if (!dpos.isZero()) {
-            Position pos = getFeature(FeatureType.POSITION);
-            Point targetPos = new Point(pos.getCoords().x() + dpos.x(), pos.getCoords().y() + dpos.y());
-            if (!world.getCurrentLevel().isObstacle(targetPos)) {
-                setCurrentAction(new MoveAction(this, new Point(pos.getCoords().x() + dpos.x(), pos.getCoords().y() + dpos.y())));
+            if (input.key.keyCode() == Input.Keys.NUMPAD_4) {
+                dpos = new Point(-1, 0);
+            } else if (input.key.keyCode() == Input.Keys.NUMPAD_6) {
+                dpos = new Point(1, 0);
+            } else if (input.key.keyCode() == Input.Keys.NUMPAD_8) {
+                dpos = new Point(0, 1);
+            } else if (input.key.keyCode() == Input.Keys.NUMPAD_2) {
+                dpos = new Point(0, -1);
+            } else if (input.key.keyCode() == Input.Keys.NUMPAD_7) {
+                dpos = new Point(-1, 1);
+            } else if (input.key.keyCode() == Input.Keys.NUMPAD_9) {
+                dpos = new Point(1, 1);
+            } else if (input.key.keyCode() == Input.Keys.NUMPAD_1) {
+                dpos = new Point(-1, -1);
+            } else if (input.key.keyCode() == Input.Keys.NUMPAD_3) {
+                dpos = new Point(1, -1);
             }
+
+            if (!dpos.isZero()) {
+                Position pos = getFeature(FeatureType.POSITION);
+                Point targetPos = new Point(pos.getCoords().x() + dpos.x(), pos.getCoords().y() + dpos.y());
+
+                // move
+                if (!world.getCurrentLevel().isObstacle(targetPos)) {
+                    setCurrentAction(new MoveAction(this, new Point(pos.getCoords().x() + dpos.x(), pos.getCoords().y() + dpos.y())));
+                } else {
+
+                    // Check fight possibility
+                    world
+                        .getCurrentLevel()
+                        .getEntityAt(targetPos, FeatureType.ATTACKABLE)
+                        .ifPresent(mob -> setCurrentAction(new AttackAction(this, mob)));
+//                        // check openable
+//                        () -> level.getEntityAt(newPos, FeatureType.OPENABLE)
+//                            .ifPresent(openable -> {
+//                                openable.<Openable>getFeature(FeatureType.OPENABLE)
+//                                    .open(world);
+//                            }));
+
+                    input.reset(); // do not process the same key again
+                }
+
+            }
+
         }
 
         super.update(delta, world);
@@ -127,4 +157,26 @@ public class Player extends Entity {
 //    }
 //
 //    public record PlayerCommandResult(int turns) {}
+
+    class InputListener implements DzibdziInput.DzibdziInputListener {
+
+        DzibdziInput.DzibdziKey key;
+
+        @Override
+        public void onInput(DzibdziInput.DzibdziKey key) {
+            if (key.released()) {
+                this.key = null;
+                return;
+            }
+            this.key = key;
+        }
+
+        void reset() {
+            key = null;
+        }
+
+        boolean empty() {
+            return key == null;
+        }
+    }
 }

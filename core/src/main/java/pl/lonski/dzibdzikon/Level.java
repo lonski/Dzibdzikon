@@ -102,7 +102,7 @@ public class Level {
         return getEntities().stream()
             .filter(e -> {
                 var pos = e.<Position>getFeature(FeatureType.POSITION);
-                return pos != null && pos.getCoords() == targetPos;
+                return pos != null && pos.getCoords().equals(targetPos);
             })
             .filter(e -> featureType == null || e.getFeature(featureType) != null)
             .collect(Collectors.toList());

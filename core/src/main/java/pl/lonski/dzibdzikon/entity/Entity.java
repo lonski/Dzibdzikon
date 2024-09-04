@@ -5,6 +5,7 @@ import java.util.Map;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.Action;
 import pl.lonski.dzibdzikon.action.NoOpAction;
+import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.EntityFeature;
 import pl.lonski.dzibdzikon.map.Glyph;
 
@@ -67,5 +68,10 @@ public class Entity {
         if (getFeature(FeatureType.PLAYER) == null && currentAction == null) {
             setCurrentAction(new NoOpAction());
         }
+    }
+
+    public boolean alive() {
+        Attackable attackable = getFeature(FeatureType.ATTACKABLE);
+        return attackable != null && attackable.getHp() > 0;
     }
 }

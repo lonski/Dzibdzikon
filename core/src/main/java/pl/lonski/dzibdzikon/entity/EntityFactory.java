@@ -1,5 +1,6 @@
 package pl.lonski.dzibdzikon.entity;
 
+import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.MonsterAi;
 import pl.lonski.dzibdzikon.map.Glyph;
@@ -8,7 +9,7 @@ public class EntityFactory {
 
     public static Entity createZombie() {
         var zombie = new Entity("Zombie", Glyph.ZOMBIE, 10);
-//        zombie.addFeature(FeatureType.ATTACKABLE, new Attackable(10, 10, 1, 0));
+        zombie.addFeature(FeatureType.ATTACKABLE, new Attackable(10, 10, 1, 0));
         zombie.addFeature(FeatureType.AI, new MonsterAi(zombie));
         zombie.addFeature(FeatureType.FOV, new FieldOfView(zombie, 8));
         return zombie;

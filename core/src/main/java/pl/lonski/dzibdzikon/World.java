@@ -13,9 +13,10 @@ public class World {
     private Level currentLevel;
 
     private final Player player = new Player();
-    private int currentEntityIdx = 0;
+    private Entity currentEntity = player;
 
     public World() {
+        DzibdziInput.listeners.add(player.getInputListener());
         currentLevel = LevelFactory.generate();
         currentLevel.addEntity(player);
         player.<Position>getFeature(FeatureType.POSITION).setCoords(currentLevel.getMap().getRandomRoom().getCenter());
@@ -39,24 +40,30 @@ public class World {
 
     public void update(float delta) {
 
-        while (currentEntityIdx < currentLevel.getEntities().size()) {
-            var entity = currentLevel.getEntities().get(currentEntityIdx);
+        // update all entities
+        // break if any entity is still performing an action or did not take a turn yet
+        while (currentLevel.getEntities().indexOf(currentEntity) < currentLevel.getEntities().size()) {
 
-            if (entity.getCurrentAction() == null) {
-                entity.update(delta, this);
+            if (currentEntity.getCurrentAction() == null) {
+                currentEntity.update(delta, this);
             }
 
-            if (entity.getCurrentAction() == null) {
+            if (currentEntity.getCurrentAction() == null) {
                 break;
             }
 
-            entity.getCurrentAction().update(delta, this);
-            if (!entity.getCurrentAction().isDone()) {
+            currentEntity.getCurrentAction().update(delta, this);
+            if (!currentEntity.getCurrentAction().isDone()) {
                 break;
             }
 
-            entity.setCurrentAction(null);
-            currentEntityIdx = (currentEntityIdx + 1) % currentLevel.getEntities().size();
+            currentEntity.setCurrentAction(null);
+
+            // proceed to next entity
+            // recalculate the idx in case the entity was removed during the update
+            var currentEntityIdx = currentLevel.getEntities().indexOf(currentEntity);
+            var nextEntityIdx = (currentEntityIdx + 1) % currentLevel.getEntities().size();
+            currentEntity = currentLevel.getEntities().get(nextEntityIdx);
         }
 
         // update map visibility & fov

@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 import java.util.HashMap;
 import java.util.Map;
-import pl.lonski.dzibdzikon.action.Action;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Position;
@@ -25,7 +24,6 @@ public class GameScreen implements Screen {
 
     private OrthographicCamera camera;
     private World world;
-    private Action currentAction;
 
     public GameScreen(Dzibdzikon game) {
         this.game = game;
@@ -39,6 +37,8 @@ public class GameScreen implements Screen {
         camera.setToOrtho(false, 800, 480);
 
         world = new World();
+
+        Gdx.input.setInputProcessor(new DzibdziInput.InputHandler());
     }
 
     @Override
@@ -66,7 +66,7 @@ public class GameScreen implements Screen {
                 Texture texture = textures.get(world.getCurrentLevel().getMap().getTile(x, y));
                 if (SHOW_WHOLE_LEVEL || world.getCurrentLevel().getVisible().contains(pos)) {
                     game.batch.draw(texture, x * TILE_WIDTH, y * TILE_HEIGHT);
-                }else if (world.getCurrentLevel().getVisited().contains(pos)) {
+                } else if (world.getCurrentLevel().getVisited().contains(pos)) {
                     game.batch.setColor(0.5f, 0.5f, 0.5f, 1);
                     game.batch.draw(texture, x * TILE_WIDTH, y * TILE_HEIGHT);
                     game.batch.setColor(1, 1, 1, 1);
