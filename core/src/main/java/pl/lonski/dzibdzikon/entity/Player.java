@@ -49,34 +49,15 @@ public class Player extends Entity {
         }
 
         if (!input.empty()) {
+            Point dPos = getPositionChangeInput();
 
-            Point dpos = new Point(0, 0);
-
-            if (input.key.keyCode() == Input.Keys.NUMPAD_4) {
-                dpos = new Point(-1, 0);
-            } else if (input.key.keyCode() == Input.Keys.NUMPAD_6) {
-                dpos = new Point(1, 0);
-            } else if (input.key.keyCode() == Input.Keys.NUMPAD_8) {
-                dpos = new Point(0, 1);
-            } else if (input.key.keyCode() == Input.Keys.NUMPAD_2) {
-                dpos = new Point(0, -1);
-            } else if (input.key.keyCode() == Input.Keys.NUMPAD_7) {
-                dpos = new Point(-1, 1);
-            } else if (input.key.keyCode() == Input.Keys.NUMPAD_9) {
-                dpos = new Point(1, 1);
-            } else if (input.key.keyCode() == Input.Keys.NUMPAD_1) {
-                dpos = new Point(-1, -1);
-            } else if (input.key.keyCode() == Input.Keys.NUMPAD_3) {
-                dpos = new Point(1, -1);
-            }
-
-            if (!dpos.isZero()) {
+            if (!dPos.isZero()) {
                 Position pos = getFeature(FeatureType.POSITION);
-                Point targetPos = new Point(pos.getCoords().x() + dpos.x(), pos.getCoords().y() + dpos.y());
+                Point targetPos = new Point(pos.getCoords().x() + dPos.x(), pos.getCoords().y() + dPos.y());
 
                 // move
                 if (!world.getCurrentLevel().isObstacle(targetPos)) {
-                    setCurrentAction(new MoveAction(this, new Point(pos.getCoords().x() + dpos.x(), pos.getCoords().y() + dpos.y())));
+                    setCurrentAction(new MoveAction(this, new Point(pos.getCoords().x() + dPos.x(), pos.getCoords().y() + dPos.y())));
                 } else {
 
                     // Check fight possibility
@@ -93,9 +74,7 @@ public class Player extends Entity {
 
 //                    input.reset(); // do not process the same key again
                 }
-
             }
-
         }
 
         super.update(delta, world);
@@ -172,6 +151,30 @@ public class Player extends Entity {
 //    }
 //
 //    public record PlayerCommandResult(int turns) {}
+
+    private Point getPositionChangeInput() {
+        Point dpos = new Point(0, 0);
+
+        if (input.key.keyCode() == Input.Keys.NUMPAD_4 || input.key.keyCode() == Input.Keys.LEFT || input.key.keyCode() == Input.Keys.H) {
+            dpos = new Point(-1, 0);
+        } else if (input.key.keyCode() == Input.Keys.NUMPAD_6 || input.key.keyCode() == Input.Keys.RIGHT || input.key.keyCode() == Input.Keys.L) {
+            dpos = new Point(1, 0);
+        } else if (input.key.keyCode() == Input.Keys.NUMPAD_8 || input.key.keyCode() == Input.Keys.UP || input.key.keyCode() == Input.Keys.K) {
+            dpos = new Point(0, 1);
+        } else if (input.key.keyCode() == Input.Keys.NUMPAD_2 || input.key.keyCode() == Input.Keys.DOWN || input.key.keyCode() == Input.Keys.J) {
+            dpos = new Point(0, -1);
+        } else if (input.key.keyCode() == Input.Keys.NUMPAD_7 || input.key.keyCode() == Input.Keys.Y) {
+            dpos = new Point(-1, 1);
+        } else if (input.key.keyCode() == Input.Keys.NUMPAD_9 || input.key.keyCode() == Input.Keys.U) {
+            dpos = new Point(1, 1);
+        } else if (input.key.keyCode() == Input.Keys.NUMPAD_1 || input.key.keyCode() == Input.Keys.B) {
+            dpos = new Point(-1, -1);
+        } else if (input.key.keyCode() == Input.Keys.NUMPAD_3 || input.key.keyCode() == Input.Keys.N) {
+            dpos = new Point(1, -1);
+        }
+
+        return dpos;
+    }
 
     class InputListener implements DzibdziInput.DzibdziInputListener {
 

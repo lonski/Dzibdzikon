@@ -24,7 +24,7 @@ public class RoomMapGeneratorV2 {
         int maxRooms = 50;
         // try place X rooms
         while (maxRooms-- > 0) {
-            int roomWidth = random.nextInt(3, 14);
+            int roomWidth = random.nextInt(3, 10);
             int roomHeight = random.nextInt(3, 10);
             int roomX = random.nextInt(1, width - roomWidth);
             int roomY = random.nextInt(1, height - roomHeight);

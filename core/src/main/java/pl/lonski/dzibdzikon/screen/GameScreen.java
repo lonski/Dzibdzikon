@@ -1,4 +1,4 @@
-package pl.lonski.dzibdzikon;
+package pl.lonski.dzibdzikon.screen;
 
 import static pl.lonski.dzibdzikon.Dzibdzikon.SHOW_WHOLE_LEVEL;
 import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
@@ -6,11 +6,17 @@ import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.ScreenUtils;
 import java.util.HashMap;
 import java.util.Map;
+import pl.lonski.dzibdzikon.DzibdziInput;
+import pl.lonski.dzibdzikon.Dzibdzikon;
+import pl.lonski.dzibdzikon.Point;
+import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Position;
@@ -19,11 +25,14 @@ import pl.lonski.dzibdzikon.map.Glyph;
 public class GameScreen implements Screen {
 
     private final Dzibdzikon game;
+    private final Hud hud;
 
     private Map<Glyph, Texture> textures = new HashMap<>();
 
     private OrthographicCamera camera;
     private World world;
+
+    private BitmapFont font;
 
     public GameScreen(Dzibdzikon game) {
         this.game = game;
@@ -37,6 +46,8 @@ public class GameScreen implements Screen {
         camera.setToOrtho(false, 800, 480);
 
         world = new World();
+
+        hud = new Hud(camera);
 
         Gdx.input.setInputProcessor(new DzibdziInput.InputHandler());
     }
@@ -54,6 +65,7 @@ public class GameScreen implements Screen {
 
         camera.position.set(world.getPlayer().getCameraPosition().x(), world.getPlayer().getCameraPosition().y(), 0);
         camera.update();
+        hud.update(world);
 
         //render
         ScreenUtils.clear(0, 0, 0, 0);
@@ -80,6 +92,8 @@ public class GameScreen implements Screen {
             }
             game.batch.draw(textures.get(entity.getGlyph()), pos.getRenderPosition().x(), pos.getRenderPosition().y());
         }
+
+        hud.render(delta, game.batch);
 
         game.batch.end();
     }

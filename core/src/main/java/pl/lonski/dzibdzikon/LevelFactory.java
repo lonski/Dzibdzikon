@@ -16,7 +16,7 @@ public class LevelFactory {
 
     public static Level generate() {
 
-        var level = new Level(RoomMapGeneratorV2.generate(80, 40));
+        var level = new Level(RoomMapGeneratorV2.generate(80, 80));
 
         for (Room room : level.getMap().getRooms()) {
             int zombieCount = RANDOM.nextInt(0, 3);

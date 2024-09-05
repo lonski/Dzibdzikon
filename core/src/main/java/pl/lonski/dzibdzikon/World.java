@@ -2,6 +2,9 @@ package pl.lonski.dzibdzikon;
 
 import static pl.lonski.dzibdzikon.Dzibdzikon.SHOW_WHOLE_LEVEL;
 
+import com.badlogic.gdx.graphics.Color;
+import java.util.ArrayList;
+import java.util.List;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
@@ -9,6 +12,7 @@ import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.Position;
 
 public class World {
+
 
     private Level currentLevel;
 

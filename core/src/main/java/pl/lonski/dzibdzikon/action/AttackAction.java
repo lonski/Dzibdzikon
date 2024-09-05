@@ -1,5 +1,6 @@
 package pl.lonski.dzibdzikon.action;
 
+import com.badlogic.gdx.graphics.Color;
 import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
@@ -7,6 +8,7 @@ import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.Position;
+import pl.lonski.dzibdzikon.screen.Hud;
 
 public class AttackAction implements Action {
 
@@ -54,20 +56,18 @@ public class AttackAction implements Action {
             defending.setHp(defending.getHp() - damage);
             if (defending.getHp() <= 0) {
                 if (target == world.getPlayer()) {
-                    message = attacker.getName() + " killed you.";
+                    Hud.addMessage("Zabił Cię " + attacker.getName(), Color.RED);
                     // TODO: game over
                 } else {
-                    message = attacker.getName() + " killed " + target.getName().toLowerCase() + ".";
+                    Hud.addMessage(attacker.getName() + " zabił " + target.getName().toLowerCase(), Color.RED);
                     world.getCurrentLevel().removeEntity(target);
                 }
             } else {
-                message = attacker.getName() + " hit " + target.getName().toLowerCase() + " for " + damage + " hp.";
+                Hud.addMessage(attacker.getName() + " uderzył " + target.getName().toLowerCase() + " i zadał " + damage + " punktów obrażeń.", Color.PINK);
             }
         } else {
-            message = attacker.getName() + " missed " + target.getName().toLowerCase() + ".";
+            Hud.addMessage(attacker.getName() + " chybił " + target.getName().toLowerCase() + ".", Color.CYAN);
         }
-
-        System.out.println(message);
     }
 
     @Override
