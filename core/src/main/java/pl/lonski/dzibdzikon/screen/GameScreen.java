@@ -6,8 +6,6 @@ import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -29,7 +27,6 @@ public class GameScreen implements Screen {
 
     private Map<Glyph, Texture> textures = new HashMap<>();
 
-    private OrthographicCamera camera;
     private World world;
 
     private BitmapFont font;
@@ -42,12 +39,9 @@ public class GameScreen implements Screen {
         textures.put(Glyph.FLOOR, new Texture("floor_1.png"));
         textures.put(Glyph.ZOMBIE, new Texture("zombie.png"));
 
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
-
         world = new World();
 
-        hud = new Hud(camera);
+        hud = new Hud(game);
 
         Gdx.input.setInputProcessor(new DzibdziInput.InputHandler());
     }
@@ -63,14 +57,15 @@ public class GameScreen implements Screen {
         //update
         world.update(delta);
 
-        camera.position.set(world.getPlayer().getCameraPosition().x(), world.getPlayer().getCameraPosition().y(), 0);
-        camera.update();
+        game.camera.position.set(world.getPlayer().getCameraPosition().x(), world.getPlayer().getCameraPosition().y(), 0);
+        game.camera.update();
         hud.update(world);
 
         //render
         ScreenUtils.clear(0, 0, 0, 0);
-        game.batch.setProjectionMatrix(camera.combined);
+        game.batch.setProjectionMatrix(game.camera.combined);
         game.batch.begin();
+
         for (int y = 0; y < world.getCurrentLevel().getMap().getHeight(); y++) {
             for (int x = 0; x < world.getCurrentLevel().getMap().getWidth(); x++) {
                 var pos = new Point(x, y);
@@ -93,19 +88,18 @@ public class GameScreen implements Screen {
             game.batch.draw(textures.get(entity.getGlyph()), pos.getRenderPosition().x(), pos.getRenderPosition().y());
         }
 
-        hud.render(delta, game.batch);
-
         game.batch.end();
+
+        hud.render(delta);
     }
 
     @Override
     public void resize(int width, int height) {
         float aspectRatio = (float) width / (float) height;
-        camera.setToOrtho(false, Gdx.graphics.getWidth() * aspectRatio, Gdx.graphics.getHeight());
-
-        camera.viewportWidth = Gdx.graphics.getWidth();
-        camera.viewportHeight = Gdx.graphics.getHeight();
-        camera.update();
+        game.camera.setToOrtho(false, Gdx.graphics.getWidth() * aspectRatio, Gdx.graphics.getHeight());
+        game.camera.viewportWidth = Gdx.graphics.getWidth();
+        game.camera.viewportHeight = Gdx.graphics.getHeight();
+        game.camera.update();
     }
 
     @Override

@@ -1,26 +1,27 @@
 package pl.lonski.dzibdzikon.screen;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.List;
 import pl.lonski.dzibdzikon.CameraUtils;
-import pl.lonski.dzibdzikon.FontUtils;
+import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.World;
+import pl.lonski.dzibdzikon.entity.FeatureType;
+import pl.lonski.dzibdzikon.entity.features.Attackable;
+import pl.lonski.dzibdzikon.ui.ProgressBar;
 
 public class Hud {
 
-    private static final int FONT_SIZE = 15;
     private static final int MAX_MESSAGES = 3;
     private static final List<Message> messages = new ArrayList<>();
-    private final BitmapFont font;
-    private final OrthographicCamera camera;
+    private final Dzibdzikon game;
+    private final ProgressBar hpBar;
 
-    public Hud(OrthographicCamera camera) {
-        this.camera = camera;
-        font = FontUtils.createFont("font/DejaVuSerif-Italic.ttf", FONT_SIZE);
+    public Hud(Dzibdzikon game) {
+        this.game = game;
+        this.hpBar = new ProgressBar(new Vector2(10, 10), 100, 10, new Color(0x880000ff), Color.RED);
     }
 
     public static void addMessage(String message, Color color) {
@@ -32,20 +33,29 @@ public class Hud {
     }
 
     public void update(World world) {
+        messages.removeIf(message -> message.ttl <= 0);
+        Attackable playerAttackable = world.getPlayer().getFeature(FeatureType.ATTACKABLE);
+        hpBar.setProgress((float) playerAttackable.getHp() / playerAttackable.getMaxHp());
     }
 
-    public void render(float delta, SpriteBatch batch) {
-        // render messages
-        var pos = CameraUtils.getTopLeftCorner(camera);
+    public void render(float delta) {
+        game.batch.begin();
 
+        // render messages
+        var pos = CameraUtils.getTopLeftCorner(game.camera);
         for (int i = 0; i < messages.size(); i++) {
             var message = messages.get(i);
             message.ttl -= delta;
-            font.setColor(message.color);
-            font.draw(batch, message.text, pos.x + 10, pos.y - 10 - (FONT_SIZE + 2) * i);
+            game.font.setColor(message.color);
+            game.font.draw(game.batch, message.text, pos.x + 10, pos.y - 10 - (17 * i));
         }
 
-        messages.removeIf(message -> message.ttl <= 0);
+        game.batch.end();
+
+        // render hp bar
+        game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        hpBar.render(game.shapeRenderer);
+        game.shapeRenderer.end();
     }
 
     private static class Message {
