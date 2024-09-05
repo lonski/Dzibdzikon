@@ -52,8 +52,7 @@ public class GameScreen implements Screen {
         //update
         world.update(delta);
 
-        var playerPos = world.getPlayer().<Position>getFeature(FeatureType.POSITION);
-        camera.position.set(playerPos.getRenderPosition().x(), playerPos.getRenderPosition().y(), 0);
+        camera.position.set(world.getPlayer().getCameraPosition().x(), world.getPlayer().getCameraPosition().y(), 0);
         camera.update();
 
         //render

@@ -1,10 +1,12 @@
 package pl.lonski.dzibdzikon.action;
 
 import pl.lonski.dzibdzikon.Dzibdzikon;
+import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
+import pl.lonski.dzibdzikon.entity.features.Position;
 
 public class AttackAction implements Action {
 
@@ -12,14 +14,34 @@ public class AttackAction implements Action {
     private final Entity target;
     private boolean done = false;
 
+    private final MoveAnimation moveAnimation;
+
     public AttackAction(Entity attacker, Entity target) {
         this.attacker = attacker;
         this.target = target;
+        var myPos = attacker.<Position>getFeature(FeatureType.POSITION);
+        var targetPos = target.<Position>getFeature(FeatureType.POSITION);
+
+        var diff = targetPos.getCoords().sub(myPos.getCoords());
+        var targetRenderPos = new Point(
+            myPos.getRenderPosition().x() + diff.x() * Dzibdzikon.TILE_WIDTH / 2,
+            myPos.getRenderPosition().y() + diff.y() * Dzibdzikon.TILE_HEIGHT / 2);
+
+        this.moveAnimation = new MoveAnimation(attacker, new Point(targetPos.getCoords()), targetRenderPos);
+        this.moveAnimation.setMoveSpeed(2);
+        this.moveAnimation.setBackToOriginalPosition(true);
     }
 
     @Override
     public void update(float delta, World world) {
+        moveAnimation.update(delta, world);
+        if (moveAnimation.isDone()) {
+            doFight(world);
+            done = true;
+        }
+    }
 
+    private void doFight(World world) {
         Attackable attacking = attacker.getFeature(FeatureType.ATTACKABLE);
         Attackable defending = target.getFeature(FeatureType.ATTACKABLE);
 
@@ -46,8 +68,6 @@ public class AttackAction implements Action {
         }
 
         System.out.println(message);
-
-        done = true;
     }
 
     @Override

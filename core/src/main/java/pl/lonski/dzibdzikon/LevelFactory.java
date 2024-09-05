@@ -19,7 +19,7 @@ public class LevelFactory {
         var level = new Level(RoomMapGeneratorV2.generate(80, 40));
 
         for (Room room : level.getMap().getRooms()) {
-            int zombieCount = RANDOM.nextInt(0, 2);
+            int zombieCount = RANDOM.nextInt(0, 3);
             while (zombieCount-- > 0) {
                 var pos = room.getRandomPosition();
                 if (level.getEntityAt(pos, null).isEmpty()) {

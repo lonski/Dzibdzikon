@@ -1,5 +1,8 @@
 package pl.lonski.dzibdzikon.entity;
 
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
+
 import com.badlogic.gdx.Input;
 import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.Point;
@@ -15,6 +18,7 @@ import pl.lonski.dzibdzikon.map.Glyph;
 public class Player extends Entity {
 
     private final InputListener input = new InputListener();
+    private Point cameraPosition;
 
     public Player() {
         super("Dzibdzik", Glyph.PLAYER, 100);
@@ -23,6 +27,14 @@ public class Player extends Entity {
         addFeature(FeatureType.POSITION, new Position(new Point(0, 0)));
         addFeature(FeatureType.FOV, new FieldOfView(this, 8));
         addFeature(FeatureType.ATTACKABLE, new Attackable(20, 20, 5, 0));
+    }
+
+    public Point getCameraPosition() {
+        return cameraPosition;
+    }
+
+    public void setCameraPosition(Point cameraPosition) {
+        this.cameraPosition = cameraPosition;
     }
 
     public InputListener getInputListener() {
@@ -79,7 +91,7 @@ public class Player extends Entity {
 //                                    .open(world);
 //                            }));
 
-                    input.reset(); // do not process the same key again
+//                    input.reset(); // do not process the same key again
                 }
 
             }
@@ -87,6 +99,9 @@ public class Player extends Entity {
         }
 
         super.update(delta, world);
+
+        Position pos = getFeature(FeatureType.POSITION);
+        setCameraPosition(new Point(pos.getCoords().x() * TILE_WIDTH, pos.getCoords().y() * TILE_HEIGHT));
     }
 
     //    public PlayerCommandResult hanldeCommand(World world, KeyEvent key) {
