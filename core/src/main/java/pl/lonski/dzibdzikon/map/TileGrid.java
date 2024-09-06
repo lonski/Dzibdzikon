@@ -1,5 +1,6 @@
 package pl.lonski.dzibdzikon.map;
 
+import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.List;
 import pl.lonski.dzibdzikon.Point;

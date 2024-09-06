@@ -1,6 +1,7 @@
 package pl.lonski.dzibdzikon.entity;
 
 import pl.lonski.dzibdzikon.entity.features.Attackable;
+import pl.lonski.dzibdzikon.entity.features.DoorOpenable;
 import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.MonsterAi;
 import pl.lonski.dzibdzikon.map.Glyph;
@@ -15,13 +16,13 @@ public class EntityFactory {
         return zombie;
     }
 
-//    public static Entity createDoor() {
-//        var door = new Entity("Door", Tile.DOOR_CLOSED);
-//        door.setVisibleInFog(true);
-//        door.addFeature(FeatureType.OPENABLE, new DoorOpenable(door));
-//        return door;
-//    }
-//
+    public static Entity createDoor() {
+        var door = new Entity("Door", Glyph.DOOR_CLOSED, 0);
+        door.setVisibleInFog(true);
+        door.addFeature(FeatureType.OPENABLE, new DoorOpenable(door));
+        return door;
+    }
+
 //    public static Entity createDownstairs() {
 //        var stairs = new Entity("Downstairs", Tile.DOWNSTAIRS);
 //        stairs.setVisibleInFog(true);

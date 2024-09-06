@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
+import pl.lonski.dzibdzikon.entity.features.Openable;
 import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.map.Glyph;
 import pl.lonski.dzibdzikon.map.TileGrid;
@@ -61,11 +62,11 @@ public class Level {
         }
 
         // openables
-//        if (getEntityAt(pos, FeatureType.OPENABLE)
-//            .map(o -> o.<Openable>getFeature(FeatureType.OPENABLE).obstacle())
-//            .orElse(false)) {
-//            return true;
-//        }
+        if (getEntityAt(pos, FeatureType.OPENABLE)
+            .map(o -> o.<Openable>getFeature(FeatureType.OPENABLE).obstacle())
+            .orElse(false)) {
+            return true;
+        }
 
         return false;
     }
@@ -76,11 +77,11 @@ public class Level {
         }
 
         // openables
-//        if (getEntityAt(pos, FeatureType.OPENABLE)
-//            .map(o -> o.<Openable>getFeature(FeatureType.OPENABLE).opaque())
-//            .orElse(false)) {
-//            return true;
-//        }
+        if (getEntityAt(pos, FeatureType.OPENABLE)
+            .map(o -> o.<Openable>getFeature(FeatureType.OPENABLE).opaque())
+            .orElse(false)) {
+            return true;
+        }
 
         return map.getTile(pos) == Glyph.WALL;
     }

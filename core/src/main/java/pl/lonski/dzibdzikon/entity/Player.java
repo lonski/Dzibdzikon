@@ -9,9 +9,11 @@ import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.AttackAction;
 import pl.lonski.dzibdzikon.action.MoveAction;
+import pl.lonski.dzibdzikon.action.NoOpAction;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.EntityFeature;
 import pl.lonski.dzibdzikon.entity.features.FieldOfView;
+import pl.lonski.dzibdzikon.entity.features.Openable;
 import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.map.Glyph;
 
@@ -51,7 +53,15 @@ public class Player extends Entity {
         if (!input.empty()) {
             Point dPos = getPositionChangeInput();
 
-            if (!dPos.isZero()) {
+            if (dPos.isZero()) {
+                // handle command
+                if (input.key.keyCode() == Input.Keys.NUMPAD_5 || input.key.keyCode() == Input.Keys.SPACE) {
+                    setCurrentAction(new NoOpAction());
+                }
+
+                input.reset();
+            } else {
+                // handle position change
                 Position pos = getFeature(FeatureType.POSITION);
                 Point targetPos = new Point(pos.getCoords().x() + dPos.x(), pos.getCoords().y() + dPos.y());
 
@@ -64,13 +74,15 @@ public class Player extends Entity {
                     world
                         .getCurrentLevel()
                         .getEntityAt(targetPos, FeatureType.ATTACKABLE)
-                        .ifPresent(mob -> setCurrentAction(new AttackAction(this, mob)));
-//                        // check openable
-//                        () -> level.getEntityAt(newPos, FeatureType.OPENABLE)
-//                            .ifPresent(openable -> {
-//                                openable.<Openable>getFeature(FeatureType.OPENABLE)
-//                                    .open(world);
-//                            }));
+                        .ifPresentOrElse(
+                            mob -> setCurrentAction(new AttackAction(this, mob)),
+                            // check openable
+                            () -> world.getCurrentLevel().getEntityAt(targetPos, FeatureType.OPENABLE)
+                                .ifPresent(openable -> {
+                                    openable.<Openable>getFeature(FeatureType.OPENABLE)
+                                        .open(world);
+                                    input.reset();
+                                }));
 
 //                    input.reset(); // do not process the same key again
                 }

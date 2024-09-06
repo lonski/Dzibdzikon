@@ -38,6 +38,8 @@ public class GameScreen implements Screen {
         textures.put(Glyph.WALL, new Texture("wall_1.png"));
         textures.put(Glyph.FLOOR, new Texture("floor_1.png"));
         textures.put(Glyph.ZOMBIE, new Texture("zombie.png"));
+        textures.put(Glyph.DOOR_OPEN, new Texture("door_open.png"));
+        textures.put(Glyph.DOOR_CLOSED, new Texture("door_closed.png"));
 
         world = new World();
 

@@ -24,6 +24,10 @@ public class Entity {
         this.zLevel = zLevel;
     }
 
+    public void setGlyph(Glyph glyph) {
+        this.glyph = glyph;
+    }
+
     public Action getCurrentAction() {
         return currentAction;
     }

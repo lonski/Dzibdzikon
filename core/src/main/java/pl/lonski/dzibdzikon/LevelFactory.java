@@ -9,8 +9,10 @@ import java.util.List;
 import pl.lonski.dzibdzikon.entity.EntityFactory;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Position;
+import pl.lonski.dzibdzikon.map.Glyph;
 import pl.lonski.dzibdzikon.map.Room;
 import pl.lonski.dzibdzikon.map.RoomMapGeneratorV2;
+import pl.lonski.dzibdzikon.map.TileGrid;
 
 public class LevelFactory {
 
@@ -31,21 +33,21 @@ public class LevelFactory {
         }
 
         // put doors
-//        var map = level.getMap();
-//        Collections.shuffle(map.getRooms());
-//        int minDoors = map.getRooms().size() / 5;
-//        int maxDoors = map.getRooms().size();
-//        for (Room room : map.getRooms().subList(0, RANDOM.nextInt(minDoors, maxDoors))) {
-//            var possibleDoors = findPossibleDoorPositions(map.getTiles(), room);
-//            if (!possibleDoors.isEmpty()) {
-//                Collections.shuffle(possibleDoors);
-//                if (level.getEntityAt(possibleDoors.get(0), null).isEmpty()) {
-//                    var door = EntityFactory.createDoor();
-//                    door.addFeature(FeatureType.POSITION, new Position(possibleDoors.get(0)));
-//                    level.addEntity(door);
-//                }
-//            }
-//        }
+        var map = level.getMap();
+        Collections.shuffle(map.getRooms());
+        int minDoors = map.getRooms().size() / 5;
+        int maxDoors = map.getRooms().size();
+        for (Room room : map.getRooms().subList(0, RANDOM.nextInt(minDoors, maxDoors))) {
+            var possibleDoors = findPossibleDoorPositions(map, room);
+            if (!possibleDoors.isEmpty()) {
+                Collections.shuffle(possibleDoors);
+                if (level.getEntityAt(possibleDoors.get(0), null).isEmpty()) {
+                    var door = EntityFactory.createDoor();
+                    door.addFeature(FeatureType.POSITION, new Position(possibleDoors.get(0)));
+                    level.addEntity(door);
+                }
+            }
+        }
 
         // put downstairs
 //        var downstairs = EntityFactory.createDownstairs();
@@ -56,63 +58,59 @@ public class LevelFactory {
         return level;
     }
 
-//    private static List<Integer> findPossibleDoorPositions(List<Tile> tiles, Room room) {
-//        List<Integer> possibleDoors = new ArrayList<>();
-//
-//        for (int rx = 0; rx < room.w(); rx++) {
-//            int x = room.x() + rx;
-//
-//            // top wall
-//            int y = room.y() - 1;
-//            int pos = MapUtils.toPos(x, y);
-//            if (MapUtils.inBounds(pos) && tiles.get(pos) == Tile.FLOOR && horizontalNeighboursAreWalls(x, y, tiles)) {
-//                possibleDoors.add(MapUtils.toPos(x, y));
-//            }
-//
-//            // bottom wall
-//            y = room.y() + room.h();
-//            pos = MapUtils.toPos(x, y);
-//            if (MapUtils.inBounds(pos) && tiles.get(pos) == Tile.FLOOR && horizontalNeighboursAreWalls(x, y, tiles)) {
-//                possibleDoors.add(MapUtils.toPos(x, y));
-//            }
-//        }
-//
-//        for (int ry = 0; ry < room.h(); ry++) {
-//            int y = room.y() + ry;
-//
-//            // left wall
-//            int x = room.x() - 1;
-//            int pos = MapUtils.toPos(x, y);
-//            if (MapUtils.inBounds(pos) && tiles.get(pos) == Tile.FLOOR && verticalNeighboursAreWalls(x, y, tiles)) {
-//                possibleDoors.add(MapUtils.toPos(x, y));
-//            }
-//
-//            // right wall
-//            x = room.x() + room.w();
-//            pos = MapUtils.toPos(x, y);
-//            if (MapUtils.inBounds(pos) && tiles.get(pos) == Tile.FLOOR && verticalNeighboursAreWalls(x, y, tiles)) {
-//                possibleDoors.add(MapUtils.toPos(x, y));
-//            }
-//        }
-//
-//        return possibleDoors;
-//    }
-//
-//    private static boolean horizontalNeighboursAreWalls(int x, int y, List<Tile> tiles) {
-//        int nbPos1 = MapUtils.toPos(x - 1, y);
-//        int nbPos2 = MapUtils.toPos(x + 1, y);
-//        return (MapUtils.inBounds(nbPos1)
-//            && tiles.get(nbPos1) == Tile.WALL
-//            && MapUtils.inBounds(nbPos2)
-//            && tiles.get(nbPos2) == Tile.WALL);
-//    }
-//
-//    private static boolean verticalNeighboursAreWalls(int x, int y, List<Tile> tiles) {
-//        int nbPos1 = MapUtils.toPos(x, y - 1);
-//        int nbPos2 = MapUtils.toPos(x, y + 1);
-//        return (MapUtils.inBounds(nbPos1)
-//            && tiles.get(nbPos1) == Tile.WALL
-//            && MapUtils.inBounds(nbPos2)
-//            && tiles.get(nbPos2) == Tile.WALL);
-//    }
+    private static List<Point> findPossibleDoorPositions(TileGrid map, Room room) {
+        List<Point> possibleDoors = new ArrayList<>();
+
+        for (int rx = 0; rx < room.w(); rx++) {
+            int x = room.x() + rx;
+
+            // top wall
+            int y = room.y() - 1;
+            if (map.inBounds(x, y) && map.getTile(x, y) == Glyph.FLOOR && horizontalNeighboursAreWalls(x, y, map)) {
+                possibleDoors.add(new Point(x, y));
+            }
+
+            // bottom wall
+            y = room.y() + room.h();
+            if (map.inBounds(x, y) && map.getTile(x, y) == Glyph.FLOOR && horizontalNeighboursAreWalls(x, y, map)) {
+                possibleDoors.add(new Point(x, y));
+            }
+        }
+
+        for (int ry = 0; ry < room.h(); ry++) {
+            int y = room.y() + ry;
+
+            // left wall
+            int x = room.x() - 1;
+            if (map.inBounds(x, y) && map.getTile(x, y) == Glyph.FLOOR && verticalNeighboursAreWalls(x, y, map)) {
+                possibleDoors.add(new Point(x, y));
+            }
+
+            // right wall
+            x = room.x() + room.w();
+            if (map.inBounds(x, y) && map.getTile(x, y) == Glyph.FLOOR && verticalNeighboursAreWalls(x, y, map)) {
+                possibleDoors.add(new Point(x, y));
+            }
+        }
+
+        return possibleDoors;
+    }
+
+    private static boolean horizontalNeighboursAreWalls(int x, int y, TileGrid map) {
+        var nbPos1 = new Point(x - 1, y);
+        var nbPos2 = new Point(x + 1, y);
+        return (map.inBounds(nbPos1)
+            && map.getTile(nbPos1) == Glyph.WALL
+            && map.inBounds(nbPos2)
+            && map.getTile(nbPos2) == Glyph.WALL);
+    }
+
+    private static boolean verticalNeighboursAreWalls(int x, int y, TileGrid map) {
+        var nbPos1 = new Point(x, y - 1);
+        var nbPos2 = new Point(x, y + 1);
+        return (map.inBounds(nbPos1)
+            && map.getTile(nbPos1) == Glyph.WALL
+            && map.inBounds(nbPos2)
+            && map.getTile(nbPos2) == Glyph.WALL);
+    }
 }

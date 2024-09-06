@@ -6,4 +6,6 @@ public enum Glyph {
     FLOOR,
     PLAYER,
     ZOMBIE,
+    DOOR_OPEN,
+    DOOR_CLOSED
 }
