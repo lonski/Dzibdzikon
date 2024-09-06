@@ -17,7 +17,7 @@ public class EntityFactory {
     }
 
     public static Entity createDoor() {
-        var door = new Entity("Door", Glyph.DOOR_CLOSED);
+        var door = new Entity("Drzwi", Glyph.DOOR_CLOSED);
         door.setVisibleInFog(true);
         door.addFeature(FeatureType.OPENABLE, new DoorOpenable(door));
         return door;

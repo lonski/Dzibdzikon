@@ -7,4 +7,8 @@ public interface Action {
     void update(float delta, World world);
 
     boolean isDone();
+
+    default boolean succeeded() {
+        return isDone();
+    }
 }

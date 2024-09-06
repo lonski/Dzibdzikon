@@ -28,4 +28,10 @@ public class CameraUtils {
         float halfHeight = camera.viewportHeight * 0.5f;
         return new Vector2(camera.position.x + halfWidth, camera.position.y + halfHeight);
     }
+
+    public static Vector2 getBottomCenter(OrthographicCamera camera) {
+        float halfWidth = camera.viewportWidth * 0.5f;
+        float halfHeight = camera.viewportHeight * 0.5f;
+        return new Vector2(camera.position.x , camera.position.y - halfHeight);
+    }
 }
