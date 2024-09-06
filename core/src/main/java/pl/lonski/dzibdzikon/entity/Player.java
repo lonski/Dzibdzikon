@@ -23,10 +23,10 @@ public class Player extends Entity {
     private Point cameraPosition;
 
     public Player() {
-        super("Dzibdzik", Glyph.PLAYER, 100);
+        super("Dzibdzik", Glyph.PLAYER);
         addFeature(FeatureType.PLAYER, new EntityFeature() {
         });
-        addFeature(FeatureType.POSITION, new Position(new Point(0, 0)));
+        addFeature(FeatureType.POSITION, new Position(new Point(0, 0), 0, 100));
         addFeature(FeatureType.FOV, new FieldOfView(this, 8));
         addFeature(FeatureType.ATTACKABLE, new Attackable(20, 20, 5, 0));
     }

@@ -9,7 +9,7 @@ import pl.lonski.dzibdzikon.map.Glyph;
 public class EntityFactory {
 
     public static Entity createZombie() {
-        var zombie = new Entity("Zombie", Glyph.ZOMBIE, 10);
+        var zombie = new Entity("Zombie", Glyph.ZOMBIE);
         zombie.addFeature(FeatureType.ATTACKABLE, new Attackable(10, 10, 1, 0));
         zombie.addFeature(FeatureType.AI, new MonsterAi(zombie));
         zombie.addFeature(FeatureType.FOV, new FieldOfView(zombie, 8));
@@ -17,7 +17,7 @@ public class EntityFactory {
     }
 
     public static Entity createDoor() {
-        var door = new Entity("Door", Glyph.DOOR_CLOSED, 0);
+        var door = new Entity("Door", Glyph.DOOR_CLOSED);
         door.setVisibleInFog(true);
         door.addFeature(FeatureType.OPENABLE, new DoorOpenable(door));
         return door;

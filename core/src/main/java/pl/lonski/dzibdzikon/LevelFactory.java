@@ -26,7 +26,7 @@ public class LevelFactory {
                 var pos = room.getRandomPosition();
                 if (level.getEntityAt(pos, null).isEmpty()) {
                     var zombie = EntityFactory.createZombie();
-                    zombie.addFeature(FeatureType.POSITION, new Position(pos));
+                    zombie.addFeature(FeatureType.POSITION, new Position(pos, 0, 10));
                     level.addEntity(zombie);
                 }
             }
@@ -41,9 +41,10 @@ public class LevelFactory {
             var possibleDoors = findPossibleDoorPositions(map, room);
             if (!possibleDoors.isEmpty()) {
                 Collections.shuffle(possibleDoors);
-                if (level.getEntityAt(possibleDoors.get(0), null).isEmpty()) {
+                var possiblePos = possibleDoors.get(0);
+                if (level.getEntityAt(possiblePos.pos, null).isEmpty()) {
                     var door = EntityFactory.createDoor();
-                    door.addFeature(FeatureType.POSITION, new Position(possibleDoors.get(0)));
+                    door.addFeature(FeatureType.POSITION, new Position(possiblePos.pos, possiblePos.rotation, 1));
                     level.addEntity(door);
                 }
             }
@@ -58,8 +59,8 @@ public class LevelFactory {
         return level;
     }
 
-    private static List<Point> findPossibleDoorPositions(TileGrid map, Room room) {
-        List<Point> possibleDoors = new ArrayList<>();
+    private static List<PossiblePosition> findPossibleDoorPositions(TileGrid map, Room room) {
+        List<PossiblePosition> possibleDoors = new ArrayList<>();
 
         for (int rx = 0; rx < room.w(); rx++) {
             int x = room.x() + rx;
@@ -67,13 +68,13 @@ public class LevelFactory {
             // top wall
             int y = room.y() - 1;
             if (map.inBounds(x, y) && map.getTile(x, y) == Glyph.FLOOR && horizontalNeighboursAreWalls(x, y, map)) {
-                possibleDoors.add(new Point(x, y));
+                possibleDoors.add(new PossiblePosition(new Point(x, y), 0));
             }
 
             // bottom wall
             y = room.y() + room.h();
             if (map.inBounds(x, y) && map.getTile(x, y) == Glyph.FLOOR && horizontalNeighboursAreWalls(x, y, map)) {
-                possibleDoors.add(new Point(x, y));
+                possibleDoors.add(new PossiblePosition(new Point(x, y), 0));
             }
         }
 
@@ -83,13 +84,13 @@ public class LevelFactory {
             // left wall
             int x = room.x() - 1;
             if (map.inBounds(x, y) && map.getTile(x, y) == Glyph.FLOOR && verticalNeighboursAreWalls(x, y, map)) {
-                possibleDoors.add(new Point(x, y));
+                possibleDoors.add(new PossiblePosition(new Point(x, y), 90));
             }
 
             // right wall
             x = room.x() + room.w();
             if (map.inBounds(x, y) && map.getTile(x, y) == Glyph.FLOOR && verticalNeighboursAreWalls(x, y, map)) {
-                possibleDoors.add(new Point(x, y));
+                possibleDoors.add(new PossiblePosition(new Point(x, y), 90));
             }
         }
 
@@ -112,5 +113,8 @@ public class LevelFactory {
             && map.getTile(nbPos1) == Glyph.WALL
             && map.inBounds(nbPos2)
             && map.getTile(nbPos2) == Glyph.WALL);
+    }
+
+    record PossiblePosition(Point pos, float rotation) {
     }
 }

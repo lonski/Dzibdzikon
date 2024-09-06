@@ -14,14 +14,12 @@ public class Entity {
     private final Map<FeatureType, EntityFeature> features = new HashMap<>();
     private String name;
     private Glyph glyph;
-    private int zLevel;
     private boolean visibleInFog = false;
     private Action currentAction;
 
-    public Entity(String name, Glyph glyph, int zLevel) {
+    public Entity(String name, Glyph glyph) {
         this.name = name;
         this.glyph = glyph;
-        this.zLevel = zLevel;
     }
 
     public void setGlyph(Glyph glyph) {
@@ -42,10 +40,6 @@ public class Entity {
 
     public Glyph getGlyph() {
         return glyph;
-    }
-
-    public int getZLevel() {
-        return zLevel;
     }
 
     public boolean isVisibleInFog() {
