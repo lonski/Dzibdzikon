@@ -3,15 +3,20 @@ package pl.lonski.dzibdzikon.screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import java.util.ArrayList;
-import java.util.List;
 import pl.lonski.dzibdzikon.CameraUtils;
 import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.FontUtils;
+import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.ui.ProgressBar;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
 
 public class Hud {
 
@@ -20,12 +25,13 @@ public class Hud {
     private static String actionMessage = "";
     private final Dzibdzikon game;
     private final ProgressBar hpBar;
+    public static final List<Point> debugHighlight = new ArrayList<>();
 
     public Hud(Dzibdzikon game) {
         this.game = game;
 
         this.hpBar = new ProgressBar(
-                 100, 10, new Color(0x880000ff), Color.RED);
+            100, 10, new Color(0x880000ff), Color.RED);
     }
 
     public static void addMessage(String message) {
@@ -79,6 +85,15 @@ public class Hud {
         game.shapeRenderer.setProjectionMatrix(game.camera.combined);
         game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         hpBar.render(hpBarPos, game.shapeRenderer);
+
+        // debug render
+        var red = 0.05f;
+        for (Point point : debugHighlight) {
+            game.shapeRenderer.setColor(new Color(red, 0, 0, 255));
+            game.shapeRenderer.rect((point.x() * TILE_WIDTH) - TILE_WIDTH / 4f, (point.y() * TILE_HEIGHT) - TILE_HEIGHT / 4f, 16, 16);
+            red = Math.min(1.0f, red + 0.05f);
+        }
+
         game.shapeRenderer.end();
     }
 

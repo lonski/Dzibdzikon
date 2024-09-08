@@ -1,13 +1,15 @@
 package pl.lonski.dzibdzikon.entity;
 
-import java.util.HashMap;
-import java.util.Map;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.Action;
 import pl.lonski.dzibdzikon.action.NoOpAction;
+import pl.lonski.dzibdzikon.animation.Animation;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.EntityFeature;
 import pl.lonski.dzibdzikon.map.Glyph;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Entity {
 
@@ -16,10 +18,15 @@ public class Entity {
     private Glyph glyph;
     private boolean visibleInFog = false;
     private Action currentAction;
+    private Animation animation;
 
     public Entity(String name, Glyph glyph) {
         this.name = name;
         this.glyph = glyph;
+    }
+
+    public void setAnimation(Animation animation) {
+        this.animation = animation;
     }
 
     public void setGlyph(Glyph glyph) {
@@ -65,6 +72,12 @@ public class Entity {
         features.values().forEach(f -> f.update(delta, world));
         if (getFeature(FeatureType.PLAYER) == null && currentAction == null) {
             setCurrentAction(new NoOpAction());
+        }
+    }
+
+    public void updateAnimation(float delta, World world) {
+        if (animation != null) {
+            animation.update(delta, world, this);
         }
     }
 

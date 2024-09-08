@@ -12,12 +12,12 @@ public class MoveAction implements Action {
     private final Point target;
     private boolean done = false;
 
-    private final MoveAnimation moveAnimation;
+    private final MoveAnimationAction moveAnimation;
 
     public MoveAction(Entity entity, Point target) {
         this.entity = entity;
         this.target = target;
-        this.moveAnimation = new MoveAnimation(entity, target);
+        this.moveAnimation = new MoveAnimationAction(entity, target);
     }
 
     @Override

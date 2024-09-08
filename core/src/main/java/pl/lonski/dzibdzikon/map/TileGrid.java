@@ -1,9 +1,9 @@
 package pl.lonski.dzibdzikon.map;
 
-import com.badlogic.gdx.math.Vector2;
+import pl.lonski.dzibdzikon.Point;
+
 import java.util.ArrayList;
 import java.util.List;
-import pl.lonski.dzibdzikon.Point;
 
 public class TileGrid {
     private final int width;
@@ -56,6 +56,10 @@ public class TileGrid {
 
     public Glyph getTile(Point pos) {
         return getTile(pos.x(), pos.y());
+    }
+
+    public void setTile(Point pos, Glyph tile) {
+        setTile(pos.x(), pos.y(), tile);
     }
 
     public void setTile(int x, int y, Glyph tile) {

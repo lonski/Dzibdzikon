@@ -1,8 +1,5 @@
 package pl.lonski.dzibdzikon.entity.features;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
@@ -12,11 +9,18 @@ import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.map.MapUtils;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
 public class MonsterAi implements EntityFeature {
 
-    private final Entity entity;
-    private Point lastSeenPlayerPos;
-    private List<Point> path;
+    protected final Entity entity;
+    protected Point lastSeenPlayerPos;
+    protected List<Point> path;
+    protected Position myPos;
+    protected Entity player;
+    protected Position playerPos;
 
     public MonsterAi(Entity entity) {
         this.entity = entity;
@@ -24,17 +28,40 @@ public class MonsterAi implements EntityFeature {
 
     @Override
     public void update(float delta, World world) {
-        if (entity.getCurrentAction() != null) {
+        if (!init(world)) {
             return;
+        }
+
+        if (attackPlayerIfAtNeighbourTile(world)) {
+            return;
+        }
+
+        if (chasePlayer(world)) {
+            return;
+        }
+
+        mindlessWander(world);
+    }
+
+    protected boolean seesPlayer(World world) {
+        FieldOfView fov = entity.getFeature(FeatureType.FOV);
+        var playerInFov = fov.getVisible().contains(playerPos.getCoords());
+
+        return playerInFov;
+    }
+
+    protected boolean init(World world) {
+        if (entity.getCurrentAction() != null) {
+            return false;
         }
 
         if (!entity.alive()) {
-            return;
+            return false;
         }
 
-        Position myPos = entity.getFeature(FeatureType.POSITION);
-        Entity player = world.getPlayer();
-        Position playerPos = player.getFeature(FeatureType.POSITION);
+        myPos = entity.getFeature(FeatureType.POSITION);
+        player = world.getPlayer();
+        playerPos = player.getFeature(FeatureType.POSITION);
 
         if (path != null && path.isEmpty()) {
             path = null;
@@ -44,25 +71,29 @@ public class MonsterAi implements EntityFeature {
             lastSeenPlayerPos = null;
         }
 
-        // attack if player in neighbour position
+        return true;
+    }
+
+    protected boolean attackPlayerIfAtNeighbourTile(World world) {
         Set<Point> nbPositions = MapUtils.getNeighbourPositions(myPos.getCoords());
         if (nbPositions.contains(playerPos.getCoords())) {
             lastSeenPlayerPos = playerPos.getCoords();
             entity.setCurrentAction(new AttackAction(entity, player));
-            return;
+            return true;
         }
+        return false;
+    }
 
-        // chase player
-        FieldOfView fov = entity.getFeature(FeatureType.FOV);
-        var playerInFov = fov.getVisible().contains(playerPos.getCoords());
-        if (path != null || playerInFov) {
+    protected boolean chasePlayer(World world) {
+        var seesPlayer = seesPlayer(world);
+        if (path != null || seesPlayer) {
 
-            if (path == null || (playerInFov && !Objects.equals(lastSeenPlayerPos, playerPos.getCoords()))) {
+            if (path == null || (seesPlayer && !Objects.equals(lastSeenPlayerPos, playerPos.getCoords()))) {
                 path = MapUtils.pathfind(myPos.getCoords(), playerPos.getCoords(), p -> !world.getCurrentLevel()
                     .isObstacle(p));
             }
 
-            if (path.isEmpty() && playerInFov) {
+            if (path.isEmpty() && seesPlayer) {
                 // try to find path without considering entites
                 path = MapUtils.pathfind(myPos.getCoords(), playerPos.getCoords(), p -> !world.getCurrentLevel()
                     .isObstacle(p, false));
@@ -77,14 +108,14 @@ public class MonsterAi implements EntityFeature {
                 }
             }
 
-            if (playerInFov) {
+            if (seesPlayer) {
                 lastSeenPlayerPos = playerPos.getCoords();
             }
 
-            return;
+            return true;
         }
 
-        mindlessWander(world);
+        return false;
     }
 
     protected void mindlessWander(World world) {

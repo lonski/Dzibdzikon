@@ -24,6 +24,8 @@ public class Player extends Entity {
 
     private final InputListener input = new InputListener();
     private Point cameraPosition;
+    private float timeSinceLastWait = 0;
+    private final float waitDebounce = 0.3f;
 
     public Player() {
         super("Dzibdzik", Glyph.PLAYER);
@@ -52,6 +54,7 @@ public class Player extends Entity {
         if (getCurrentAction() != null || !alive()) {
             return;
         }
+        timeSinceLastWait += delta;
 
         if (!input.empty()) {
             Point dPos = getPositionChangeInput();
@@ -59,9 +62,11 @@ public class Player extends Entity {
             if (dPos.isZero()) {
                 // handle command
                 if (input.key.keyCode() == Input.Keys.NUMPAD_5 || input.key.keyCode() == Input.Keys.SPACE) {
-                    // wait
-                    setCurrentAction(new NoOpAction());
-                    input.reset();
+                    if (timeSinceLastWait >= waitDebounce) {
+                        timeSinceLastWait = 0;
+                        // wait
+                        setCurrentAction(new NoOpAction());
+                    }
                 } else if (input.key.keyCode() == Input.Keys.C) {
                     // close
                     setCurrentAction(new ChooseDirectionAction(dir -> {

@@ -9,7 +9,7 @@ import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Position;
 
-public class MoveAnimation implements Action {
+public class MoveAnimationAction implements Action {
 
     private float moveTime = 0.01f;
     private int moveSpeed = 3;
@@ -22,11 +22,11 @@ public class MoveAnimation implements Action {
     private boolean backToOriginalPosition = false;
     private final Point originalPosition;
 
-    public MoveAnimation(Entity entity, Point targetCoords) {
+    public MoveAnimationAction(Entity entity, Point targetCoords) {
         this(entity, targetCoords, new Point(targetCoords.x() * TILE_WIDTH, targetCoords.y() * TILE_HEIGHT));
     }
 
-    public MoveAnimation(Entity entity, Point targetCoords, Point targetRenderPosition) {
+    public MoveAnimationAction(Entity entity, Point targetCoords, Point targetRenderPosition) {
         this.entity = entity;
         this.targetCoords = targetCoords;
         this.targetRenderPosition = targetRenderPosition;

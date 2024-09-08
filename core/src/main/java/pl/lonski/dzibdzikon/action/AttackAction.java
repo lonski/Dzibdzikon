@@ -15,10 +15,13 @@ public class AttackAction implements Action {
     private final Entity attacker;
     private final Entity target;
     private boolean done = false;
-
-    private final MoveAnimation moveAnimation;
+    private final MoveAnimationAction moveAnimation;
 
     public AttackAction(Entity attacker, Entity target) {
+        this(attacker, target, true);
+    }
+
+    public AttackAction(Entity attacker, Entity target, boolean withAnimation) {
         this.attacker = attacker;
         this.target = target;
         var myPos = attacker.<Position>getFeature(FeatureType.POSITION);
@@ -29,15 +32,21 @@ public class AttackAction implements Action {
             myPos.getRenderPosition().x() + diff.x() * Dzibdzikon.TILE_WIDTH / 2,
             myPos.getRenderPosition().y() + diff.y() * Dzibdzikon.TILE_HEIGHT / 2);
 
-        this.moveAnimation = new MoveAnimation(attacker, new Point(targetPos.getCoords()), targetRenderPos);
-        this.moveAnimation.setMoveSpeed(2);
-        this.moveAnimation.setBackToOriginalPosition(true);
+        if (withAnimation) {
+            this.moveAnimation = new MoveAnimationAction(attacker, new Point(targetPos.getCoords()), targetRenderPos);
+            this.moveAnimation.setMoveSpeed(2);
+            this.moveAnimation.setBackToOriginalPosition(true);
+        } else {
+            this.moveAnimation = null;
+        }
     }
 
     @Override
     public void update(float delta, World world) {
-        moveAnimation.update(delta, world);
-        if (moveAnimation.isDone()) {
+        if (moveAnimation != null) {
+            moveAnimation.update(delta, world);
+        }
+        if (moveAnimation == null || moveAnimation.isDone()) {
             doFight(world);
             done = true;
         }
@@ -47,13 +56,10 @@ public class AttackAction implements Action {
         Attackable attacking = attacker.getFeature(FeatureType.ATTACKABLE);
         Attackable defending = target.getFeature(FeatureType.ATTACKABLE);
 
-        var attackRoll = Dzibdzikon.RANDOM.nextInt(0, attacking.getAttack() + 1);
-        var defenceRoll = Dzibdzikon.RANDOM.nextInt(0, defending.getDefense() + 1);
-        var message = "";
+        var result = attacking.attack(defending);
 
-        if (attackRoll > defenceRoll) {
-            var damage = attackRoll - defenceRoll;
-            defending.setHp(defending.getHp() - damage);
+        if (result.hit()) {
+            defending.setHp(defending.getHp() - result.damage());
             if (defending.getHp() <= 0) {
                 if (target == world.getPlayer()) {
                     Hud.addMessage("Zabił Cię " + attacker.getName(), Color.RED);
@@ -63,7 +69,7 @@ public class AttackAction implements Action {
                     world.getCurrentLevel().removeEntity(target);
                 }
             } else {
-                Hud.addMessage(attacker.getName() + " uderzył " + target.getName().toLowerCase() + " i zadał " + damage + " punktów obrażeń.", Color.PINK);
+                Hud.addMessage(attacker.getName() + " uderzył " + target.getName().toLowerCase() + " i zadał " + result.damage() + " punktów obrażeń.", Color.PINK);
             }
         } else {
             Hud.addMessage(attacker.getName() + " chybił " + target.getName().toLowerCase() + ".", Color.CYAN);

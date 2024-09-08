@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import java.security.SecureRandom;
 import pl.lonski.dzibdzikon.screen.GameScreen;
 
-/**
- * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
- */
+// TODO:
+// - pathfinding coś chyba nie bangla na 100%
+// - obrażenia jako liczby nad postaciami
 public class Dzibdzikon extends Game {
 
     public static boolean SHOW_WHOLE_LEVEL = false;

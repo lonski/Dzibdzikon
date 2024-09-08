@@ -19,18 +19,27 @@ public class LevelFactory {
 
     public static Level generate() {
 
-        var level = new Level(RoomMapGeneratorV2.generate(30, 20));
+        var level = new Level(RoomMapGeneratorV2.generate(20, 20));
 
-        for (Room room : level.getMap().getRooms()) {
-            int zombieCount = RANDOM.nextInt(0, 3);
-            while (zombieCount-- > 0) {
-                var pos = room.getRandomPosition();
-                if (level.getEntityAt(pos, null).isEmpty()) {
-                    var zombie = EntityFactory.createZombie();
-                    zombie.addFeature(FeatureType.POSITION, new Position(pos, 0, 10));
-                    level.addEntity(zombie);
-                }
-            }
+        // put zombies
+//        for (Room room : level.getMap().getRooms()) {
+//            int zombieCount = RANDOM.nextInt(0, 3);
+//            while (zombieCount-- > 0) {
+//                var pos = room.getRandomPosition();
+//                if (level.getEntityAt(pos, null).isEmpty()) {
+//                    var zombie = EntityFactory.createZombie();
+//                    zombie.addFeature(FeatureType.POSITION, new Position(pos, 0, 10));
+//                    level.addEntity(zombie);
+//                }
+//            }
+//        }
+
+        // glazolud
+        {
+            var room = level.getMap().getRooms().get(0);
+            var glazolud = EntityFactory.createGlazolud();
+            glazolud.addFeature(FeatureType.POSITION, new Position(room.getRandomPosition()));
+            level.addEntity(glazolud);
         }
 
         // put doors

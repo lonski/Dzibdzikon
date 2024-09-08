@@ -76,6 +76,9 @@ public class World {
             currentEntity = currentLevel.getEntities().get(nextEntityIdx);
         }
 
+        // update all entities animations
+        currentLevel.getEntities().forEach(e -> e.updateAnimation(delta, this));
+
         // update map visibility & fov
         currentLevel.getVisible().clear();
         player.<FieldOfView>getFeature(FeatureType.FOV).getVisible().forEach(p -> {
