@@ -1,11 +1,6 @@
 package pl.lonski.dzibdzikon;
 
 
-import static pl.lonski.dzibdzikon.Dzibdzikon.RANDOM;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import pl.lonski.dzibdzikon.entity.EntityFactory;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Position;
@@ -13,6 +8,12 @@ import pl.lonski.dzibdzikon.map.Glyph;
 import pl.lonski.dzibdzikon.map.Room;
 import pl.lonski.dzibdzikon.map.RoomMapGeneratorV2;
 import pl.lonski.dzibdzikon.map.TileGrid;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static pl.lonski.dzibdzikon.Dzibdzikon.RANDOM;
 
 public class LevelFactory {
 
@@ -35,17 +36,20 @@ public class LevelFactory {
         // put doors
         var map = level.getMap();
         Collections.shuffle(map.getRooms());
-        int minDoors = map.getRooms().size() / 5;
+        int minDoors = map.getRooms().size() / 2;
         int maxDoors = map.getRooms().size();
         for (Room room : map.getRooms().subList(0, RANDOM.nextInt(minDoors, maxDoors))) {
             var possibleDoors = findPossibleDoorPositions(map, room);
+            Collections.shuffle(possibleDoors);
             if (!possibleDoors.isEmpty()) {
-                Collections.shuffle(possibleDoors);
-                var possiblePos = possibleDoors.get(0);
-                if (level.getEntityAt(possiblePos.pos, null).isEmpty()) {
-                    var door = EntityFactory.createDoor();
-                    door.addFeature(FeatureType.POSITION, new Position(possiblePos.pos, possiblePos.rotation, 1));
-                    level.addEntity(door);
+                var doorInRoom = RANDOM.nextInt(1, possibleDoors.size() + 1);
+                for (int i = 0; i < doorInRoom; i++) {
+                    var possiblePos = possibleDoors.get(i);
+                    if (level.getEntityAt(possiblePos.pos, null).isEmpty()) {
+                        var door = EntityFactory.createDoor();
+                        door.addFeature(FeatureType.POSITION, new Position(possiblePos.pos, 0, 1));
+                        level.addEntity(door);
+                    }
                 }
             }
         }

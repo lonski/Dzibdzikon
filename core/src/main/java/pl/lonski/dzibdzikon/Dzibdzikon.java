@@ -14,8 +14,8 @@ import pl.lonski.dzibdzikon.screen.GameScreen;
 public class Dzibdzikon extends Game {
 
     public static boolean SHOW_WHOLE_LEVEL = false;
-    public static final int TILE_WIDTH = 29;
-    public static final int TILE_HEIGHT = 29;
+    public static final int TILE_WIDTH = 32;
+    public static final int TILE_HEIGHT = 32;
 
     public static SecureRandom RANDOM = new SecureRandom();
 
