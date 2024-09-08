@@ -1,10 +1,14 @@
 package pl.lonski.dzibdzikon;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+
 import java.util.HashSet;
 import java.util.Set;
 
 public class DzibdziInput {
+
+    public static boolean isShiftDown = false;
 
     public static Set<DzibdziInputListener> listeners = new HashSet<>();
 
@@ -12,12 +16,23 @@ public class DzibdziInput {
 
         @Override
         public boolean keyDown(int keycode) {
+            if (keycode == Input.Keys.SHIFT_LEFT) {
+                isShiftDown = true;
+                return true;
+            }
+
             listeners.forEach(l -> l.onInput(new DzibdziKey(keycode, false)));
+
             return true;
         }
 
+
         @Override
         public boolean keyUp(int keycode) {
+            if (keycode == Input.Keys.SHIFT_LEFT) {
+                isShiftDown = false;
+                return true;
+            }
             listeners.forEach(l -> l.onInput(new DzibdziKey(keycode, true)));
             return true;
         }

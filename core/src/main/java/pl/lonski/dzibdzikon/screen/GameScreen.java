@@ -27,7 +27,7 @@ public class GameScreen implements Screen {
 
     private Map<Glyph, TextureRegion> textures = new HashMap<>();
 
-    private World world;
+    private final World world;
 
     private BitmapFont font;
 
@@ -40,6 +40,7 @@ public class GameScreen implements Screen {
         textures.put(Glyph.ZOMBIE, new TextureRegion(new Texture("zombie.png")));
         textures.put(Glyph.DOOR_OPEN, new TextureRegion(new Texture("door_open.png")));
         textures.put(Glyph.DOOR_CLOSED, new TextureRegion(new Texture("door_closed.png")));
+        textures.put(Glyph.DOWNSTAIRS, new TextureRegion(new Texture("downstairs.png")));
 
         world = new World();
 

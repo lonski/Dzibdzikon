@@ -1,12 +1,12 @@
 package pl.lonski.dzibdzikon;
 
-import static pl.lonski.dzibdzikon.Dzibdzikon.SHOW_WHOLE_LEVEL;
-
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
 import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.Position;
+
+import static pl.lonski.dzibdzikon.Dzibdzikon.SHOW_WHOLE_LEVEL;
 
 public class World {
 
@@ -17,10 +17,7 @@ public class World {
 
     public World() {
         DzibdziInput.listeners.add(player.getInputListener());
-        currentLevel = LevelFactory.generate();
-        currentLevel.addEntity(player);
-        player.<Position>getFeature(FeatureType.POSITION)
-                .setCoords(currentLevel.getMap().getRandomRoom().getCenter());
+        nextLevel();
     }
 
     public Level getCurrentLevel() {
@@ -34,8 +31,8 @@ public class World {
     public boolean visible(Entity entity) {
         var entityPos = entity.<Position>getFeature(FeatureType.POSITION).getCoords();
         return SHOW_WHOLE_LEVEL
-                || getCurrentLevel().getVisible().contains(entityPos)
-                || (getCurrentLevel().getVisited().contains(entityPos) && entity.isVisibleInFog());
+            || getCurrentLevel().getVisible().contains(entityPos)
+            || (getCurrentLevel().getVisited().contains(entityPos) && entity.isVisibleInFog());
     }
 
     public void update(float delta) {
@@ -43,7 +40,7 @@ public class World {
         // update all entities
         // break if any entity is still performing an action or did not take a turn yet
         while (currentLevel.getEntities().indexOf(currentEntity)
-                < currentLevel.getEntities().size()) {
+            < currentLevel.getEntities().size()) {
 
             // no action, update entity to take turn
             if (currentEntity.getCurrentAction() == null) {
@@ -75,7 +72,7 @@ public class World {
             // recalculate the idx in case the entity was removed during the update
             var currentEntityIdx = currentLevel.getEntities().indexOf(currentEntity);
             var nextEntityIdx =
-                    (currentEntityIdx + 1) % currentLevel.getEntities().size();
+                (currentEntityIdx + 1) % currentLevel.getEntities().size();
             currentEntity = currentLevel.getEntities().get(nextEntityIdx);
         }
 
@@ -85,5 +82,18 @@ public class World {
             currentLevel.getVisited().add(p);
             currentLevel.getVisible().add(p);
         });
+    }
+
+    public void nextLevel() {
+        currentLevel = LevelFactory.generate();
+        currentLevel.addEntity(player);
+        int maxTries = 5;
+        while (maxTries-- > 0) {
+            var pos = currentLevel.getMap().getRandomRoom().getCenter();
+            if (currentLevel.getEntitiesAt(pos, null).isEmpty()) {
+                player.<Position>getFeature(FeatureType.POSITION).setCoords(pos);
+                break;
+            }
+        }
     }
 }

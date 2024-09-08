@@ -2,6 +2,7 @@ package pl.lonski.dzibdzikon.entity;
 
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.DoorOpenable;
+import pl.lonski.dzibdzikon.entity.features.Downstairs;
 import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.MonsterAi;
 import pl.lonski.dzibdzikon.map.Glyph;
@@ -23,10 +24,10 @@ public class EntityFactory {
         return door;
     }
 
-//    public static Entity createDownstairs() {
-//        var stairs = new Entity("Downstairs", Tile.DOWNSTAIRS);
-//        stairs.setVisibleInFog(true);
-//        stairs.addFeature(FeatureType.DOWNSTAIRS, new Downstairs());
-//        return stairs;
-//    }
+    public static Entity createDownstairs() {
+        var stairs = new Entity("Schody w dół", Glyph.DOWNSTAIRS);
+        stairs.setVisibleInFog(true);
+        stairs.addFeature(FeatureType.DOWNSTAIRS, new Downstairs());
+        return stairs;
+    }
 }

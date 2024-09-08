@@ -19,7 +19,7 @@ public class LevelFactory {
 
     public static Level generate() {
 
-        var level = new Level(RoomMapGeneratorV2.generate(80, 80));
+        var level = new Level(RoomMapGeneratorV2.generate(30, 20));
 
         for (Room room : level.getMap().getRooms()) {
             int zombieCount = RANDOM.nextInt(0, 3);
@@ -55,10 +55,10 @@ public class LevelFactory {
         }
 
         // put downstairs
-//        var downstairs = EntityFactory.createDownstairs();
-//        var downstairsPos = map.getRooms().get(0).getRandomPosition();
-//        downstairs.addFeature(FeatureType.POSITION, new Position(downstairsPos));
-//        level.addEntity(downstairs);
+        var downstairs = EntityFactory.createDownstairs();
+        var downstairsPos = map.getRooms().get(RANDOM.nextInt(map.getRooms().size())).getCenter();
+        downstairs.addFeature(FeatureType.POSITION, new Position(downstairsPos));
+        level.addEntity(downstairs);
 
         return level;
     }

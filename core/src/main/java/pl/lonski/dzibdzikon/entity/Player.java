@@ -1,8 +1,5 @@
 package pl.lonski.dzibdzikon.entity;
 
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
-
 import com.badlogic.gdx.Input;
 import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.Point;
@@ -18,6 +15,10 @@ import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.Openable;
 import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.map.Glyph;
+import pl.lonski.dzibdzikon.screen.Hud;
+
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
 
 public class Player extends Entity {
 
@@ -26,7 +27,8 @@ public class Player extends Entity {
 
     public Player() {
         super("Dzibdzik", Glyph.PLAYER);
-        addFeature(FeatureType.PLAYER, new EntityFeature() {});
+        addFeature(FeatureType.PLAYER, new EntityFeature() {
+        });
         addFeature(FeatureType.POSITION, new Position(new Point(0, 0), 0, 100));
         addFeature(FeatureType.FOV, new FieldOfView(this, 8));
         addFeature(FeatureType.ATTACKABLE, new Attackable(20, 20, 5, 0));
@@ -64,42 +66,51 @@ public class Player extends Entity {
                     // close
                     setCurrentAction(new ChooseDirectionAction(dir -> {
                         var openablePos = this.<Position>getFeature(FeatureType.POSITION)
-                                .getCoords()
-                                .add(dir);
+                            .getCoords()
+                            .add(dir);
 
                         return new CloseAction(this, openablePos);
                     }));
+                    input.reset();
+                } else if (input.key.keyCode() == Input.Keys.PERIOD && DzibdziInput.isShiftDown) {
+                    var myPos = this.<Position>getFeature(FeatureType.POSITION);
+                    if (world.getCurrentLevel().getEntityAt(myPos.getCoords(), FeatureType.DOWNSTAIRS).isPresent()) {
+                        Hud.addMessage("Schodzenie w dół...");
+                        world.nextLevel();
+                    } else {
+                        Hud.addMessage("Nie ma tutaj schodów po których można zejść.");
+                    }
                     input.reset();
                 }
             } else {
                 // handle position change
                 Position pos = getFeature(FeatureType.POSITION);
                 Point targetPos = new Point(
-                        pos.getCoords().x() + dPos.x(), pos.getCoords().y() + dPos.y());
+                    pos.getCoords().x() + dPos.x(), pos.getCoords().y() + dPos.y());
 
                 // move
                 if (!world.getCurrentLevel().isObstacle(targetPos)) {
                     setCurrentAction(new MoveAction(
-                            this,
-                            new Point(
-                                    pos.getCoords().x() + dPos.x(),
-                                    pos.getCoords().y() + dPos.y())));
+                        this,
+                        new Point(
+                            pos.getCoords().x() + dPos.x(),
+                            pos.getCoords().y() + dPos.y())));
                 } else {
 
                     // Check fight possibility
                     world.getCurrentLevel()
-                            .getEntityAt(targetPos, FeatureType.ATTACKABLE)
-                            .ifPresentOrElse(
-                                    mob -> setCurrentAction(new AttackAction(this, mob)),
-                                    // check openable
-                                //TODO: change to action
-                                    () -> world.getCurrentLevel()
-                                            .getEntityAt(targetPos, FeatureType.OPENABLE)
-                                            .ifPresent(openable -> {
-                                                openable.<Openable>getFeature(FeatureType.OPENABLE)
-                                                        .open(world);
-                                                input.reset();
-                                            }));
+                        .getEntityAt(targetPos, FeatureType.ATTACKABLE)
+                        .ifPresentOrElse(
+                            mob -> setCurrentAction(new AttackAction(this, mob)),
+                            // check openable
+                            //TODO: change to action
+                            () -> world.getCurrentLevel()
+                                .getEntityAt(targetPos, FeatureType.OPENABLE)
+                                .ifPresent(openable -> {
+                                    openable.<Openable>getFeature(FeatureType.OPENABLE)
+                                        .open(world);
+                                    input.reset();
+                                }));
 
                     //                    input.reset(); // do not process the same key again
                 }
@@ -110,7 +121,7 @@ public class Player extends Entity {
 
         Position pos = getFeature(FeatureType.POSITION);
         setCameraPosition(
-                new Point(pos.getCoords().x() * TILE_WIDTH, pos.getCoords().y() * TILE_HEIGHT));
+            new Point(pos.getCoords().x() * TILE_WIDTH, pos.getCoords().y() * TILE_HEIGHT));
     }
 
     //    public PlayerCommandResult hanldeCommand(World world, KeyEvent key) {
@@ -190,20 +201,20 @@ public class Player extends Entity {
         }
 
         if (input.key.keyCode() == Input.Keys.NUMPAD_4
-                || input.key.keyCode() == Input.Keys.LEFT
-                || input.key.keyCode() == Input.Keys.H) {
+            || input.key.keyCode() == Input.Keys.LEFT
+            || input.key.keyCode() == Input.Keys.H) {
             dpos = new Point(-1, 0);
         } else if (input.key.keyCode() == Input.Keys.NUMPAD_6
-                || input.key.keyCode() == Input.Keys.RIGHT
-                || input.key.keyCode() == Input.Keys.L) {
+            || input.key.keyCode() == Input.Keys.RIGHT
+            || input.key.keyCode() == Input.Keys.L) {
             dpos = new Point(1, 0);
         } else if (input.key.keyCode() == Input.Keys.NUMPAD_8
-                || input.key.keyCode() == Input.Keys.UP
-                || input.key.keyCode() == Input.Keys.K) {
+            || input.key.keyCode() == Input.Keys.UP
+            || input.key.keyCode() == Input.Keys.K) {
             dpos = new Point(0, 1);
         } else if (input.key.keyCode() == Input.Keys.NUMPAD_2
-                || input.key.keyCode() == Input.Keys.DOWN
-                || input.key.keyCode() == Input.Keys.J) {
+            || input.key.keyCode() == Input.Keys.DOWN
+            || input.key.keyCode() == Input.Keys.J) {
             dpos = new Point(0, -1);
         } else if (input.key.keyCode() == Input.Keys.NUMPAD_7 || input.key.keyCode() == Input.Keys.Y) {
             dpos = new Point(-1, 1);
