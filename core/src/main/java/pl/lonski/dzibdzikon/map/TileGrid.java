@@ -1,9 +1,8 @@
 package pl.lonski.dzibdzikon.map;
 
-import pl.lonski.dzibdzikon.Point;
-
 import java.util.ArrayList;
 import java.util.List;
+import pl.lonski.dzibdzikon.Point;
 
 public class TileGrid {
     private final int width;
@@ -64,5 +63,9 @@ public class TileGrid {
 
     public void setTile(int x, int y, Glyph tile) {
         tiles[x][y] = tile;
+    }
+
+    public boolean isBorderTile(Point pos) {
+        return pos.x() == 0 || pos.y() == 0 || pos.x() == width - 1 || pos.y() == height - 1;
     }
 }

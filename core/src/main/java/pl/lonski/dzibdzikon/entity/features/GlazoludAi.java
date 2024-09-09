@@ -1,6 +1,7 @@
 package pl.lonski.dzibdzikon.entity.features;
 
 import com.badlogic.gdx.graphics.Color;
+import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.MoveAction;
@@ -13,7 +14,7 @@ import pl.lonski.dzibdzikon.screen.Hud;
 
 public class GlazoludAi extends MonsterAi {
 
-    private boolean rolledARock = false;
+    private int rockRollCooldown = 0;
 
     public GlazoludAi(Entity entity) {
         super(entity);
@@ -41,7 +42,8 @@ public class GlazoludAi extends MonsterAi {
     }
 
     private boolean rollRock(World world) {
-        if (rolledARock) {
+        if (rockRollCooldown > 0) {
+            rockRollCooldown--;
             return false;
         }
 
@@ -64,8 +66,7 @@ public class GlazoludAi extends MonsterAi {
         Hud.addMessage("Głazolud rzuca ogromny głaz!", Color.ORANGE);
 
         entity.setCurrentAction(new MoveAction(rock, rockPos));
-
-        rolledARock = true;
+        rockRollCooldown = Dzibdzikon.RANDOM.nextInt(8, 16);
 
         return true;
     }
