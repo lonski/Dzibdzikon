@@ -33,7 +33,8 @@ public class Player extends Entity {
         });
         addFeature(FeatureType.POSITION, new Position(new Point(0, 0), 0, 100));
         addFeature(FeatureType.FOV, new FieldOfView(this, 8));
-        addFeature(FeatureType.ATTACKABLE, new Attackable(20, 20, 5, 0));
+        addFeature(FeatureType.ATTACKABLE, new Attackable(1000, 1000, 5, 0));
+        setSpeed(1f);
     }
 
     public Point getCameraPosition() {
@@ -255,4 +256,6 @@ public class Player extends Entity {
             return key == null;
         }
     }
+
+
 }

@@ -1,7 +1,6 @@
 package pl.lonski.dzibdzikon.entity;
 
 import pl.lonski.dzibdzikon.Point;
-import pl.lonski.dzibdzikon.animation.RollingAnimation;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.DoorOpenable;
 import pl.lonski.dzibdzikon.entity.features.Downstairs;
@@ -22,8 +21,8 @@ public class EntityFactory {
         return zombie;
     }
 
-    public static Entity createDoor() {
-        var door = new Entity("Drzwi", Glyph.DOOR_CLOSED);
+    public static Entity createDoor(boolean opened) {
+        var door = new Entity("Drzwi", opened ? Glyph.DOOR_OPEN : Glyph.DOOR_CLOSED);
         door.setVisibleInFog(true);
         door.addFeature(FeatureType.OPENABLE, new DoorOpenable(door));
         return door;
@@ -38,16 +37,18 @@ public class EntityFactory {
 
     public static Entity createGlazolud() {
         var glazolud = new Entity("Głazolud", Glyph.GLAZOLUD);
-        glazolud.addFeature(FeatureType.ATTACKABLE, new Attackable(20, 20, 2, 1));
+        glazolud.addFeature(FeatureType.ATTACKABLE, new Attackable(15, 15, 2, 1));
         glazolud.addFeature(FeatureType.AI, new GlazoludAi(glazolud));
         glazolud.addFeature(FeatureType.FOV, new FieldOfView(glazolud, 8));
+        glazolud.setSpeed(0.8f);
         return glazolud;
     }
 
     public static Entity createRollingRock(Point direction) {
         var rock = new Entity("Głaz", Glyph.BIG_ROCK);
-        rock.addFeature(FeatureType.ATTACKABLE, new RollingRockAttackable(30, 30, 10));
+        rock.addFeature(FeatureType.ATTACKABLE, new RollingRockAttackable(30, 30, 8));
         rock.addFeature(FeatureType.AI, new RollingRockAi(rock, direction));
+        rock.setSpeed(2f);
         return rock;
     }
 }

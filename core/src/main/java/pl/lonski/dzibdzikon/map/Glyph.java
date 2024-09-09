@@ -1,7 +1,6 @@
 package pl.lonski.dzibdzikon.map;
 
 public enum Glyph {
-
     WALL("wall_1.png"),
     FLOOR("floor_1.png"),
     PLAYER("dzibdzik.png"),
@@ -24,5 +23,9 @@ public enum Glyph {
 
     public boolean isWall() {
         return this == WALL;
+    }
+
+    public boolean isFloor() {
+        return this == FLOOR;
     }
 }

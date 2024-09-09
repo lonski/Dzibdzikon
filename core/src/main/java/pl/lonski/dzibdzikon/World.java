@@ -1,12 +1,14 @@
 package pl.lonski.dzibdzikon;
 
+import static pl.lonski.dzibdzikon.Dzibdzikon.SHOW_WHOLE_LEVEL;
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
+
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
 import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.Position;
-
-import static pl.lonski.dzibdzikon.Dzibdzikon.SHOW_WHOLE_LEVEL;
 
 public class World {
 
@@ -31,20 +33,36 @@ public class World {
     public boolean visible(Entity entity) {
         var entityPos = entity.<Position>getFeature(FeatureType.POSITION).getCoords();
         return SHOW_WHOLE_LEVEL
-            || getCurrentLevel().getVisible().contains(entityPos)
-            || (getCurrentLevel().getVisited().contains(entityPos) && entity.isVisibleInFog());
+                || getCurrentLevel().getVisible().contains(entityPos)
+                || (getCurrentLevel().getVisited().contains(entityPos) && entity.isVisibleInFog());
     }
 
     public void update(float delta) {
+        updateWithEnergy(delta);
+    }
 
+    public void updateWithEnergy(float delta) {
         // update all entities
-        // break if any entity is still performing an action or did not take a turn yet
         while (currentLevel.getEntities().indexOf(currentEntity)
-            < currentLevel.getEntities().size()) {
+                < currentLevel.getEntities().size()) {
 
-            // no action, update entity to take turn
+            // take new turn
             if (currentEntity.getCurrentAction() == null) {
+
+                // cant take turn because has no energy, recharge energy and proceed to next entity
+                if (!currentEntity.canTakeAction()) {
+                    currentEntity.rechargeEnergy();
+                    proceedToNextEntity();
+                    continue;
+                }
+
+                // take turn, update entity to get action
                 currentEntity.update(delta, this);
+
+                // new action set, use energy for it
+                if (currentEntity.getCurrentAction() != null) {
+                    currentEntity.useEnergyForAction();
+                }
             }
 
             // entity did not take a turn, give it another chance
@@ -52,28 +70,27 @@ public class World {
                 break;
             }
 
-            // perform action
+            // perform the action
             currentEntity.getCurrentAction().update(delta, this);
 
-            // action not done yet
+            // action not done yet, break to continue at the next update
             if (!currentEntity.getCurrentAction().isDone()) {
                 break;
             }
 
-            // action failed, clear it, but do not take turn
+            // action failed, clear it, do not take turn - break, to acquire new action on next update
             if (!currentEntity.getCurrentAction().succeeded()) {
                 currentEntity.setCurrentAction(null);
                 break;
             }
 
+            // action succeeded, clear it to make ready for next turn
             currentEntity.setCurrentAction(null);
 
-            // proceed to next entity
-            // recalculate the idx in case the entity was removed during the update
-            var currentEntityIdx = currentLevel.getEntities().indexOf(currentEntity);
-            var nextEntityIdx =
-                (currentEntityIdx + 1) % currentLevel.getEntities().size();
-            currentEntity = currentLevel.getEntities().get(nextEntityIdx);
+            // check if entity can take another action, if not proceed to next entity
+            if (!currentEntity.canTakeAction()) {
+                proceedToNextEntity();
+            }
         }
 
         // update all entities animations
@@ -87,6 +104,13 @@ public class World {
         });
     }
 
+    private void proceedToNextEntity() {
+        // calculate index to handle entities removed during update
+        var currentEntityIdx = currentLevel.getEntities().indexOf(currentEntity);
+        var nextEntityIdx = (currentEntityIdx + 1) % currentLevel.getEntities().size();
+        currentEntity = currentLevel.getEntities().get(nextEntityIdx);
+    }
+
     public void nextLevel() {
         currentLevel = LevelFactory.generate();
         currentLevel.addEntity(player);
@@ -95,6 +119,7 @@ public class World {
             var pos = currentLevel.getMap().getRandomRoom().getCenter();
             if (currentLevel.getEntitiesAt(pos, null).isEmpty()) {
                 player.<Position>getFeature(FeatureType.POSITION).setCoords(pos);
+                player.setCameraPosition(new Point(pos.x() * TILE_WIDTH, pos.y() * TILE_HEIGHT));
                 break;
             }
         }

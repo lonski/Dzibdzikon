@@ -1,5 +1,7 @@
 package pl.lonski.dzibdzikon.entity;
 
+import java.util.HashMap;
+import java.util.Map;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.Action;
 import pl.lonski.dzibdzikon.action.NoOpAction;
@@ -8,21 +10,24 @@ import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.EntityFeature;
 import pl.lonski.dzibdzikon.map.Glyph;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Entity {
 
     private final Map<FeatureType, EntityFeature> features = new HashMap<>();
-    private String name;
+    private final String name;
     private Glyph glyph;
     private boolean visibleInFog = false;
     private Action currentAction;
     private Animation animation;
+    private double speed = 1.0;
+    private double energy = 0.0;
 
     public Entity(String name, Glyph glyph) {
         this.name = name;
         this.glyph = glyph;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
     }
 
     public void setAnimation(Animation animation) {
@@ -70,6 +75,7 @@ public class Entity {
 
     public void update(float delta, World world) {
         features.values().forEach(f -> f.update(delta, world));
+        // make sure non-player entity always take a turn
         if (getFeature(FeatureType.PLAYER) == null && currentAction == null) {
             setCurrentAction(new NoOpAction());
         }
@@ -84,5 +90,17 @@ public class Entity {
     public boolean alive() {
         Attackable attackable = getFeature(FeatureType.ATTACKABLE);
         return attackable != null && attackable.getHp() > 0;
+    }
+
+    public void rechargeEnergy() {
+        this.energy += speed;
+    }
+
+    public boolean canTakeAction() {
+        return energy >= 1.0;
+    }
+
+    public void useEnergyForAction() {
+        energy -= 1.0;
     }
 }

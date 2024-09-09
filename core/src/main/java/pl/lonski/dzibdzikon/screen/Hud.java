@@ -20,7 +20,7 @@ import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
 
 public class Hud {
 
-    private static final int MAX_MESSAGES = 3;
+    private static final int MAX_MESSAGES = 5;
     private static final List<Message> messages = new ArrayList<>();
     private static String actionMessage = "";
     private final Dzibdzikon game;
