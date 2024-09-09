@@ -6,31 +6,29 @@ import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Position;
 
-public class RollingAnimation implements Animation {
+public class FallAnimation implements Animation {
 
-    private final int rollSpeedDeg;
+    private float speed = 0.01f;
     private float time = 0;
     private final Entity entity;
+    private final Position entityPos;
+    private float targetRotation = 90;
 
-    public RollingAnimation(int rollSpeedDeg, Entity entity) {
-        this.rollSpeedDeg = rollSpeedDeg;
+    public FallAnimation(Entity entity) {
         this.entity = entity;
+        this.entityPos = entity.getFeature(FeatureType.POSITION);
+        if (entityPos.getRotation() >= targetRotation) {
+            targetRotation += 90;
+            targetRotation = targetRotation % 360;
+        }
     }
 
     @Override
     public void update(float delta, World world) {
-        Position pos = entity.getFeature(FeatureType.POSITION);
-
-        // not in player view, skip
-        if (!world.getCurrentLevel().getVisible().contains(pos.getCoords())) {
-            return;
-        }
-
         time += delta;
-        float rollTime = 0.01f;
-        if (time >= rollTime) {
+        if (time >= speed) {
             time = 0;
-            pos.setRotation((pos.getRotation() + rollSpeedDeg) % 360);
+            entityPos.setRotation((entityPos.getRotation() + 10) % 360);
         }
     }
 
@@ -39,6 +37,6 @@ public class RollingAnimation implements Animation {
 
     @Override
     public boolean isDone() {
-        return false;
+        return entityPos.getRotation() >= targetRotation;
     }
 }

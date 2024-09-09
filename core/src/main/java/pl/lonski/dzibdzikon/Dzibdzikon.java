@@ -10,7 +10,7 @@ import pl.lonski.dzibdzikon.screen.GameScreen;
 
 // TODO:
 // - pathfinding coś chyba nie bangla na 100%
-// - obrażenia jako liczby nad postaciami
+// - heal over time
 public class Dzibdzikon extends Game {
 
     public static boolean SHOW_WHOLE_LEVEL = false;
@@ -21,14 +21,16 @@ public class Dzibdzikon extends Game {
 
     public SpriteBatch batch;
     public ShapeRenderer shapeRenderer;
-    public BitmapFont font;
+    public BitmapFont fontItalic;
+    public BitmapFont fontBoldItalic;
     public OrthographicCamera camera;
 
     @Override
     public void create() {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-        font = FontUtils.createFont("font/DejaVuSerif-Italic.ttf", 15);
+        fontItalic = FontUtils.createFont("font/DejaVuSerif-Italic.ttf", 15);
+        fontBoldItalic = FontUtils.createFont("font/DejaVuSerif-BoldItalic.ttf", 15);
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
@@ -46,6 +48,6 @@ public class Dzibdzikon extends Game {
     public void dispose() {
         batch.dispose();
         shapeRenderer.dispose();
-        font.dispose();
+        fontItalic.dispose();
     }
 }

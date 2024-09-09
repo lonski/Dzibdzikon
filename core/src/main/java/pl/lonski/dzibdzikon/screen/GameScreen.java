@@ -130,6 +130,7 @@ public class GameScreen implements Screen {
                     1.0f,
                     pos.getRotation() // Rotation angle in degrees
                 );
+                entity.getAnimations().forEach(a -> a.render(game));
             });
 
         game.batch.end();

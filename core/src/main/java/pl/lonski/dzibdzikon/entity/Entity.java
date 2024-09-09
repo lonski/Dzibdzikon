@@ -1,6 +1,8 @@
 package pl.lonski.dzibdzikon.entity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.Action;
@@ -17,7 +19,7 @@ public class Entity {
     private Glyph glyph;
     private boolean visibleInFog = false;
     private Action currentAction;
-    private Animation animation;
+    private List<Animation> animations = new ArrayList<>();
     private double speed = 1.0;
     private double energy = 0.0;
 
@@ -30,8 +32,8 @@ public class Entity {
         this.speed = speed;
     }
 
-    public void setAnimation(Animation animation) {
-        this.animation = animation;
+    public void addAnimation(Animation animation) {
+        this.animations.add(animation);
     }
 
     public void setGlyph(Glyph glyph) {
@@ -82,9 +84,12 @@ public class Entity {
     }
 
     public void updateAnimation(float delta, World world) {
-        if (animation != null) {
-            animation.update(delta, world, this);
-        }
+        animations.forEach(a -> a.update(delta, world));
+        animations.removeIf(Animation::isDone);
+    }
+
+    public List<Animation> getAnimations() {
+        return animations;
     }
 
     public boolean alive() {

@@ -1,7 +1,9 @@
 package pl.lonski.dzibdzikon.action;
 
 import com.badlogic.gdx.graphics.Color;
+import java.util.List;
 import pl.lonski.dzibdzikon.World;
+import pl.lonski.dzibdzikon.animation.TextFlowUpAnimation;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
@@ -44,28 +46,24 @@ public class AttackAction implements Action {
     private void doFight(World world) {
         Attackable attacking = attacker.getFeature(FeatureType.ATTACKABLE);
         Attackable defending = target.getFeature(FeatureType.ATTACKABLE);
+        var targetPos = target.<Position>getFeature(FeatureType.POSITION).getCoords();
 
         var result = attacking.attack(defending);
 
         if (result.hit()) {
             defending.setHp(defending.getHp() - result.damage());
+            target.addAnimation(new TextFlowUpAnimation("-" + result.damage(), targetPos, Color.SCARLET));
             if (defending.getHp() <= 0) {
                 if (target == world.getPlayer()) {
                     Hud.addMessage("Zabił Cię " + attacker.getName(), Color.RED);
                     // TODO: game over
                 } else {
-                    Hud.addMessage(
-                            attacker.getName() + " zabił " + target.getName().toLowerCase(), Color.RED);
-                    world.getCurrentLevel().removeEntity(target);
+                    target.setCurrentAction(
+                            new ChainAction(List.of(new FallAnimationAction(target), new RemoveEntityAction(target))));
                 }
-            } else {
-                Hud.addMessage(
-                        attacker.getName() + " uderzył " + target.getName().toLowerCase() + " i zadał "
-                                + result.damage() + " punktów obrażeń.",
-                        Color.PINK);
             }
         } else {
-            Hud.addMessage(attacker.getName() + " chybił " + target.getName().toLowerCase() + ".", Color.CYAN);
+            target.addAnimation(new TextFlowUpAnimation("unik", targetPos, Color.YELLOW));
         }
     }
 
