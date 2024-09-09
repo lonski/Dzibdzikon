@@ -1,6 +1,7 @@
 package pl.lonski.dzibdzikon.entity.features;
 
 import com.badlogic.gdx.graphics.Color;
+import java.util.List;
 import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
@@ -13,8 +14,6 @@ import pl.lonski.dzibdzikon.action.RemoveEntityAction;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.screen.Hud;
-
-import java.util.List;
 
 public class RollingRockAi extends MonsterAi {
 
@@ -40,39 +39,46 @@ public class RollingRockAi extends MonsterAi {
             return new MoveAction(entity, newPos);
         }
 
+        // if on next rock position is a mob
         var mobOpt = world.getCurrentLevel().getEntityAt(newPos, FeatureType.ATTACKABLE);
         if (mobOpt.isPresent()) {
             var mob = mobOpt.get();
+            var mobPos = mob.<Position>getFeature(FeatureType.POSITION);
 
             // try to push back mob
             var nextRollingRockPos = newPos.add(direction);
             if (!world.getCurrentLevel().isObstacle(nextRollingRockPos, true)) {
-                mob.<Position>getFeature(FeatureType.POSITION).setCoords(nextRollingRockPos);
-                return new ChainAction(List.of(
-                    new MoveAction(entity, newPos),
-                    new AttackAction(entity, mob, false)
-                ));
+                mobPos.setCoords(nextRollingRockPos);
+                return new ChainAction(List.of(new MoveAction(entity, newPos), new AttackAction(entity, mob, false)));
             }
 
-            //// cant push back mob
-
-            // tile next to mob is wall
+            // cant push back mob because tile next to mob is wall
             if (world.getCurrentLevel().getMap().getTile(nextRollingRockPos).isWall()) {
                 return new ChainAction(List.of(
-                    new MoveAction(entity, newPos),
-                    new AttackAction(entity, mob, false),
-                    new RemoveEntityAction(entity),
-                    new CustomAction(() -> Hud.addMessage("Głaz uderza w ścianę i rozbija się na kawałki", Color.ORANGE))
-                ));
+                        new MoveAction(entity, newPos),
+                        new AttackAction(entity, mob, false),
+                        new RemoveEntityAction(entity),
+                        new CustomAction(
+                                () -> Hud.addMessage("Głaz uderza w ścianę i rozbija się na kawałki", Color.ORANGE))));
             }
 
-            // another blocking entity behind this mob
-            // TODO
-            // - roll over?
-            // - add destroying openables?
-            // - increase speed? introduce game speed...
+            // cant push back mob because another blocking entity behind this mob
+            // - roll over the mob
+            return new ChainAction(List.of(new MoveAction(entity, newPos), new AttackAction(entity, mob, false)));
         }
 
+        // if on next rock position is a openable
+        // - it has to be 'obstacle' because of check above at line 39
+        var openableOpt = world.getCurrentLevel().getEntityAt(newPos, FeatureType.OPENABLE);
+        if (openableOpt.isPresent()) {
+            return new ChainAction(List.of(new MoveAction(entity, newPos), new CustomAction(() -> {
+                var openable = openableOpt.get();
+                world.getCurrentLevel().removeEntity(openable);
+                Hud.addMessage("Głaz niszczy " + openable.getName().toLowerCase() + "!", Color.ORANGE);
+            })));
+        }
+
+        // if on next rock position is a wall
         if (world.getCurrentLevel().getMap().getTile(newPos).isWall()) {
             if (Dzibdzikon.RANDOM.nextBoolean()) {
                 return new CustomAction(() -> {
