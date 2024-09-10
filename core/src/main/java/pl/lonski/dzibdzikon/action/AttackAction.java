@@ -1,14 +1,15 @@
 package pl.lonski.dzibdzikon.action;
 
 import com.badlogic.gdx.graphics.Color;
-import java.util.List;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.animation.TextFlowUpAnimation;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
+import pl.lonski.dzibdzikon.entity.Player;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.Position;
-import pl.lonski.dzibdzikon.screen.Hud;
+
+import java.util.List;
 
 public class AttackAction implements Action {
 
@@ -53,14 +54,9 @@ public class AttackAction implements Action {
         if (result.hit()) {
             defending.setHp(defending.getHp() - result.damage());
             target.addAnimation(new TextFlowUpAnimation("-" + result.damage(), targetPos, Color.SCARLET));
-            if (defending.getHp() <= 0) {
-                if (target == world.getPlayer()) {
-                    Hud.addMessage("Zabił Cię " + attacker.getName(), Color.RED);
-                    // TODO: game over
-                } else {
-                    target.setCurrentAction(
-                            new ChainAction(List.of(new FallAnimationAction(target), new RemoveEntityAction(target))));
-                }
+            if (defending.getHp() <= 0 && !(target instanceof Player)) {
+                target.setCurrentAction(
+                    new ChainAction(List.of(new FallAnimationAction(target), new RemoveEntityAction(target))));
             }
         } else {
             target.addAnimation(new TextFlowUpAnimation("unik", targetPos, Color.YELLOW));

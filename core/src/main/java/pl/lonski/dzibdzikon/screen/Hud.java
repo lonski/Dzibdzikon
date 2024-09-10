@@ -29,9 +29,9 @@ public class Hud {
 
     public Hud(Dzibdzikon game) {
         this.game = game;
-
         this.hpBar = new ProgressBar(
             100, 10, new Color(0x880000ff), Color.RED);
+        messages.clear();
     }
 
     public static void addMessage(String message) {

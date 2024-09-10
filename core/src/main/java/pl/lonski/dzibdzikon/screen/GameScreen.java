@@ -1,10 +1,6 @@
 package pl.lonski.dzibdzikon.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.Dzibdzikon;
@@ -12,33 +8,18 @@ import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Position;
-import pl.lonski.dzibdzikon.map.Glyph;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static pl.lonski.dzibdzikon.Dzibdzikon.SHOW_WHOLE_LEVEL;
 import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
 import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
 
-public class GameScreen implements Screen {
+public class GameScreen extends DzibdzikonScreen {
 
-    private final Dzibdzikon game;
     private final Hud hud;
-
-    private Map<Glyph, TextureRegion> textures = new HashMap<>();
-
     private final World world;
 
-    private BitmapFont font;
-
     public GameScreen(Dzibdzikon game) {
-        this.game = game;
-
-        for (Glyph glyph : Glyph.values()) {
-            textures.put(glyph, new TextureRegion(new Texture(glyph.getFilename())));
-        }
-
+        super(game);
         world = new World();
         hud = new Hud(game);
 
@@ -46,14 +27,14 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void show() {
-    }
-
-    @Override
     public void render(float delta) {
 
         // update
         world.update(delta);
+
+        if (!world.getPlayer().alive()) {
+            game.gameOver();
+        }
 
         game.camera.position.set(
             world.getPlayer().getCameraPosition().x(),
@@ -71,7 +52,7 @@ public class GameScreen implements Screen {
             for (int x = 0; x < world.getCurrentLevel().getMap().getWidth(); x++) {
                 var pos = new Point(x, y);
                 var renderPos = new Point(x * TILE_WIDTH, y * TILE_HEIGHT);
-                var texture = textures.get(world.getCurrentLevel().getMap().getTile(x, y));
+                var texture = game.textures.get(world.getCurrentLevel().getMap().getTile(x, y));
                 float originX = texture.getRegionWidth() / 2f;
                 float originY = texture.getRegionHeight() / 2f;
 
@@ -115,7 +96,7 @@ public class GameScreen implements Screen {
             })
             .forEach(entity -> {
                 var pos = entity.<Position>getFeature(FeatureType.POSITION);
-                var tex = textures.get(entity.getGlyph());
+                var tex = game.textures.get(entity.getGlyph());
                 float originX = tex.getRegionWidth() / 2f;
                 float originY = tex.getRegionHeight() / 2f;
                 game.batch.draw(
@@ -136,31 +117,5 @@ public class GameScreen implements Screen {
         game.batch.end();
 
         hud.render(delta);
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        float aspectRatio = (float) width / (float) height;
-        game.camera.setToOrtho(false, Gdx.graphics.getWidth() * aspectRatio, Gdx.graphics.getHeight());
-        game.camera.viewportWidth = Gdx.graphics.getWidth();
-        game.camera.viewportHeight = Gdx.graphics.getHeight();
-        game.camera.update();
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void hide() {
-    }
-
-    @Override
-    public void dispose() {
-        textures.values().forEach(t -> t.getTexture().dispose());
     }
 }

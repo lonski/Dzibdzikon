@@ -2,17 +2,25 @@ package pl.lonski.dzibdzikon;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import java.security.SecureRandom;
+import pl.lonski.dzibdzikon.map.Glyph;
+import pl.lonski.dzibdzikon.screen.GameMenu;
+import pl.lonski.dzibdzikon.screen.GameOver;
 import pl.lonski.dzibdzikon.screen.GameScreen;
+
+import java.security.SecureRandom;
+import java.util.HashMap;
+import java.util.Map;
 
 // TODO:
 // - pathfinding coś chyba nie bangla na 100%
 public class Dzibdzikon extends Game {
 
-    public static boolean SHOW_WHOLE_LEVEL = true;
+    public static boolean SHOW_WHOLE_LEVEL = false;
     public static final int TILE_WIDTH = 32;
     public static final int TILE_HEIGHT = 32;
 
@@ -22,7 +30,9 @@ public class Dzibdzikon extends Game {
     public ShapeRenderer shapeRenderer;
     public BitmapFont fontItalic;
     public BitmapFont fontBoldItalic;
+    public BitmapFont bigFont;
     public OrthographicCamera camera;
+    public final Map<Glyph, TextureRegion> textures = new HashMap<>();
 
     @Override
     public void create() {
@@ -30,17 +40,21 @@ public class Dzibdzikon extends Game {
         shapeRenderer = new ShapeRenderer();
         fontItalic = FontUtils.createFont("font/DejaVuSerif-Italic.ttf", 15);
         fontBoldItalic = FontUtils.createFont("font/DejaVuSerif-BoldItalic.ttf", 15);
+        bigFont = FontUtils.createFont("font/DejaVuSerif-Italic.ttf", 32);
+
+        for (Glyph glyph : Glyph.values()) {
+            textures.put(glyph, new TextureRegion(new Texture(glyph.getFilename())));
+        }
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 480);
 
-        this.setScreen(new GameScreen(this));
+        gameMenu();
     }
 
     @Override
     public void render() {
         super.render();
-
     }
 
     @Override
@@ -48,5 +62,20 @@ public class Dzibdzikon extends Game {
         batch.dispose();
         shapeRenderer.dispose();
         fontItalic.dispose();
+        fontBoldItalic.dispose();
+        bigFont.dispose();
+        textures.values().forEach(t -> t.getTexture().dispose());
+    }
+
+    public void startNewGame() {
+        this.setScreen(new GameScreen(this));
+    }
+
+    public void gameMenu() {
+        setScreen(new GameMenu(this));
+    }
+
+    public void gameOver() {
+        setScreen(new GameOver(this));
     }
 }
