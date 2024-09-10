@@ -12,6 +12,7 @@ import pl.lonski.dzibdzikon.entity.features.Position;
 
 public class World {
 
+    private long turn = 0;
     private Level currentLevel;
 
     private final Player player = new Player();
@@ -38,10 +39,6 @@ public class World {
     }
 
     public void update(float delta) {
-        updateWithEnergy(delta);
-    }
-
-    public void updateWithEnergy(float delta) {
         // update all entities
         while (currentLevel.getEntities().indexOf(currentEntity)
                 < currentLevel.getEntities().size()) {
@@ -89,6 +86,9 @@ public class World {
 
             // check if entity can take another action, if not proceed to next entity
             if (!currentEntity.canTakeAction()) {
+                if (isLastEntity()) {
+                    turn++;
+                }
                 proceedToNextEntity();
             }
         }
@@ -111,6 +111,11 @@ public class World {
         currentEntity = currentLevel.getEntities().get(nextEntityIdx);
     }
 
+    private boolean isLastEntity() {
+        var currentEntityIdx = currentLevel.getEntities().indexOf(currentEntity);
+        return currentEntityIdx == currentLevel.getEntities().size() - 1;
+    }
+
     public void nextLevel() {
         currentLevel = LevelFactory.generate();
         currentLevel.addEntity(player);
@@ -123,5 +128,9 @@ public class World {
                 break;
             }
         }
+    }
+
+    public long getTurn() {
+        return turn;
     }
 }

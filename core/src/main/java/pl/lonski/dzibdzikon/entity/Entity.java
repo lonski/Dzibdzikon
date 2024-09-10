@@ -108,4 +108,8 @@ public class Entity {
     public void useEnergyForAction() {
         energy -= 1.0;
     }
+
+    public boolean isHostile(Entity entity) {
+        return entity instanceof Player;
+    }
 }

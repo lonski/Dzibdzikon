@@ -7,5 +7,6 @@ public enum FeatureType {
     ATTACKABLE,
     AI,
     OPENABLE,
-    DOWNSTAIRS
+    DOWNSTAIRS,
+    REGENERATION
 }

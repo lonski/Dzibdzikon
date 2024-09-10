@@ -7,6 +7,7 @@ import pl.lonski.dzibdzikon.entity.features.Downstairs;
 import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.GlazoludAi;
 import pl.lonski.dzibdzikon.entity.features.MonsterAi;
+import pl.lonski.dzibdzikon.entity.features.Regeneration;
 import pl.lonski.dzibdzikon.entity.features.RollingRockAi;
 import pl.lonski.dzibdzikon.entity.features.RollingRockAttackable;
 import pl.lonski.dzibdzikon.map.Glyph;
@@ -15,9 +16,10 @@ public class EntityFactory {
 
     public static Entity createZombie() {
         var zombie = new Entity("Zombie", Glyph.ZOMBIE);
-        zombie.addFeature(FeatureType.ATTACKABLE, new Attackable(10, 10, 1, 0));
+        zombie.addFeature(FeatureType.ATTACKABLE, new Attackable(8, 10, 1, 0));
         zombie.addFeature(FeatureType.AI, new MonsterAi(zombie));
         zombie.addFeature(FeatureType.FOV, new FieldOfView(zombie, 8));
+        zombie.addFeature(FeatureType.REGENERATION, new Regeneration(7, zombie));
         return zombie;
     }
 
@@ -40,6 +42,7 @@ public class EntityFactory {
         glazolud.addFeature(FeatureType.ATTACKABLE, new Attackable(15, 15, 2, 1));
         glazolud.addFeature(FeatureType.AI, new GlazoludAi(glazolud));
         glazolud.addFeature(FeatureType.FOV, new FieldOfView(glazolud, 8));
+        glazolud.addFeature(FeatureType.REGENERATION, new Regeneration(20, glazolud));
         glazolud.setSpeed(0.8f);
         return glazolud;
     }

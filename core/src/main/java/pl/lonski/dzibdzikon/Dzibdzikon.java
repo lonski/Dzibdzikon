@@ -10,10 +10,9 @@ import pl.lonski.dzibdzikon.screen.GameScreen;
 
 // TODO:
 // - pathfinding coś chyba nie bangla na 100%
-// - heal over time
 public class Dzibdzikon extends Game {
 
-    public static boolean SHOW_WHOLE_LEVEL = false;
+    public static boolean SHOW_WHOLE_LEVEL = true;
     public static final int TILE_WIDTH = 32;
     public static final int TILE_HEIGHT = 32;
 

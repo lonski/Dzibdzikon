@@ -13,6 +13,7 @@ public class FieldOfView implements EntityFeature {
     private final int radius;
     private final Entity entity;
     private final Set<Point> visible = new HashSet<>();
+    private final Set<Point> hostiles = new HashSet<>();
 
     public FieldOfView(Entity entity, int radius) {
         this.entity = entity;
@@ -21,6 +22,10 @@ public class FieldOfView implements EntityFeature {
 
     public Set<Point> getVisible() {
         return visible;
+    }
+
+    public Set<Point> getHostiles() {
+        return hostiles;
     }
 
     @Override
@@ -32,6 +37,7 @@ public class FieldOfView implements EntityFeature {
         var y1 = pos.getCoords().y();
 
         visible.clear();
+        hostiles.clear();
 
         for (int ox = -radius; ox <= radius; ox++) {
             for (int oy = -radius; oy <= radius; oy++) {
@@ -41,6 +47,11 @@ public class FieldOfView implements EntityFeature {
                         visible.add(p);
                         if (world.getCurrentLevel().isOpaque(p)) {
                             break;
+                        }
+                        for (Entity e : world.getCurrentLevel().getEntitiesAt(p, FeatureType.ATTACKABLE)) {
+                            if (e.isHostile(entity)) {
+                                hostiles.add(p);
+                            }
                         }
                     }
                 }

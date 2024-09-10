@@ -1,5 +1,9 @@
 package pl.lonski.dzibdzikon.entity.features;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
@@ -8,10 +12,6 @@ import pl.lonski.dzibdzikon.action.MoveAction;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.map.MapUtils;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 public class MonsterAi implements EntityFeature {
 
@@ -90,13 +90,13 @@ public class MonsterAi implements EntityFeature {
 
             if (path == null || (seesPlayer && !Objects.equals(lastSeenPlayerPos, playerPos.getCoords()))) {
                 path = MapUtils.pathfind(myPos.getCoords(), playerPos.getCoords(), p -> !world.getCurrentLevel()
-                    .isObstacle(p));
+                        .isObstacle(p));
             }
 
             if (path.isEmpty() && seesPlayer) {
                 // try to find path without considering entites
                 path = MapUtils.pathfind(myPos.getCoords(), playerPos.getCoords(), p -> !world.getCurrentLevel()
-                    .isObstacle(p, false));
+                        .isObstacle(p, false));
             }
 
             if (!path.isEmpty()) {
