@@ -1,6 +1,7 @@
 package pl.lonski.dzibdzikon.action;
 
 import pl.lonski.dzibdzikon.Point;
+import pl.lonski.dzibdzikon.PositionUtils;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.screen.Hud;
 
@@ -26,7 +27,8 @@ public class ChooseDirectionAction implements Action {
         }
 
         Hud.setActionMessage("Wybierz kierunek..");
-        Point dPos = world.getPlayer().getPositionChangeInput();
+        Point dPos = PositionUtils.getPositionChange(
+                world.getPlayer().getInputListener().getKey());
         if (!dPos.isZero()) {
             world.getPlayer().getInputListener().reset();
             consumerAction = directionConsumer.accept(dPos);
