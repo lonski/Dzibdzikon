@@ -36,11 +36,12 @@ public class GameMenu extends DzibdzikonScreen {
         var camera = getGameResources().camera;
 
         // input
-        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_2) || Gdx.input.isKeyJustPressed(Input.Keys.J)) {
             menuEntryIdx = Math.min(menuEntryIdx + 1, menuEntries.size() - 1);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_8) || Gdx.input.isKeyJustPressed(Input.Keys.K)) {
             menuEntryIdx = Math.max(menuEntryIdx - 1, 0);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)
+                || Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_ENTER)) {
             if (menuEntryIdx == 1) {
                 Gdx.app.exit();
             } else if (menuEntryIdx == 0) {
@@ -80,9 +81,9 @@ public class GameMenu extends DzibdzikonScreen {
         batch.draw(getGameResources().textures.get(TextureId.PLAYER), logoPos.x, logoPos.y);
         getGameResources().bigFont.setColor(Color.ORANGE);
         getGameResources().bigFont.draw(batch, "Dzibdzikon", titlePos.x, titlePos.y);
-        getGameResources().fontItalic.setColor(Color.LIGHT_GRAY);
+        getGameResources().fontItalic15.setColor(Color.LIGHT_GRAY);
         for (int i = 0; i < menuEntries.size(); i++) {
-            getGameResources().fontItalic.draw(batch, menuEntries.get(i), msgPos.x, msgPos.y - msgYLineDiff * i);
+            getGameResources().fontItalic15.draw(batch, menuEntries.get(i), msgPos.x, msgPos.y - msgYLineDiff * i);
         }
         batch.end();
     }

@@ -11,4 +11,8 @@ public class SpellBook implements EntityFeature {
     public List<Spell> getSpells() {
         return spells;
     }
+
+    public SpellBook(List<Spell> spells) {
+        this.spells.addAll(spells);
+    }
 }

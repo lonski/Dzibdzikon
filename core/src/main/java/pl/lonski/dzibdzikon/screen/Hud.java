@@ -61,19 +61,19 @@ public class Hud {
         for (int i = 0; i < messages.size(); i++) {
             var message = messages.get(i);
             message.ttl -= delta;
-            getGameResources().fontItalic.setColor(message.color);
+            getGameResources().fontItalic15.setColor(message.color);
             getGameResources()
-                    .fontItalic
+                    .fontItalic15
                     .draw(getGameResources().batch, message.text, messagePos.x + 10, messagePos.y - 10 - (17 * i));
         }
 
         if (!actionMessage.isEmpty()) {
             var bottomLeft = CameraUtils.getBottomCenter(camera);
-            var textWidth = FontUtils.getTextWidth(getGameResources().fontItalic, actionMessage);
+            var textWidth = FontUtils.getTextWidth(getGameResources().fontItalic15, actionMessage);
             var actionMessagePos = new Vector2(bottomLeft.x - textWidth / 2, bottomLeft.y + 25);
-            getGameResources().fontItalic.setColor(Color.GOLD);
+            getGameResources().fontItalic15.setColor(Color.GOLD);
             getGameResources()
-                    .fontItalic
+                    .fontItalic15
                     .draw(getGameResources().batch, actionMessage, actionMessagePos.x, actionMessagePos.y);
         }
 

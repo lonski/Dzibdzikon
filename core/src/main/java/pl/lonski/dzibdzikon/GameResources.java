@@ -16,7 +16,8 @@ public class GameResources {
     public OrthographicCamera camera;
     public SpriteBatch batch;
     public ShapeRenderer shapeRenderer;
-    public BitmapFont fontItalic;
+    public BitmapFont fontItalic15;
+    public BitmapFont fontItalic20;
     public BitmapFont fontBoldItalic;
     public BitmapFont bigFont;
     public final Map<TextureId, TextureRegion> textures = new HashMap<>();
@@ -25,7 +26,8 @@ public class GameResources {
     public GameResources() {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-        fontItalic = FontUtils.createFont("font/DejaVuSerif-Italic.ttf", 15);
+        fontItalic15 = FontUtils.createFont("font/DejaVuSerif-Italic.ttf", 15);
+        fontItalic20 = FontUtils.createFont("font/DejaVuSerif-Italic.ttf", 20);
         fontBoldItalic = FontUtils.createFont("font/DejaVuSerif-BoldItalic.ttf", 15);
         bigFont = FontUtils.createFont("font/DejaVuSerif-Italic.ttf", 32);
 
@@ -40,7 +42,7 @@ public class GameResources {
     public void dispose() {
         batch.dispose();
         shapeRenderer.dispose();
-        fontItalic.dispose();
+        fontItalic15.dispose();
         fontBoldItalic.dispose();
         bigFont.dispose();
         textures.values().forEach(t -> t.getTexture().dispose());

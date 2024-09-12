@@ -10,7 +10,8 @@ public enum TextureId {
     DOWNSTAIRS("downstairs.png"),
     GLAZOLUD("glazolud.png"),
     BIG_ROCK("glazolud_glaz.png"),
-    WND_SPELLBOOK("window/spellbook.png");
+    WND_SPELLBOOK("window/spellbook.png"),
+    SPELL_SPIKE("spell/kolec.png");
 
     private String filename;
 

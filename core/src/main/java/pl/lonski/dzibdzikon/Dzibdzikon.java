@@ -28,7 +28,6 @@ public class Dzibdzikon extends Game {
     @Override
     public void create() {
         gameResources = new GameResources();
-
         gameMenu();
     }
 

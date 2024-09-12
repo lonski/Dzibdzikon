@@ -42,8 +42,8 @@ public class GameOver extends DzibdzikonScreen {
         batch.begin();
         getGameResources().bigFont.setColor(Color.SCARLET);
         getGameResources().bigFont.draw(batch, "Zostałeś zabity!", titlePos.x, titlePos.y);
-        getGameResources().fontItalic.setColor(Color.LIGHT_GRAY);
-        getGameResources().fontItalic.draw(batch, "Naciśnij <enter> aby wrócić do menu", msgPos.x, msgPos.y);
+        getGameResources().fontItalic15.setColor(Color.LIGHT_GRAY);
+        getGameResources().fontItalic15.draw(batch, "Naciśnij <enter> aby wrócić do menu", msgPos.x, msgPos.y);
         batch.end();
     }
 }

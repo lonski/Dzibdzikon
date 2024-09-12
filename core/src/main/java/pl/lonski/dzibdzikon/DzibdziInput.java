@@ -48,5 +48,18 @@ public class DzibdziInput {
         void onInput(DzibdziKey key);
     }
 
-    public record DzibdziKey(int keyCode, boolean released) {}
+    public record DzibdziKey(int keyCode, boolean released) {
+
+        public boolean isUpKey() {
+            return keyCode == Input.Keys.UP || keyCode == Input.Keys.NUMPAD_8 || keyCode == Input.Keys.K;
+        }
+
+        public boolean isDownKey() {
+            return keyCode == Input.Keys.DOWN || keyCode == Input.Keys.NUMPAD_2 || keyCode == Input.Keys.J;
+        }
+
+        public boolean isEnterKey() {
+            return keyCode == Input.Keys.ENTER || keyCode == Input.Keys.NUMPAD_ENTER;
+        }
+    }
 }

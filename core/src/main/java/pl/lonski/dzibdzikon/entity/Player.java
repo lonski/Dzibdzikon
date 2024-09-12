@@ -20,6 +20,8 @@ import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.entity.features.Regeneration;
 import pl.lonski.dzibdzikon.entity.features.SpellBook;
 import pl.lonski.dzibdzikon.map.TextureId;
+import pl.lonski.dzibdzikon.spell.Fireball;
+import pl.lonski.dzibdzikon.spell.SpikeSpell;
 
 public class Player extends Entity {
 
@@ -40,7 +42,7 @@ public class Player extends Entity {
         addFeature(FeatureType.FOV, new FieldOfView(this, 8));
         addFeature(FeatureType.ATTACKABLE, new Attackable(20, 20, 5, 0));
         addFeature(FeatureType.REGENERATION, new Regeneration(10, this));
-        addFeature(FeatureType.SPELLBOOK, new SpellBook());
+        addFeature(FeatureType.SPELLBOOK, new SpellBook(List.of(new SpikeSpell(), new Fireball())));
     }
 
     public Point getCameraPosition() {
