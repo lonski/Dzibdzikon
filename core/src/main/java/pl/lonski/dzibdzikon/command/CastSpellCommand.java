@@ -1,5 +1,7 @@
 package pl.lonski.dzibdzikon.command;
 
+import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
+
 import com.badlogic.gdx.Input;
 import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.World;
@@ -15,7 +17,7 @@ public class CastSpellCommand implements Command {
 
     @Override
     public void execute(Player player, World world) {
-        player.getWindowManager().executeInWindow(WindowManager.WindowType.SPELL_BOOK, window -> {
+        getGameResources().windowManager.executeInWindow(WindowManager.WindowType.SPELL_BOOK, window -> {
             ((SpellBookWindow) window).takeSelectedSpell().ifPresent(spell -> {
                 System.out.println("Casting spell: " + spell.getName());
             });

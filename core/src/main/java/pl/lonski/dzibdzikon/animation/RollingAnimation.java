@@ -1,6 +1,5 @@
 package pl.lonski.dzibdzikon.animation;
 
-import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
@@ -35,7 +34,7 @@ public class RollingAnimation implements Animation {
     }
 
     @Override
-    public void render(Dzibdzikon game) {}
+    public void render() {}
 
     @Override
     public boolean isDone() {

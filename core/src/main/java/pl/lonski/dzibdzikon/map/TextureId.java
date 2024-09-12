@@ -1,6 +1,6 @@
 package pl.lonski.dzibdzikon.map;
 
-public enum Glyph {
+public enum TextureId {
     WALL("wall_1.png"),
     FLOOR("floor_1.png"),
     PLAYER("dzibdzik.png"),
@@ -14,7 +14,7 @@ public enum Glyph {
 
     private String filename;
 
-    Glyph(String filename) {
+    TextureId(String filename) {
         this.filename = filename;
     }
 

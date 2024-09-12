@@ -1,17 +1,18 @@
 package pl.lonski.dzibdzikon.ui.window;
 
+import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
+
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import java.util.List;
 import java.util.Optional;
 import pl.lonski.dzibdzikon.CameraUtils;
 import pl.lonski.dzibdzikon.DzibdziInput;
-import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
 import pl.lonski.dzibdzikon.entity.features.SpellBook;
-import pl.lonski.dzibdzikon.map.Glyph;
+import pl.lonski.dzibdzikon.map.TextureId;
 import pl.lonski.dzibdzikon.spell.Spell;
 
 public class SpellBookWindow extends WindowAdapter implements DzibdziInput.DzibdziInputListener {
@@ -19,9 +20,9 @@ public class SpellBookWindow extends WindowAdapter implements DzibdziInput.Dzibd
     private Spell selectedSpell;
     private final TextureRegion windowTexture;
 
-    public SpellBookWindow(Dzibdzikon game, Player player) {
-        super(game, player);
-        windowTexture = game.textures.get(Glyph.WND_SPELLBOOK);
+    public SpellBookWindow(Player player) {
+        super(player);
+        windowTexture = getGameResources().textures.get(TextureId.WND_SPELLBOOK);
     }
 
     @Override
@@ -34,14 +35,14 @@ public class SpellBookWindow extends WindowAdapter implements DzibdziInput.Dzibd
     @Override
     public void render(float delta) {
         if (visible()) {
-            game.batch.draw(windowTexture, position.x(), position.y());
+            getGameResources().batch.draw(windowTexture, position.x(), position.y());
         }
     }
 
     private void positionWindowInCenter() {
-        var bottomLeftCorner = CameraUtils.getBottomLeftCorner(camera);
-        var heightRem = camera.viewportHeight - windowTexture.getRegionHeight();
-        var widthRem = camera.viewportWidth - windowTexture.getRegionWidth();
+        var bottomLeftCorner = CameraUtils.getBottomLeftCorner(getGameResources().camera);
+        var heightRem = getGameResources().camera.viewportHeight - windowTexture.getRegionHeight();
+        var widthRem = getGameResources().camera.viewportWidth - windowTexture.getRegionWidth();
 
         position = new Point((int) (bottomLeftCorner.x + widthRem / 2f), (int) (bottomLeftCorner.y + heightRem / 2f));
     }

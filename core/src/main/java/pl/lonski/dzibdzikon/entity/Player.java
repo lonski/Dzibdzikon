@@ -5,7 +5,6 @@ import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
 
 import java.util.List;
 import pl.lonski.dzibdzikon.DzibdziInput;
-import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.command.CastSpellCommand;
@@ -20,14 +19,12 @@ import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.entity.features.Regeneration;
 import pl.lonski.dzibdzikon.entity.features.SpellBook;
-import pl.lonski.dzibdzikon.map.Glyph;
-import pl.lonski.dzibdzikon.screen.WindowManager;
+import pl.lonski.dzibdzikon.map.TextureId;
 
 public class Player extends Entity {
 
     private final InputListener input = new InputListener();
     private Point cameraPosition;
-    private final Dzibdzikon game;
     private final List<Command> commands = List.of(
             new PositionChangeCommand(),
             new WaitCommand(),
@@ -35,9 +32,8 @@ public class Player extends Entity {
             new GoDownCommand(),
             new CastSpellCommand());
 
-    public Player(Dzibdzikon game) {
-        super("Dzibdzik", Glyph.PLAYER);
-        this.game = game;
+    public Player() {
+        super("Dzibdzik", TextureId.PLAYER);
         setSpeed(1f);
         addFeature(FeatureType.PLAYER, new EntityFeature() {});
         addFeature(FeatureType.POSITION, new Position(new Point(0, 0), 0, 100));
@@ -84,10 +80,6 @@ public class Player extends Entity {
     @Override
     public boolean isHostile(Entity entity) {
         return entity.getFeature(FeatureType.ATTACKABLE) != null && (!(entity instanceof Player));
-    }
-
-    public WindowManager getWindowManager() {
-        return game.windowManager;
     }
 
     public static class InputListener implements DzibdziInput.DzibdziInputListener {

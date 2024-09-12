@@ -1,7 +1,8 @@
 package pl.lonski.dzibdzikon.animation;
 
+import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
+
 import com.badlogic.gdx.graphics.Color;
-import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 
@@ -35,9 +36,9 @@ public class TextFlowUpAnimation implements Animation {
     }
 
     @Override
-    public void render(Dzibdzikon game) {
-        game.fontBoldItalic.setColor(color);
-        game.fontBoldItalic.draw(game.batch, text, pos.x(), pos.y());
+    public void render() {
+        getGameResources().fontBoldItalic.setColor(color);
+        getGameResources().fontBoldItalic.draw(getGameResources().batch, text, pos.x(), pos.y());
     }
 
     @Override

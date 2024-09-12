@@ -10,12 +10,12 @@ import pl.lonski.dzibdzikon.entity.features.MonsterAi;
 import pl.lonski.dzibdzikon.entity.features.Regeneration;
 import pl.lonski.dzibdzikon.entity.features.RollingRockAi;
 import pl.lonski.dzibdzikon.entity.features.RollingRockAttackable;
-import pl.lonski.dzibdzikon.map.Glyph;
+import pl.lonski.dzibdzikon.map.TextureId;
 
 public class EntityFactory {
 
     public static Entity createZombie() {
-        var zombie = new Entity("Zombie", Glyph.ZOMBIE);
+        var zombie = new Entity("Zombie", TextureId.ZOMBIE);
         zombie.addFeature(FeatureType.ATTACKABLE, new Attackable(8, 10, 1, 0));
         zombie.addFeature(FeatureType.AI, new MonsterAi(zombie));
         zombie.addFeature(FeatureType.FOV, new FieldOfView(zombie, 8));
@@ -24,21 +24,21 @@ public class EntityFactory {
     }
 
     public static Entity createDoor(boolean opened) {
-        var door = new Entity("Drzwi", opened ? Glyph.DOOR_OPEN : Glyph.DOOR_CLOSED);
+        var door = new Entity("Drzwi", opened ? TextureId.DOOR_OPEN : TextureId.DOOR_CLOSED);
         door.setVisibleInFog(true);
         door.addFeature(FeatureType.OPENABLE, new DoorOpenable(door));
         return door;
     }
 
     public static Entity createDownstairs() {
-        var stairs = new Entity("Schody w dół", Glyph.DOWNSTAIRS);
+        var stairs = new Entity("Schody w dół", TextureId.DOWNSTAIRS);
         stairs.setVisibleInFog(true);
         stairs.addFeature(FeatureType.DOWNSTAIRS, new Downstairs());
         return stairs;
     }
 
     public static Entity createGlazolud() {
-        var glazolud = new Entity("Głazolud", Glyph.GLAZOLUD);
+        var glazolud = new Entity("Głazolud", TextureId.GLAZOLUD);
         glazolud.addFeature(FeatureType.ATTACKABLE, new Attackable(15, 15, 2, 1));
         glazolud.addFeature(FeatureType.AI, new GlazoludAi(glazolud));
         glazolud.addFeature(FeatureType.FOV, new FieldOfView(glazolud, 8));
@@ -48,7 +48,7 @@ public class EntityFactory {
     }
 
     public static Entity createRollingRock(Point direction) {
-        var rock = new Entity("Głaz", Glyph.BIG_ROCK);
+        var rock = new Entity("Głaz", TextureId.BIG_ROCK);
         rock.addFeature(FeatureType.ATTACKABLE, new RollingRockAttackable(30, 30, 8));
         rock.addFeature(FeatureType.AI, new RollingRockAi(rock, direction));
         rock.setSpeed(2f);

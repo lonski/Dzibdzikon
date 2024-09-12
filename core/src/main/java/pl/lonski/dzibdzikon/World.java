@@ -18,8 +18,8 @@ public class World {
     private final Player player;
     private Entity currentEntity;
 
-    public World(Dzibdzikon game) {
-        player = new Player(game);
+    public World() {
+        player = new Player();
         DzibdziInput.listeners.add(player.getInputListener());
         nextLevel();
         currentEntity = player;

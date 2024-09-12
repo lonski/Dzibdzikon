@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import pl.lonski.dzibdzikon.DzibdziInput;
-import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.Player;
 import pl.lonski.dzibdzikon.ui.window.SpellBookWindow;
@@ -15,9 +14,9 @@ public class WindowManager {
     private final Map<WindowType, Window> windows = new HashMap<>();
     private Player player;
 
-    public void init(World world, Dzibdzikon game) {
+    public void init(World world) {
         this.player = world.getPlayer();
-        windows.put(WindowType.SPELL_BOOK, new SpellBookWindow(game, world.getPlayer()));
+        windows.put(WindowType.SPELL_BOOK, new SpellBookWindow(world.getPlayer()));
     }
 
     public void show(WindowType type) {

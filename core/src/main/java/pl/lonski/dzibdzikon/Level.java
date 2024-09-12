@@ -10,7 +10,7 @@ import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Openable;
 import pl.lonski.dzibdzikon.entity.features.Position;
-import pl.lonski.dzibdzikon.map.Glyph;
+import pl.lonski.dzibdzikon.map.TextureId;
 import pl.lonski.dzibdzikon.map.TileGrid;
 
 public class Level {
@@ -53,7 +53,7 @@ public class Level {
             return true;
         }
 
-        if (map.getTile(pos) == Glyph.WALL) {
+        if (map.getTile(pos) == TextureId.WALL) {
             return true;
         }
 
@@ -83,13 +83,13 @@ public class Level {
             return true;
         }
 
-        return map.getTile(pos) == Glyph.WALL;
+        return map.getTile(pos) == TextureId.WALL;
     }
 
     public Point getRandomFreePosition() {
         while (true) {
             Point pos = new Point(Dzibdzikon.RANDOM.nextInt(map.getWidth()), Dzibdzikon.RANDOM.nextInt(map.getHeight()));
-            if (map.getTile(pos) == Glyph.FLOOR && getEntitiesAt(pos, FeatureType.POSITION).isEmpty()) {
+            if (map.getTile(pos) == TextureId.FLOOR && getEntitiesAt(pos, FeatureType.POSITION).isEmpty()) {
                 return pos;
             }
         }

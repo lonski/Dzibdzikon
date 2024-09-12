@@ -3,6 +3,7 @@ package pl.lonski.dzibdzikon.screen;
 import static pl.lonski.dzibdzikon.Dzibdzikon.SHOW_WHOLE_LEVEL;
 import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
 import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
+import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -10,6 +11,7 @@ import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
+import pl.lonski.dzibdzikon.animation.Animation;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Position;
 
@@ -18,27 +20,30 @@ public class GameScreen extends DzibdzikonScreen {
     private final Hud hud;
     private final World world;
 
-    public GameScreen(Dzibdzikon game) {
-        super(game);
-        world = new World(game);
-        hud = new Hud(game);
-        game.windowManager.init(world, game);
+    public GameScreen(Dzibdzikon dzibdzikon) {
+        super(dzibdzikon);
+        world = new World();
+        hud = new Hud();
+        getGameResources().windowManager.init(world);
         Gdx.input.setInputProcessor(new DzibdziInput.InputHandler());
     }
 
     private void update(float delta) {
         world.update(delta);
-        game.windowManager.update(delta);
+        getGameResources().windowManager.update(delta);
 
         if (!world.getPlayer().alive()) {
-            game.gameOver();
+            dzibdzikon.gameOver();
         }
 
-        game.camera.position.set(
-                world.getPlayer().getCameraPosition().x(),
-                world.getPlayer().getCameraPosition().y(),
-                0);
-        game.camera.update();
+        getGameResources()
+                .camera
+                .position
+                .set(
+                        world.getPlayer().getCameraPosition().x(),
+                        world.getPlayer().getCameraPosition().y(),
+                        0);
+        getGameResources().camera.update();
         hud.update(world);
     }
 
@@ -47,20 +52,23 @@ public class GameScreen extends DzibdzikonScreen {
         update(delta);
 
         // render
+        var batch = getGameResources().batch;
+        var camera = getGameResources().camera;
+        var textures = getGameResources().textures;
         ScreenUtils.clear(0, 0, 0, 0);
-        game.batch.setProjectionMatrix(game.camera.combined);
-        game.batch.begin();
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
 
         for (int y = 0; y < world.getCurrentLevel().getMap().getHeight(); y++) {
             for (int x = 0; x < world.getCurrentLevel().getMap().getWidth(); x++) {
                 var pos = new Point(x, y);
                 var renderPos = new Point(x * TILE_WIDTH, y * TILE_HEIGHT);
-                var texture = game.textures.get(world.getCurrentLevel().getMap().getTile(x, y));
+                var texture = textures.get(world.getCurrentLevel().getMap().getTile(x, y));
                 float originX = texture.getRegionWidth() / 2f;
                 float originY = texture.getRegionHeight() / 2f;
 
                 if (SHOW_WHOLE_LEVEL || world.getCurrentLevel().getVisible().contains(pos)) {
-                    game.batch.draw(
+                    batch.draw(
                             texture,
                             renderPos.x() - originX,
                             renderPos.y() - originY,
@@ -72,8 +80,8 @@ public class GameScreen extends DzibdzikonScreen {
                             1.0f,
                             0);
                 } else if (world.getCurrentLevel().getVisited().contains(pos)) {
-                    game.batch.setColor(0.5f, 0.5f, 0.5f, 1);
-                    game.batch.draw(
+                    batch.setColor(0.5f, 0.5f, 0.5f, 1);
+                    batch.draw(
                             texture,
                             renderPos.x() - originX,
                             renderPos.y() - originY,
@@ -84,7 +92,7 @@ public class GameScreen extends DzibdzikonScreen {
                             1.0f,
                             1.0f,
                             0);
-                    game.batch.setColor(1, 1, 1, 1);
+                    batch.setColor(1, 1, 1, 1);
                 }
             }
         }
@@ -99,10 +107,10 @@ public class GameScreen extends DzibdzikonScreen {
                 })
                 .forEach(entity -> {
                     var pos = entity.<Position>getFeature(FeatureType.POSITION);
-                    var tex = game.textures.get(entity.getGlyph());
+                    var tex = textures.get(entity.getGlyph());
                     float originX = tex.getRegionWidth() / 2f;
                     float originY = tex.getRegionHeight() / 2f;
-                    game.batch.draw(
+                    batch.draw(
                             tex,
                             pos.getRenderPosition().x() - originX,
                             pos.getRenderPosition().y() - originY,
@@ -114,12 +122,12 @@ public class GameScreen extends DzibdzikonScreen {
                             1.0f,
                             pos.getRotation() // Rotation angle in degrees
                             );
-                    entity.getAnimations().forEach(a -> a.render(game));
+                    entity.getAnimations().forEach(Animation::render);
                 });
 
-        game.windowManager.render(delta);
+        getGameResources().windowManager.render(delta);
 
-        game.batch.end();
+        batch.end();
 
         hud.render(delta);
     }

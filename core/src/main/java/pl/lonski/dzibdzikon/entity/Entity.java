@@ -10,20 +10,20 @@ import pl.lonski.dzibdzikon.action.NoOpAction;
 import pl.lonski.dzibdzikon.animation.Animation;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.EntityFeature;
-import pl.lonski.dzibdzikon.map.Glyph;
+import pl.lonski.dzibdzikon.map.TextureId;
 
 public class Entity {
 
     private final Map<FeatureType, EntityFeature> features = new HashMap<>();
     private final String name;
-    private Glyph glyph;
+    private TextureId glyph;
     private boolean visibleInFog = false;
     private Action currentAction;
     private List<Animation> animations = new ArrayList<>();
     private double speed = 1.0;
     private double energy = 0.0;
 
-    public Entity(String name, Glyph glyph) {
+    public Entity(String name, TextureId glyph) {
         this.name = name;
         this.glyph = glyph;
     }
@@ -36,7 +36,7 @@ public class Entity {
         this.animations.add(animation);
     }
 
-    public void setGlyph(Glyph glyph) {
+    public void setGlyph(TextureId glyph) {
         this.glyph = glyph;
     }
 
@@ -52,7 +52,7 @@ public class Entity {
         return name;
     }
 
-    public Glyph getGlyph() {
+    public TextureId getGlyph() {
         return glyph;
     }
 

@@ -17,7 +17,7 @@ public class RoomMapGeneratorV2 {
         // Fill whole map with '#'
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                map.setTile(x, y, Glyph.WALL);
+                map.setTile(x, y, TextureId.WALL);
             }
         }
 
@@ -32,7 +32,7 @@ public class RoomMapGeneratorV2 {
                 // put room
                 for (int ry = 0; ry < roomHeight; ry++) {
                     for (int rx = 0; rx < roomWidth; rx++) {
-                        map.setTile(rx + roomX, ry + roomY, Glyph.FLOOR);
+                        map.setTile(rx + roomX, ry + roomY, TextureId.FLOOR);
                     }
                 }
                 map.addRoom(new Room(roomX, roomY, roomWidth, roomHeight));
@@ -62,7 +62,7 @@ public class RoomMapGeneratorV2 {
                     new Point(room2x, room2y),
                     pos -> MapUtils.inBounds(pos, width, height),
                     false)
-                .forEach(pos -> map.setTile(pos.x(), pos.y(), Glyph.FLOOR));
+                .forEach(pos -> map.setTile(pos.x(), pos.y(), TextureId.FLOOR));
 
             // go to next room
             currentRoom = toConnectWith;
@@ -91,7 +91,7 @@ public class RoomMapGeneratorV2 {
         for (int ry = -1; ry <= roomHeight; ry++) {
             for (int rx = -1; rx <= roomWidth; rx++) {
                 var pos = new Point(roomX + rx, roomY + ry);
-                if (!tileGrid.inBounds(pos.x(), pos.y()) || tileGrid.getTile(pos.x(), pos.y()) != Glyph.WALL) {
+                if (!tileGrid.inBounds(pos.x(), pos.y()) || tileGrid.getTile(pos.x(), pos.y()) != TextureId.WALL) {
                     return false;
                 }
             }

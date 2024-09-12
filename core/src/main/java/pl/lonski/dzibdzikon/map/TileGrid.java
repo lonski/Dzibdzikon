@@ -7,14 +7,14 @@ import pl.lonski.dzibdzikon.Point;
 public class TileGrid {
     private final int width;
     private final int height;
-    private final Glyph[][] tiles;
+    private final TextureId[][] tiles;
 
     private final List<Room> rooms = new ArrayList<>();
 
     public TileGrid(int width, int height) {
         this.width = width;
         this.height = height;
-        this.tiles = new Glyph[width][height];
+        this.tiles = new TextureId[width][height];
     }
 
     public boolean inBounds(int x, int y) {
@@ -33,7 +33,7 @@ public class TileGrid {
         return height;
     }
 
-    public Glyph[][] getTiles() {
+    public TextureId[][] getTiles() {
         return tiles;
     }
 
@@ -49,19 +49,19 @@ public class TileGrid {
         rooms.add(room);
     }
 
-    public Glyph getTile(int x, int y) {
+    public TextureId getTile(int x, int y) {
         return tiles[x][y];
     }
 
-    public Glyph getTile(Point pos) {
+    public TextureId getTile(Point pos) {
         return getTile(pos.x(), pos.y());
     }
 
-    public void setTile(Point pos, Glyph tile) {
+    public void setTile(Point pos, TextureId tile) {
         setTile(pos.x(), pos.y(), tile);
     }
 
-    public void setTile(int x, int y, Glyph tile) {
+    public void setTile(int x, int y, TextureId tile) {
         tiles[x][y] = tile;
     }
 
