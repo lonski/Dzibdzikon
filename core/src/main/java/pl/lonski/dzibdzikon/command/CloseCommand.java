@@ -17,7 +17,7 @@ public class CloseCommand implements Command {
 
     @Override
     public void execute(Player player, World world) {
-        player.setCurrentAction(new ChooseDirectionAction(dir -> {
+        player.takeAction(new ChooseDirectionAction(dir -> {
             var openablePos = player.<Position>getFeature(FeatureType.POSITION)
                     .getCoords()
                     .add(dir);

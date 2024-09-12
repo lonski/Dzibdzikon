@@ -2,7 +2,6 @@ package pl.lonski.dzibdzikon.entity.features;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
@@ -78,7 +77,7 @@ public class MonsterAi implements EntityFeature {
         Set<Point> nbPositions = MapUtils.getNeighbourPositions(myPos.getCoords());
         if (nbPositions.contains(playerPos.getCoords())) {
             lastSeenPlayerPos = playerPos.getCoords();
-            entity.setCurrentAction(new AttackAction(entity, player));
+            entity.takeAction(new AttackAction(entity, player));
             return true;
         }
         return false;
@@ -102,7 +101,7 @@ public class MonsterAi implements EntityFeature {
             if (!path.isEmpty()) {
                 var newPos = path.remove(0);
                 if (!world.getCurrentLevel().isObstacle(newPos)) {
-                    entity.setCurrentAction(new MoveAction(entity, newPos));
+                    entity.takeAction(new MoveAction(entity, newPos));
                 } else {
                     path = null;
                 }
@@ -127,7 +126,7 @@ public class MonsterAi implements EntityFeature {
 
         var targetPos = new Point(pos.getCoords().x() + dx, pos.getCoords().y() + dy);
         if (!world.getCurrentLevel().isObstacle(targetPos)) {
-            entity.setCurrentAction(new MoveAction(entity, targetPos));
+            entity.takeAction(new MoveAction(entity, targetPos));
         }
     }
 }

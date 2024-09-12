@@ -58,10 +58,15 @@ public class World {
                 // take turn, update entity to get action
                 currentEntity.update(delta, this);
 
-                // new action set, use energy for it
-                if (currentEntity.getCurrentAction() != null) {
-                    currentEntity.useEnergyForAction();
-                }
+                // jak rzuca czas to po update nie ma akcji ustawionej tylko później
+                // w akcji trzeba zapisać czy pobrać energię?
+                // to akcja wie kiedy jest wykonana - pobrać energię
+                // co z wieloma akcjami łańcuchowymi?
+
+//                // new action set, use energy for it
+//                if (currentEntity.getCurrentAction() != null) {
+//                    currentEntity.useEnergyForAction();
+//                }
             }
 
             // entity did not take a turn, give it another chance
@@ -79,12 +84,12 @@ public class World {
 
             // action failed, clear it, do not take turn - break, to acquire new action on next update
             if (!currentEntity.getCurrentAction().succeeded()) {
-                currentEntity.setCurrentAction(null);
+                currentEntity.clearAction();
                 break;
             }
 
             // action succeeded, clear it to make ready for next turn
-            currentEntity.setCurrentAction(null);
+            currentEntity.clearAction();
 
             // check if entity can take another action, if not proceed to next entity
             if (!currentEntity.canTakeAction()) {

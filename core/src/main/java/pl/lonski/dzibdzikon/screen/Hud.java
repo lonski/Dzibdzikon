@@ -15,6 +15,7 @@ import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
+import pl.lonski.dzibdzikon.map.TextureId;
 import pl.lonski.dzibdzikon.ui.ProgressBar;
 
 public class Hud {
@@ -23,11 +24,17 @@ public class Hud {
     private static final List<Message> messages = new ArrayList<>();
     private static String actionMessage = "";
     private final ProgressBar hpBar;
+    private static final List<Point> targets = new ArrayList<>();
     public static final List<Point> debugHighlight = new ArrayList<>();
 
     public Hud() {
         this.hpBar = new ProgressBar(100, 10, new Color(0x880000ff), Color.RED);
         messages.clear();
+    }
+
+    public static void setTargets(List<Point> newTargets) {
+        targets.clear();
+        targets.addAll(newTargets);
     }
 
     public static void addMessage(String message) {
@@ -54,7 +61,8 @@ public class Hud {
 
     public void render(float delta) {
         var camera = getGameResources().camera;
-        getGameResources().batch.begin();
+        var batch = getGameResources().batch;
+        batch.begin();
 
         // render messages
         var messagePos = CameraUtils.getTopLeftCorner(camera);
@@ -62,9 +70,7 @@ public class Hud {
             var message = messages.get(i);
             message.ttl -= delta;
             getGameResources().fontItalic15.setColor(message.color);
-            getGameResources()
-                    .fontItalic15
-                    .draw(getGameResources().batch, message.text, messagePos.x + 10, messagePos.y - 10 - (17 * i));
+            getGameResources().fontItalic15.draw(batch, message.text, messagePos.x + 10, messagePos.y - 10 - (17 * i));
         }
 
         if (!actionMessage.isEmpty()) {
@@ -72,12 +78,30 @@ public class Hud {
             var textWidth = FontUtils.getTextWidth(getGameResources().fontItalic15, actionMessage);
             var actionMessagePos = new Vector2(bottomLeft.x - textWidth / 2, bottomLeft.y + 25);
             getGameResources().fontItalic15.setColor(Color.GOLD);
-            getGameResources()
-                    .fontItalic15
-                    .draw(getGameResources().batch, actionMessage, actionMessagePos.x, actionMessagePos.y);
+            getGameResources().fontItalic15.draw(batch, actionMessage, actionMessagePos.x, actionMessagePos.y);
         }
 
-        getGameResources().batch.end();
+        // debug render
+        if (!debugHighlight.isEmpty()) {
+            var texture = getGameResources().textures.get(TextureId.HIGHLIGHT_YELLOW);
+            float originX = texture.getRegionWidth() / 2f;
+            float originY = texture.getRegionHeight() / 2f;
+            for (Point point : debugHighlight) {
+                batch.draw(texture, point.x() * TILE_WIDTH - originX, point.y() * TILE_HEIGHT - originY);
+            }
+        }
+
+        // render targeting
+        if (!targets.isEmpty()) {
+            var texture = getGameResources().textures.get(TextureId.TARGET);
+            float originX = texture.getRegionWidth() / 2f;
+            float originY = texture.getRegionHeight() / 2f;
+            for (Point point : targets) {
+                batch.draw(texture, point.x() * TILE_WIDTH - originX, point.y() * TILE_HEIGHT - originY);
+            }
+        }
+
+        batch.end();
 
         // render hp bar
         var shapeRenderer = getGameResources().shapeRenderer;
@@ -86,15 +110,6 @@ public class Hud {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         hpBar.render(hpBarPos, shapeRenderer);
-
-        // debug render
-        var red = 0.05f;
-        for (Point point : debugHighlight) {
-            shapeRenderer.setColor(new Color(red, 0, 0, 255));
-            shapeRenderer.rect(
-                    (point.x() * TILE_WIDTH) - TILE_WIDTH / 4f, (point.y() * TILE_HEIGHT) - TILE_HEIGHT / 4f, 16, 16);
-            red = Math.min(1.0f, red + 0.05f);
-        }
 
         shapeRenderer.end();
     }

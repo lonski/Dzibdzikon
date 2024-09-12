@@ -9,8 +9,6 @@ import pl.lonski.dzibdzikon.entity.Player;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.Position;
 
-import java.util.List;
-
 public class AttackAction implements Action {
 
     private final Entity attacker;
@@ -55,8 +53,7 @@ public class AttackAction implements Action {
             defending.setHp(defending.getHp() - result.damage());
             target.addAnimation(new TextFlowUpAnimation("-" + result.damage(), targetPos, Color.SCARLET));
             if (defending.getHp() <= 0 && !(target instanceof Player)) {
-                target.setCurrentAction(
-                    new ChainAction(List.of(new FallAnimationAction(target), new RemoveEntityAction(target))));
+                target.takeAction(new DieAction(target));
             }
         } else {
             target.addAnimation(new TextFlowUpAnimation("unik", targetPos, Color.YELLOW));

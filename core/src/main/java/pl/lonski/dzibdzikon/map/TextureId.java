@@ -11,7 +11,9 @@ public enum TextureId {
     GLAZOLUD("glazolud.png"),
     BIG_ROCK("glazolud_glaz.png"),
     WND_SPELLBOOK("window/spellbook.png"),
-    SPELL_SPIKE("spell/kolec.png");
+    SPELL_SPIKE("spell/kolec.png"),
+    HIGHLIGHT_YELLOW("yellow-highlight.png"),
+    TARGET("target.png");
 
     private String filename;
 

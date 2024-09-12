@@ -28,7 +28,7 @@ public class PositionChangeCommand implements Command {
 
         // move
         if (!world.getCurrentLevel().isObstacle(targetPos)) {
-            player.setCurrentAction(new MoveAction(
+            player.takeAction(new MoveAction(
                     player,
                     new Point(pos.getCoords().x() + dPos.x(), pos.getCoords().y() + dPos.y())));
         } else {
@@ -37,7 +37,7 @@ public class PositionChangeCommand implements Command {
             world.getCurrentLevel()
                     .getEntityAt(targetPos, FeatureType.ATTACKABLE)
                     .ifPresentOrElse(
-                            mob -> player.setCurrentAction(new AttackAction(player, mob)),
+                            mob -> player.takeAction(new AttackAction(player, mob)),
                             // check openable
                             // TODO: change to action
                             () -> world.getCurrentLevel()

@@ -8,10 +8,7 @@ import pl.lonski.dzibdzikon.screen.GameScreen;
 
 // TODO:
 // - pathfinding coś chyba nie bangla na 100%
-// - spells:
-//      * spellbook ui
-//      * targeting entities
-//      * firing a kolec
+// - open doors as action
 public class Dzibdzikon extends Game {
 
     public static boolean SHOW_WHOLE_LEVEL = false;

@@ -25,7 +25,7 @@ public class WaitCommand implements Command {
     public void execute(Player player, World world) {
         if (timeSinceLastWait >= waitDebounce) {
             timeSinceLastWait = 0;
-            player.setCurrentAction(new NoOpAction());
+            player.takeAction(new NoOpAction());
         }
     }
 }

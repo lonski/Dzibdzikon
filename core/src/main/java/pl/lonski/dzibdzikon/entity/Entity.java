@@ -44,8 +44,16 @@ public class Entity {
         return currentAction;
     }
 
-    public void setCurrentAction(Action currentAction) {
+    public void takeAction(Action currentAction) {
+        if (currentAction == null) {
+            throw new IllegalStateException("Cant clear action here");
+        }
         this.currentAction = currentAction;
+        useEnergyForAction();
+    }
+
+    public void clearAction() {
+        this.currentAction = null;
     }
 
     public String getName() {
@@ -79,7 +87,7 @@ public class Entity {
         features.values().forEach(f -> f.update(delta, world));
         // make sure non-player entity always take a turn
         if (getFeature(FeatureType.PLAYER) == null && currentAction == null) {
-            setCurrentAction(new NoOpAction());
+            takeAction(new NoOpAction());
         }
     }
 
@@ -111,5 +119,9 @@ public class Entity {
 
     public boolean isHostile(Entity entity) {
         return entity instanceof Player;
+    }
+
+    public double getEnergy() {
+        return energy;
     }
 }

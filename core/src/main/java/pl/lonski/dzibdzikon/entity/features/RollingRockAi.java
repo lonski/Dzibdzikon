@@ -31,7 +31,7 @@ public class RollingRockAi extends MonsterAi {
             return;
         }
 
-        entity.setCurrentAction(takeTurn(world));
+        entity.takeAction(takeTurn(world));
     }
 
     private Action takeTurn(World world) {

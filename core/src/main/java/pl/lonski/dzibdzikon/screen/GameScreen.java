@@ -29,7 +29,10 @@ public class GameScreen extends DzibdzikonScreen {
     }
 
     private void update(float delta) {
-        world.update(delta);
+        if (!getGameResources().windowManager.isAnyWindowVisible()) {
+            world.update(delta);
+        }
+
         getGameResources().windowManager.update(delta);
 
         if (!world.getPlayer().alive()) {

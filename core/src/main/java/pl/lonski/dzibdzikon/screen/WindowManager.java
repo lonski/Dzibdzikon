@@ -24,11 +24,11 @@ public class WindowManager {
         DzibdziInput.listeners.remove(player.getInputListener());
     }
 
-    public void executeInWindow(WindowType type, Consumer<Window> action) {
+    public void executeInWindow(WindowType type, Consumer<Window> onWindow) {
         DzibdziInput.listeners.remove(player.getInputListener());
         Window wnd = windows.get(type);
         wnd.onClose(window -> {
-            action.accept(window);
+            onWindow.accept(window);
             DzibdziInput.listeners.add(player.getInputListener());
         });
         wnd.show();
@@ -40,6 +40,10 @@ public class WindowManager {
 
     public void render(float delta) {
         windows.values().stream().filter(Window::visible).forEach(window -> window.render(delta));
+    }
+
+    public boolean isAnyWindowVisible() {
+        return windows.values().stream().anyMatch(Window::visible);
     }
 
     public enum WindowType {
