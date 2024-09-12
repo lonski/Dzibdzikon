@@ -4,15 +4,18 @@ import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
 import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
 
 import com.badlogic.gdx.Input;
+import java.util.List;
 import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.AttackAction;
-import pl.lonski.dzibdzikon.action.ChooseDirectionAction;
-import pl.lonski.dzibdzikon.action.CloseAction;
 import pl.lonski.dzibdzikon.action.MoveAction;
-import pl.lonski.dzibdzikon.action.NoOpAction;
+import pl.lonski.dzibdzikon.command.CastSpellCommand;
+import pl.lonski.dzibdzikon.command.CloseCommand;
+import pl.lonski.dzibdzikon.command.Command;
+import pl.lonski.dzibdzikon.command.GoDownCommand;
+import pl.lonski.dzibdzikon.command.WaitCommand;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.EntityFeature;
 import pl.lonski.dzibdzikon.entity.features.FieldOfView;
@@ -21,16 +24,15 @@ import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.entity.features.Regeneration;
 import pl.lonski.dzibdzikon.entity.features.SpellBook;
 import pl.lonski.dzibdzikon.map.Glyph;
-import pl.lonski.dzibdzikon.screen.Hud;
 import pl.lonski.dzibdzikon.screen.WindowManager;
 
 public class Player extends Entity {
 
     private final InputListener input = new InputListener();
     private Point cameraPosition;
-    private float timeSinceLastWait = 0;
-    private final float waitDebounce = 0.3f;
     private final Dzibdzikon game;
+    private final List<Command> commands =
+            List.of(new WaitCommand(), new CloseCommand(), new GoDownCommand(), new CastSpellCommand());
 
     public Player(Dzibdzikon game) {
         super("Dzibdzik", Glyph.PLAYER);
@@ -62,47 +64,17 @@ public class Player extends Entity {
         if (getCurrentAction() != null || !alive()) {
             return;
         }
-        timeSinceLastWait += delta;
+
+        commands.forEach(c -> c.update(delta));
 
         if (!input.empty()) {
             Point dPos = getPositionChangeInput();
 
             if (dPos.isZero()) {
-                //// handle command
-                if (input.key.keyCode() == Input.Keys.NUMPAD_5 || input.key.keyCode() == Input.Keys.SPACE) {
-                    // wait
-                    if (timeSinceLastWait >= waitDebounce) {
-                        timeSinceLastWait = 0;
-                        setCurrentAction(new NoOpAction());
-                    }
-                } else if (input.key.keyCode() == Input.Keys.C) {
-                    // close
-                    setCurrentAction(new ChooseDirectionAction(dir -> {
-                        var openablePos = this.<Position>getFeature(FeatureType.POSITION)
-                                .getCoords()
-                                .add(dir);
-
-                        return new CloseAction(this, openablePos);
-                    }));
-                    input.reset();
-                } else if (input.key.keyCode() == Input.Keys.PERIOD && DzibdziInput.isShiftDown) {
-                    // go down
-                    var myPos = this.<Position>getFeature(FeatureType.POSITION);
-                    if (world.getCurrentLevel()
-                            .getEntityAt(myPos.getCoords(), FeatureType.DOWNSTAIRS)
-                            .isPresent()) {
-                        Hud.addMessage("Schodzenie w dół...");
-                        world.nextLevel();
-                    } else {
-                        Hud.addMessage("Nie ma tutaj schodów po których można zejść.");
-                    }
-                    input.reset();
-                } else if (input.key.keyCode() == Input.Keys.Z && DzibdziInput.isShiftDown) {
-                    // cast a spell from spellbook
-                    game.windowManager.executeInWindow(WindowManager.WindowType.SPELL_BOOK, window -> {
-                        System.out.println("Spell book window closed");
-                    });
-                }
+                commands.stream()
+                        .filter(c -> c.accepts(input.key))
+                        .findFirst()
+                        .ifPresent(command -> command.execute(this, world));
             } else {
                 // handle position change
                 Position pos = getFeature(FeatureType.POSITION);
@@ -183,6 +155,10 @@ public class Player extends Entity {
         }
 
         return dpos;
+    }
+
+    public WindowManager getWindowManager() {
+        return game.windowManager;
     }
 
     public static class InputListener implements DzibdziInput.DzibdziInputListener {

@@ -1,3 +1,6 @@
 package pl.lonski.dzibdzikon.spell;
 
-public interface Spell {}
+public interface Spell {
+
+    String getName();
+}
