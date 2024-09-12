@@ -15,12 +15,14 @@ public class World {
     private long turn = 0;
     private Level currentLevel;
 
-    private final Player player = new Player();
-    private Entity currentEntity = player;
+    private final Player player;
+    private Entity currentEntity;
 
-    public World() {
+    public World(Dzibdzikon game) {
+        player = new Player(game);
         DzibdziInput.listeners.add(player.getInputListener());
         nextLevel();
+        currentEntity = player;
     }
 
     public Level getCurrentLevel() {

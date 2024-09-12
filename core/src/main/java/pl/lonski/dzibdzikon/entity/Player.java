@@ -5,6 +5,7 @@ import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
 
 import com.badlogic.gdx.Input;
 import pl.lonski.dzibdzikon.DzibdziInput;
+import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.AttackAction;
@@ -18,8 +19,10 @@ import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.Openable;
 import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.entity.features.Regeneration;
+import pl.lonski.dzibdzikon.entity.features.SpellBook;
 import pl.lonski.dzibdzikon.map.Glyph;
 import pl.lonski.dzibdzikon.screen.Hud;
+import pl.lonski.dzibdzikon.screen.WindowManager;
 
 public class Player extends Entity {
 
@@ -27,15 +30,18 @@ public class Player extends Entity {
     private Point cameraPosition;
     private float timeSinceLastWait = 0;
     private final float waitDebounce = 0.3f;
+    private final Dzibdzikon game;
 
-    public Player() {
+    public Player(Dzibdzikon game) {
         super("Dzibdzik", Glyph.PLAYER);
+        this.game = game;
         setSpeed(1f);
         addFeature(FeatureType.PLAYER, new EntityFeature() {});
         addFeature(FeatureType.POSITION, new Position(new Point(0, 0), 0, 100));
         addFeature(FeatureType.FOV, new FieldOfView(this, 8));
         addFeature(FeatureType.ATTACKABLE, new Attackable(20, 20, 5, 0));
         addFeature(FeatureType.REGENERATION, new Regeneration(10, this));
+        addFeature(FeatureType.SPELLBOOK, new SpellBook());
     }
 
     public Point getCameraPosition() {
@@ -62,11 +68,11 @@ public class Player extends Entity {
             Point dPos = getPositionChangeInput();
 
             if (dPos.isZero()) {
-                // handle command
+                //// handle command
                 if (input.key.keyCode() == Input.Keys.NUMPAD_5 || input.key.keyCode() == Input.Keys.SPACE) {
+                    // wait
                     if (timeSinceLastWait >= waitDebounce) {
                         timeSinceLastWait = 0;
-                        // wait
                         setCurrentAction(new NoOpAction());
                     }
                 } else if (input.key.keyCode() == Input.Keys.C) {
@@ -80,6 +86,7 @@ public class Player extends Entity {
                     }));
                     input.reset();
                 } else if (input.key.keyCode() == Input.Keys.PERIOD && DzibdziInput.isShiftDown) {
+                    // go down
                     var myPos = this.<Position>getFeature(FeatureType.POSITION);
                     if (world.getCurrentLevel()
                             .getEntityAt(myPos.getCoords(), FeatureType.DOWNSTAIRS)
@@ -90,6 +97,11 @@ public class Player extends Entity {
                         Hud.addMessage("Nie ma tutaj schodów po których można zejść.");
                     }
                     input.reset();
+                } else if (input.key.keyCode() == Input.Keys.Z && DzibdziInput.isShiftDown) {
+                    // cast a spell from spellbook
+                    game.windowManager.executeInWindow(WindowManager.WindowType.SPELL_BOOK, window -> {
+                        System.out.println("Spell book window closed");
+                    });
                 }
             } else {
                 // handle position change

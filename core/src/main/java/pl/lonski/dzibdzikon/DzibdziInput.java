@@ -2,7 +2,6 @@ package pl.lonski.dzibdzikon;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,11 +20,13 @@ public class DzibdziInput {
                 return true;
             }
 
-            listeners.forEach(l -> l.onInput(new DzibdziKey(keycode, false)));
+            var listenersCopy = new HashSet<>(listeners);
+            for (DzibdziInputListener listener : listenersCopy) {
+                listener.onInput(new DzibdziKey(keycode, false));
+            }
 
             return true;
         }
-
 
         @Override
         public boolean keyUp(int keycode) {
@@ -33,7 +34,12 @@ public class DzibdziInput {
                 isShiftDown = false;
                 return true;
             }
-            listeners.forEach(l -> l.onInput(new DzibdziKey(keycode, true)));
+
+            var listenersCopy = new HashSet<>(listeners);
+            for (DzibdziInputListener listener : listenersCopy) {
+                listener.onInput(new DzibdziKey(keycode, true));
+            }
+
             return true;
         }
     }
@@ -42,6 +48,5 @@ public class DzibdziInput {
         void onInput(DzibdziKey key);
     }
 
-    public record DzibdziKey(int keyCode, boolean released) {
-    }
+    public record DzibdziKey(int keyCode, boolean released) {}
 }

@@ -15,9 +15,14 @@ import pl.lonski.dzibdzikon.screen.GameScreen;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
+import pl.lonski.dzibdzikon.screen.WindowManager;
 
 // TODO:
 // - pathfinding coś chyba nie bangla na 100%
+// - spells:
+//      * spellbook ui
+//      * targeting entities
+//      * firing a kolec
 public class Dzibdzikon extends Game {
 
     public static boolean SHOW_WHOLE_LEVEL = false;
@@ -33,6 +38,7 @@ public class Dzibdzikon extends Game {
     public BitmapFont bigFont;
     public OrthographicCamera camera;
     public final Map<Glyph, TextureRegion> textures = new HashMap<>();
+    public final WindowManager windowManager = new WindowManager();
 
     @Override
     public void create() {

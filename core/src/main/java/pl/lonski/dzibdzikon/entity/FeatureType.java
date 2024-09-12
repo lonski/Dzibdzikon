@@ -8,5 +8,6 @@ public enum FeatureType {
     AI,
     OPENABLE,
     DOWNSTAIRS,
-    REGENERATION
+    REGENERATION,
+    SPELLBOOK,
 }

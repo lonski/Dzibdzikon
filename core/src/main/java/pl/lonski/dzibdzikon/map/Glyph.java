@@ -9,7 +9,8 @@ public enum Glyph {
     DOOR_CLOSED("door_closed.png"),
     DOWNSTAIRS("downstairs.png"),
     GLAZOLUD("glazolud.png"),
-    BIG_ROCK("glazolud_glaz.png");
+    BIG_ROCK("glazolud_glaz.png"),
+    WND_SPELLBOOK("window/spellbook.png");
 
     private String filename;
 
