@@ -26,10 +26,7 @@ public class GameScreen extends DzibdzikonScreen {
         Gdx.input.setInputProcessor(new DzibdziInput.InputHandler());
     }
 
-    @Override
-    public void render(float delta) {
-
-        // update
+    private void update(float delta) {
         world.update(delta);
 
         if (!world.getPlayer().alive()) {
@@ -42,6 +39,11 @@ public class GameScreen extends DzibdzikonScreen {
             0);
         game.camera.update();
         hud.update(world);
+    }
+
+    @Override
+    public void render(float delta) {
+        update(delta);
 
         // render
         ScreenUtils.clear(0, 0, 0, 0);
