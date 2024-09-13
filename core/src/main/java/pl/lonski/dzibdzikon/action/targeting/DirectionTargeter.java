@@ -1,18 +1,19 @@
-package pl.lonski.dzibdzikon.action;
+package pl.lonski.dzibdzikon.action.targeting;
 
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.PositionUtils;
 import pl.lonski.dzibdzikon.World;
+import pl.lonski.dzibdzikon.action.Action;
 import pl.lonski.dzibdzikon.screen.Hud;
 
-public class ChooseDirectionAction implements Action {
+public class DirectionTargeter implements Action {
 
     private boolean done = false;
     private boolean succeeded = false;
-    private final DirectionConsumer directionConsumer;
+    private final TargetConsumer directionConsumer;
     private Action consumerAction;
 
-    public ChooseDirectionAction(DirectionConsumer directionConsumer) {
+    public DirectionTargeter(TargetConsumer directionConsumer) {
         this.directionConsumer = directionConsumer;
     }
 
@@ -45,9 +46,5 @@ public class ChooseDirectionAction implements Action {
     @Override
     public boolean succeeded() {
         return succeeded;
-    }
-
-    public interface DirectionConsumer {
-        Action accept(Point direction);
     }
 }

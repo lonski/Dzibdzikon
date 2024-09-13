@@ -113,8 +113,18 @@ public class Entity {
         return energy >= 1.0;
     }
 
+    public void cancelCurrentAction() {
+        if (currentAction != null) {
+            currentAction = null;
+            rechargeEnergy();
+        }
+    }
+
     public void useEnergyForAction() {
         energy -= 1.0;
+        if (energy < 0.0) {
+            System.out.println("Energy dropped below 0.0 for " + name);
+        }
     }
 
     public boolean isHostile(Entity entity) {

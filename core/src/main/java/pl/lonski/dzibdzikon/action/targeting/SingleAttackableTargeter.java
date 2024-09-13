@@ -1,9 +1,8 @@
-package pl.lonski.dzibdzikon.targeting;
+package pl.lonski.dzibdzikon.action.targeting;
 
 import com.badlogic.gdx.Input;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.Action;
@@ -15,12 +14,14 @@ import pl.lonski.dzibdzikon.screen.Hud;
 public class SingleAttackableTargeter implements Action {
 
     private boolean done = false;
-    private List<Point> possibleTargets;
+    private boolean succeeded = false;
     private int currentTargetIdx = 0;
     private Player.InputListener input;
-    private Consumer<Point> onTargetSelected;
+    private final TargetConsumer onTargetSelected;
+    private final List<Point> possibleTargets;
+    private Action consumerAction;
 
-    public SingleAttackableTargeter(Player player, Consumer<Point> onTargetSelected) {
+    public SingleAttackableTargeter(Player player, TargetConsumer onTargetSelected) {
         this.input = player.getInputListener();
         this.possibleTargets =
                 new ArrayList<>(player.<FieldOfView>getFeature(FeatureType.FOV).getHostiles());
@@ -29,6 +30,14 @@ public class SingleAttackableTargeter implements Action {
 
     @Override
     public void update(float delta, World world) {
+        if (consumerAction != null) {
+            Hud.setActionMessage("");
+            consumerAction.update(delta, world);
+            done = consumerAction.isDone();
+            succeeded = consumerAction.succeeded();
+            return;
+        }
+
         if (possibleTargets.isEmpty()) {
             done = true;
             return;
@@ -38,13 +47,23 @@ public class SingleAttackableTargeter implements Action {
             return;
         }
 
+        Hud.setActionMessage("Wybierz cel..");
         if (!input.empty()) {
             if (input.getKey().keyCode() == Input.Keys.TAB) {
                 currentTargetIdx = (currentTargetIdx + 1) % possibleTargets.size();
             } else if (input.getKey().isEnterKey()) {
-                onTargetSelected.accept(possibleTargets.get(currentTargetIdx));
+                consumerAction = onTargetSelected.accept(possibleTargets.get(currentTargetIdx));
                 currentTargetIdx = -1;
+                done = consumerAction == null || consumerAction.isDone();
+                succeeded = consumerAction != null && consumerAction.succeeded();
+            } else if (input.getKey().keyCode() == Input.Keys.ESCAPE) {
+                System.out.println("Canceling target selection");
+                Hud.setActionMessage("");
+                Hud.setTargets(List.of());
+                consumerAction = null;
                 done = true;
+                succeeded = false;
+                return;
             }
             input.reset();
         }
@@ -59,5 +78,10 @@ public class SingleAttackableTargeter implements Action {
     @Override
     public boolean isDone() {
         return done;
+    }
+
+    @Override
+    public boolean succeeded() {
+        return succeeded;
     }
 }

@@ -11,7 +11,7 @@ import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.map.TextureId;
-import pl.lonski.dzibdzikon.targeting.TargetingMode;
+import pl.lonski.dzibdzikon.action.targeting.TargetingMode;
 
 public class SpikeSpell implements Spell {
     @Override

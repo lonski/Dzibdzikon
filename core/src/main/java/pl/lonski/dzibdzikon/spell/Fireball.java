@@ -4,7 +4,7 @@ import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.map.TextureId;
-import pl.lonski.dzibdzikon.targeting.TargetingMode;
+import pl.lonski.dzibdzikon.action.targeting.TargetingMode;
 
 public class Fireball implements Spell {
     @Override
