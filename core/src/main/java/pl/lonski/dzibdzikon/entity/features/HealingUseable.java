@@ -1,6 +1,7 @@
 package pl.lonski.dzibdzikon.entity.features;
 
 import com.badlogic.gdx.graphics.Color;
+import pl.lonski.dzibdzikon.DzibdziRandom;
 import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.animation.TextFlowUpAnimation;
 import pl.lonski.dzibdzikon.entity.Entity;
@@ -18,7 +19,7 @@ public class HealingUseable extends Useable {
 
     @Override
     public void use(Entity user, Entity target) {
-        var heal = Dzibdzikon.RANDOM.nextInt(minHeal, maxHeal + 1);
+        var heal = DzibdziRandom.nextInt(minHeal, maxHeal + 1);
         var attackable = target.<Attackable>getFeature(FeatureType.ATTACKABLE);
         var pos = target.<Position>getFeature(FeatureType.POSITION);
         if (attackable != null) {

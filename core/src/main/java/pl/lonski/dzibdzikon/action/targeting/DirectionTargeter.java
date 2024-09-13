@@ -4,6 +4,8 @@ import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.PositionUtils;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.Action;
+import pl.lonski.dzibdzikon.entity.FeatureType;
+import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.screen.Hud;
 
 public class DirectionTargeter implements Action {
@@ -28,8 +30,12 @@ public class DirectionTargeter implements Action {
         }
 
         Hud.setActionMessage("Wybierz kierunek..");
+        var player = world.getPlayer();
+        var playerPos = player.<Position>getFeature(FeatureType.POSITION);
         Point dPos = PositionUtils.getPositionChange(
-                world.getPlayer().getInputListener().getKey());
+            playerPos.getCoords(),
+            player.getInputListener().getKey()
+        );
         if (!dPos.isZero()) {
             world.getPlayer().getInputListener().reset();
             consumerAction = directionConsumer.accept(dPos);

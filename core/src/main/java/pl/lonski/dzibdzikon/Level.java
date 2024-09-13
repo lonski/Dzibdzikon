@@ -105,8 +105,7 @@ public class Level {
 
     public Point getRandomFreePosition() {
         while (true) {
-            Point pos =
-                    new Point(Dzibdzikon.RANDOM.nextInt(map.getWidth()), Dzibdzikon.RANDOM.nextInt(map.getHeight()));
+            Point pos = new Point(DzibdziRandom.nextInt(map.getWidth()), DzibdziRandom.nextInt(map.getHeight()));
             if (map.getTile(pos).isFloor()
                     && getEntitiesAt(pos, FeatureType.POSITION).isEmpty()) {
                 return pos;

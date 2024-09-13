@@ -58,7 +58,7 @@ public class CoordsTargeter implements Action {
                 succeeded = false;
                 Hud.setTargets(List.of());
             } else {
-                var dpos = PositionUtils.getPositionChange(input.getKey());
+                var dpos = PositionUtils.getPositionChange(currentTarget, input.getKey());
                 var newTarget = currentTarget.add(dpos);
                 if (world.getCurrentLevel().getVisible().contains(newTarget)
                         && !world.getCurrentLevel().isObstacle(newTarget, false)) {

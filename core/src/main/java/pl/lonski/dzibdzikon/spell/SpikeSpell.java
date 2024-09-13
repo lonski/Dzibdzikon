@@ -1,5 +1,6 @@
 package pl.lonski.dzibdzikon.spell;
 
+import pl.lonski.dzibdzikon.DzibdziRandom;
 import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
@@ -43,7 +44,7 @@ public class SpikeSpell implements Spell {
         }
 
         var targetEntity = targetEntityOpt.get();
-        var damage = Dzibdzikon.RANDOM.nextInt(2, 6);
+        var damage = DzibdziRandom.nextInt(2, 6);
         new DamageEffect(damage).apply(targetEntity);
     }
 

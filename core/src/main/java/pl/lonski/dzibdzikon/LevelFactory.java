@@ -17,8 +17,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static pl.lonski.dzibdzikon.Dzibdzikon.RANDOM;
-
 public class LevelFactory {
 
     public static Level generate() {
@@ -50,7 +48,7 @@ public class LevelFactory {
                 return new PtakodrzewoRoom(x, y, w, h);
             }
 
-            return RANDOM.nextDouble() > 0.7 ? new CircleRoom(x, y, w, h) : new Room(x, y, w, h);
+            return DzibdziRandom.nextDouble() > 0.7 ? new CircleRoom(x, y, w, h) : new Room(x, y, w, h);
         }
 
         @Override
@@ -61,7 +59,7 @@ public class LevelFactory {
 
     private static Supplier<Entity> generateMobFn() {
         return () -> {
-            int mobType = RANDOM.nextInt(100);
+            int mobType = DzibdziRandom.nextInt(100);
 
             Entity mob;
             if (mobType > 80) {
@@ -169,7 +167,7 @@ public class LevelFactory {
 
             // spawn mobs
             for (Room room : level.getMap().getRooms()) {
-                int mobsCountInRoom = RANDOM.nextInt(minMobsPerRoom, maxMobsPerRoom + 1);
+                int mobsCountInRoom = DzibdziRandom.nextInt(minMobsPerRoom, maxMobsPerRoom + 1);
                 while (mobsCountInRoom-- > 0) {
                     var pos = room.getRandomPosition();
                     if (level.getEntityAt(pos, null).isEmpty()) {
@@ -193,7 +191,7 @@ public class LevelFactory {
 
             // spawn items
             for (Room room : level.getMap().getRooms()) {
-                int maxItemsInRoom = RANDOM.nextInt(minItemsPerRoom, maxItemsPerRoom + 1);
+                int maxItemsInRoom = DzibdziRandom.nextInt(minItemsPerRoom, maxItemsPerRoom + 1);
                 while (maxItemsInRoom-- > 0) {
                     var pos = room.getRandomPosition();
                     if (level.getEntityAt(pos, null).isEmpty()) {
@@ -211,15 +209,15 @@ public class LevelFactory {
             Collections.shuffle(map.getRooms());
             int minDoors = Math.round(map.getRooms().size() * minDoorPercentage);
             int maxDoors = Math.round(map.getRooms().size() * maxDoorPercentage);
-            for (Room room : map.getRooms().subList(0, RANDOM.nextInt(minDoors, maxDoors + 1))) {
+            for (Room room : map.getRooms().subList(0, DzibdziRandom.nextInt(minDoors, maxDoors + 1))) {
                 var possibleDoors = findPossibleDoorPositions(level, room);
                 Collections.shuffle(possibleDoors);
                 if (!possibleDoors.isEmpty()) {
-                    var doorInRoom = RANDOM.nextInt(1, possibleDoors.size() + 1);
+                    var doorInRoom = DzibdziRandom.nextInt(1, possibleDoors.size() + 1);
                     for (int i = 0; i < doorInRoom; i++) {
                         var possiblePos = possibleDoors.get(i);
                         if (level.getEntityAt(possiblePos, null).isEmpty()) {
-                            var door = EntityFactory.createDoor(RANDOM.nextFloat() < openedDoorPercentage);
+                            var door = EntityFactory.createDoor(DzibdziRandom.nextDouble() < openedDoorPercentage);
                             door.addFeature(FeatureType.POSITION, new Position(possiblePos, 0, 1));
                             level.addEntity(door);
                         }
@@ -229,12 +227,13 @@ public class LevelFactory {
 
             // put downstairs
             var downstairs = EntityFactory.createDownstairs();
-            var downstairsPos =
-                    map.getRooms().get(RANDOM.nextInt(map.getRooms().size())).getCenter();
+            var downstairsPos = map.getRooms()
+                    .get(DzibdziRandom.nextInt(map.getRooms().size()))
+                    .getCenter();
             var maxTries = 5;
             while (level.isObstacle(downstairsPos, true) && maxTries-- > 0) {
                 downstairsPos = map.getRooms()
-                        .get(RANDOM.nextInt(map.getRooms().size()))
+                        .get(DzibdziRandom.nextInt(map.getRooms().size()))
                         .getCenter();
             }
             downstairs.addFeature(FeatureType.POSITION, new Position(downstairsPos));

@@ -1,5 +1,6 @@
 package pl.lonski.dzibdzikon.spell;
 
+import pl.lonski.dzibdzikon.DzibdziRandom;
 import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.ExplosionSimulator;
 import pl.lonski.dzibdzikon.Point;
@@ -51,7 +52,7 @@ public class Fireball implements Spell {
         var targets = world.getCurrentLevel().getEntitiesAt(new HashSet<>(targetPoints), FeatureType.ATTACKABLE);
 
         for (Entity targetEntity : targets) {
-            var damage = Dzibdzikon.RANDOM.nextInt(4, 12);
+            var damage = DzibdziRandom.nextInt(4, 12);
             new DamageEffect(damage).apply(targetEntity);
         }
     }

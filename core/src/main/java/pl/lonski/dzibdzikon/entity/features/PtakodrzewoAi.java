@@ -1,7 +1,7 @@
 package pl.lonski.dzibdzikon.entity.features;
 
 import com.badlogic.gdx.graphics.Color;
-import pl.lonski.dzibdzikon.Dzibdzikon;
+import pl.lonski.dzibdzikon.DzibdziRandom;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.MoveAction;
 import pl.lonski.dzibdzikon.entity.Entity;
@@ -11,6 +11,7 @@ import pl.lonski.dzibdzikon.map.MapUtils;
 import pl.lonski.dzibdzikon.screen.Hud;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PtakodrzewoAi extends MonsterAi {
 
@@ -64,12 +65,12 @@ public class PtakodrzewoAi extends MonsterAi {
             return;
         }
 
-        if (Dzibdzikon.RANDOM.nextFloat() < BIRD_SPAWN_CHANCE) {
+        if (DzibdziRandom.nextDouble() < BIRD_SPAWN_CHANCE) {
             return;
         }
 
         Entity spawnedBird =
-                switch (Dzibdzikon.RANDOM.nextInt(3)) {
+                switch (DzibdziRandom.nextInt(3)) {
                     case 0 -> EntityFactory.createBirdBiter();
                     case 1 -> EntityFactory.createBirdPlanker();
                     case 2 -> EntityFactory.createBirdThrower();
@@ -78,8 +79,8 @@ public class PtakodrzewoAi extends MonsterAi {
 
         var possiblePositions = MapUtils.getNeighbourPositions(myPos.getCoords()).stream()
                 .filter(p -> !world.getCurrentLevel().isObstacle(p, true))
-                .toList();
-        var birdPos = possiblePositions.get(Dzibdzikon.RANDOM.nextInt(possiblePositions.size()));
+                .collect(Collectors.toList());
+        var birdPos = possiblePositions.get(DzibdziRandom.nextInt(possiblePositions.size()));
         spawnedBird.addFeature(FeatureType.POSITION, new Position(myPos.getCoords()));
         world.getCurrentLevel().addEntity(spawnedBird);
 
@@ -93,6 +94,6 @@ public class PtakodrzewoAi extends MonsterAi {
     private List<Entity> getNearbyBirds(World world) {
         return world.getCurrentLevel().getEntitiesAtCircle(myPos.getCoords(), 10, FeatureType.ATTACKABLE).stream()
                 .filter(e -> BIRDS.contains(e.getName()))
-                .toList();
+                .collect(Collectors.toList());
     }
 }

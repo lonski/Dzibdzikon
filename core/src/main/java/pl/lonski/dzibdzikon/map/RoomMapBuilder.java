@@ -1,5 +1,6 @@
 package pl.lonski.dzibdzikon.map;
 
+import pl.lonski.dzibdzikon.DzibdziRandom;
 import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 
@@ -76,7 +77,6 @@ public class RoomMapBuilder {
     public TileGrid build() {
 
         var map = new TileGrid(width, height);
-        var random = new SecureRandom();
 
         // Fill whole map with '#'
         for (int y = 0; y < height; y++) {
@@ -88,10 +88,10 @@ public class RoomMapBuilder {
         int maxRoomsCounter = maxRooms;
         // try place X rooms
         while (maxRoomsCounter-- > 0) {
-            int roomWidth = random.nextInt(roomSizeMin, roomSizeMax);
-            int roomHeight = random.nextInt(roomSizeMin, roomSizeMax);
-            int roomX = random.nextInt(1, width - roomWidth);
-            int roomY = random.nextInt(1, height - roomHeight);
+            int roomWidth = DzibdziRandom.nextInt(roomSizeMin, roomSizeMax);
+            int roomHeight = DzibdziRandom.nextInt(roomSizeMin, roomSizeMax);
+            int roomX = DzibdziRandom.nextInt(1, width - roomWidth);
+            int roomY = DzibdziRandom.nextInt(1, height - roomHeight);
             Room room = roomGenerator.createRoom(roomX, roomY, roomWidth, roomHeight);
             if (room.canPlace(map)) {
                 room.put(map, floor);
@@ -105,7 +105,7 @@ public class RoomMapBuilder {
         var currentRoom = unconnectedRooms.remove(0);
         while (!unconnectedRooms.isEmpty()) {
             // find closest room
-            var toConnectWith = Dzibdzikon.RANDOM.nextDouble() < connectWithClosesRoomPercent
+            var toConnectWith = DzibdziRandom.nextDouble() < connectWithClosesRoomPercent
                     ? findClosestRoom(currentRoom, unconnectedRooms)
                     : unconnectedRooms.remove(0);
 

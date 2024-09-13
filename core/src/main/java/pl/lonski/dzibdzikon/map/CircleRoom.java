@@ -1,5 +1,6 @@
 package pl.lonski.dzibdzikon.map;
 
+import pl.lonski.dzibdzikon.DzibdziRandom;
 import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.PositionUtils;
@@ -33,7 +34,7 @@ public class CircleRoom extends Room {
 
     @Override
     public Point getRandomPosition() {
-        return new ArrayList<>(points).get(Dzibdzikon.RANDOM.nextInt(0, points.size()));
+        return new ArrayList<>(points).get(DzibdziRandom.nextInt(0, points.size()));
     }
 
     @Override

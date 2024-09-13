@@ -1,6 +1,6 @@
 package pl.lonski.dzibdzikon.map;
 
-import pl.lonski.dzibdzikon.Dzibdzikon;
+import pl.lonski.dzibdzikon.DzibdziRandom;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.entity.Entity;
 
@@ -81,14 +81,14 @@ public class Room {
 
     public Point getRandomPosition() {
         return new Point(
-                x + (int) (Dzibdzikon.RANDOM.nextDouble() * w), y + (int) (Dzibdzikon.RANDOM.nextDouble() * h));
+                x + (int) (DzibdziRandom.nextDouble() * w), y + (int) (DzibdziRandom.nextDouble() * h));
     }
 
     public Point getRandomNonCornerPerimeterPosition() {
-        var p = new Point(new ArrayList<>(perimeterPoints).get(Dzibdzikon.RANDOM.nextInt(perimeterPoints.size())));
+        var p = new Point(new ArrayList<>(perimeterPoints).get(DzibdziRandom.nextInt(perimeterPoints.size())));
         int maxTries = 5;
         while (isPerimeterCorner(p) && maxTries-- > 0) {
-            p = new Point(new ArrayList<>(perimeterPoints).get(Dzibdzikon.RANDOM.nextInt(perimeterPoints.size())));
+            p = new Point(new ArrayList<>(perimeterPoints).get(DzibdziRandom.nextInt(perimeterPoints.size())));
         }
 
         return p;

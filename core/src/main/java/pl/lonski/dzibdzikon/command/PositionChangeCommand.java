@@ -13,10 +13,16 @@ import pl.lonski.dzibdzikon.entity.features.Position;
 
 public class PositionChangeCommand implements Command {
     private Point dPos = new Point(0, 0);
+    private final Player player;
+
+    public PositionChangeCommand(Player player) {
+        this.player = player;
+    }
 
     @Override
     public boolean accept(DzibdziInput.DzibdziKey key) {
-        dPos = PositionUtils.getPositionChange(key);
+        var pos = player.<Position>getFeature(FeatureType.POSITION);
+        dPos = PositionUtils.getPositionChange(pos.getCoords(), key);
         return !dPos.isZero();
     }
 

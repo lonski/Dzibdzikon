@@ -36,7 +36,7 @@ public class Player extends Entity {
     private final InputListener input = new InputListener();
     private Point cameraPosition;
     private final List<Command> commands = List.of(
-            new PositionChangeCommand(),
+            new PositionChangeCommand(this),
             new WaitCommand(),
             new CloseCommand(),
             new GoDownCommand(),

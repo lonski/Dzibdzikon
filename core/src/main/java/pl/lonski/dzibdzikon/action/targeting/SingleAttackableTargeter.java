@@ -16,7 +16,7 @@ public class SingleAttackableTargeter implements Action {
     private boolean done = false;
     private boolean succeeded = false;
     private int currentTargetIdx = 0;
-    private Player.InputListener input;
+    private final Player.InputListener input;
     private final TargetConsumer onTargetSelected;
     private List<Point> possibleTargets;
     private Action consumerAction;

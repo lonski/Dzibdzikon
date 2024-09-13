@@ -2,9 +2,13 @@ package pl.lonski.dzibdzikon;
 
 import com.badlogic.gdx.Game;
 import java.security.SecureRandom;
+
+import com.badlogic.gdx.Gdx;
 import pl.lonski.dzibdzikon.screen.GameMenu;
 import pl.lonski.dzibdzikon.screen.GameOver;
 import pl.lonski.dzibdzikon.screen.GameScreen;
+
+import static com.badlogic.gdx.graphics.glutils.HdpiUtils.glViewport;
 
 // TODO:
 // - pathfinding coś chyba nie bangla na 100%
@@ -21,7 +25,6 @@ public class Dzibdzikon extends Game {
     public static final int TILE_WIDTH = 32;
     public static final int TILE_HEIGHT = 32;
 
-    public static SecureRandom RANDOM = new SecureRandom();
     private static GameResources gameResources;
 
     public static GameResources getGameResources() {

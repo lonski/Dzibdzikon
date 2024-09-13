@@ -2,6 +2,8 @@ package pl.lonski.dzibdzikon.entity.features;
 
 import com.badlogic.gdx.graphics.Color;
 import java.util.List;
+
+import pl.lonski.dzibdzikon.DzibdziRandom;
 import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
@@ -84,7 +86,7 @@ public class RollingRockAi extends MonsterAi {
 
         // if on next rock position is a wall
         if (map.getTile(newPos).isWall()) {
-            if (!map.isBorderTile(newPos) && Dzibdzikon.RANDOM.nextBoolean()) {
+            if (!map.isBorderTile(newPos) && DzibdziRandom.nextBoolean()) {
                 return new ChainAction(List.of(new AttackAnimationAction(entity, newPos), new CustomAction(() -> {
                     // destroy wall
                     var floorTile = map.getTile(myPos.getCoords());

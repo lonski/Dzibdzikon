@@ -1,5 +1,6 @@
 package pl.lonski.dzibdzikon.screen;
 
+import static com.badlogic.gdx.graphics.glutils.HdpiUtils.glViewport;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ScreenUtils;
 import pl.lonski.dzibdzikon.DzibdziInput;
@@ -59,6 +60,8 @@ public class GameScreen extends DzibdzikonScreen {
         var batch = getGameResources().batch;
         var camera = getGameResources().camera;
         var textures = getGameResources().textures;
+
+        glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         ScreenUtils.clear(0, 0, 0, 0);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();

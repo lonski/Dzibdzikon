@@ -1,6 +1,6 @@
 package pl.lonski.dzibdzikon.entity.features;
 
-import pl.lonski.dzibdzikon.Dzibdzikon;
+import pl.lonski.dzibdzikon.DzibdziRandom;
 
 public class RollingRockAttackable extends Attackable {
 
@@ -10,7 +10,7 @@ public class RollingRockAttackable extends Attackable {
 
     @Override
     public FightResult attack(Attackable target) {
-        var defenceRoll = Dzibdzikon.RANDOM.nextInt(Math.max(1, target.getDefense()));
+        var defenceRoll = DzibdziRandom.nextInt(Math.max(1, target.getDefense()));
         var damageReduction = Math.min(getAttack() / 2, defenceRoll);
         var damage = getAttack() - damageReduction;
 

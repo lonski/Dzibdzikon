@@ -36,6 +36,11 @@ public class GameMenu extends DzibdzikonScreen {
         var camera = getGameResources().camera;
 
         // input
+        if (Gdx.input.isTouched()) {
+            System.out.println("X: " + Gdx.input.getX() + " Y:" + Gdx.input.getY());
+            dzibdzikon.startNewGame();
+        }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_2) || Gdx.input.isKeyJustPressed(Input.Keys.J)) {
             menuEntryIdx = Math.min(menuEntryIdx + 1, menuEntries.size() - 1);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_8) || Gdx.input.isKeyJustPressed(Input.Keys.K)) {
