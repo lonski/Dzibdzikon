@@ -12,6 +12,7 @@ public enum TextureId {
     BIG_ROCK("glazolud_glaz.png"),
     WND_SPELLBOOK("window/spellbook.png"),
     SPELL_SPIKE("spell/kolec.png"),
+    SPELL_EFFECT_SPIKE("spell/kolec_effect.png"),
     HIGHLIGHT_YELLOW("yellow-highlight.png"),
     TARGET("target.png");
 

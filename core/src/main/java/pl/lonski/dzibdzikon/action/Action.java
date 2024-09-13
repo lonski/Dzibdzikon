@@ -11,4 +11,6 @@ public interface Action {
     default boolean succeeded() {
         return isDone();
     }
+
+    default void render(float delta) {}
 }
