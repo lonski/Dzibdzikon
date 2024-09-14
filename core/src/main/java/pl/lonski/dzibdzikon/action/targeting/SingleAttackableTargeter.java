@@ -18,13 +18,13 @@ public class SingleAttackableTargeter implements Action {
     private int currentTargetIdx = 0;
     private Player.InputListener input;
     private final TargetConsumer onTargetSelected;
-    private final List<Point> possibleTargets;
+    private List<Point> possibleTargets;
     private Action consumerAction;
+    private Player player;
 
     public SingleAttackableTargeter(Player player, TargetConsumer onTargetSelected) {
         this.input = player.getInputListener();
-        this.possibleTargets =
-                new ArrayList<>(player.<FieldOfView>getFeature(FeatureType.FOV).getHostiles());
+        this.player = player;
         this.onTargetSelected = onTargetSelected;
     }
 
@@ -37,6 +37,9 @@ public class SingleAttackableTargeter implements Action {
             succeeded = consumerAction.succeeded();
             return;
         }
+
+        this.possibleTargets =
+            new ArrayList<>(player.<FieldOfView>getFeature(FeatureType.FOV).getHostiles());
 
         if (possibleTargets.isEmpty()) {
             done = true;

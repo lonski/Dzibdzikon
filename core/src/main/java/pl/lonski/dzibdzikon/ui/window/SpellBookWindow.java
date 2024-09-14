@@ -1,22 +1,27 @@
 package pl.lonski.dzibdzikon.ui.window;
 
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
-import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
-
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import pl.lonski.dzibdzikon.CameraUtils;
 import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.Point;
+import pl.lonski.dzibdzikon.action.CastSpellAction;
+import pl.lonski.dzibdzikon.action.targeting.TargetConsumer;
+import pl.lonski.dzibdzikon.action.targeting.TargeterFactory;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
 import pl.lonski.dzibdzikon.entity.features.SpellBook;
 import pl.lonski.dzibdzikon.map.TextureId;
+import pl.lonski.dzibdzikon.screen.Hud;
 import pl.lonski.dzibdzikon.spell.Spell;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
+import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
 
 public class SpellBookWindow extends WindowAdapter implements DzibdziInput.DzibdziInputListener {
 
@@ -34,6 +39,7 @@ public class SpellBookWindow extends WindowAdapter implements DzibdziInput.Dzibd
     @Override
     public void update(float delta) {
         if (visible()) {
+            Hud.setActionMessage("Wybierz czar to rzucenia lub wciśnij '1' aby przypisać do panelu podręcznego.");
             positionWindowInCenter();
         }
     }
@@ -112,10 +118,6 @@ public class SpellBookWindow extends WindowAdapter implements DzibdziInput.Dzibd
         var spells = getSpells();
         if (key.keyCode() == Input.Keys.ESCAPE) {
             selectedSpell = null;
-            if (onClose != null) {
-                onClose.accept(this);
-                onClose = null;
-            }
             hide();
         } else if (key.isUpKey()) {
             selectedSpellIdx = Math.max(0, selectedSpellIdx - 1);
@@ -123,11 +125,25 @@ public class SpellBookWindow extends WindowAdapter implements DzibdziInput.Dzibd
             selectedSpellIdx = Math.min(spells.size() - 1, selectedSpellIdx + 1);
         } else if (key.isEnterKey()) {
             selectedSpell = spells.get(selectedSpellIdx);
-            if (onClose != null) {
-                onClose.accept(this);
-                onClose = null;
-            }
+            hide();
+        } else if (key.keyCode() == Input.Keys.NUM_1) {
+            var spell = spells.get(selectedSpellIdx);
+            player.getQuickbar().setSlot(spell.getIcon(), () -> {
+                TargetConsumer onTargetSelected = target -> new CastSpellAction(player, target, spell);
+                return TargeterFactory.create(player, spell.getTargetingMode(), onTargetSelected);
+            });
             hide();
         }
+    }
+
+
+    @Override
+    public void hide() {
+        if (onClose != null) {
+            onClose.accept(this);
+            onClose = null;
+        }
+        Hud.setActionMessage("");
+        super.hide();
     }
 }

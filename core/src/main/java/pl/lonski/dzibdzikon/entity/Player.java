@@ -1,5 +1,6 @@
 package pl.lonski.dzibdzikon.entity;
 
+import com.badlogic.gdx.Input;
 import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
@@ -34,9 +35,11 @@ public class Player extends Entity {
         new CloseCommand(),
         new GoDownCommand(),
         new CastSpellCommand());
+    private final Quickbar quickbar;
 
     public Player() {
         super("Dzibdzik", TextureId.PLAYER);
+        this.quickbar = new Quickbar();
         setSpeed(1f);
         addFeature(FeatureType.PLAYER, new EntityFeature() {
         });
@@ -45,6 +48,10 @@ public class Player extends Entity {
         addFeature(FeatureType.ATTACKABLE, new Attackable(20, 20, 5, 0));
         addFeature(FeatureType.REGENERATION, new Regeneration(10, this));
         addFeature(FeatureType.SPELLBOOK, new SpellBook(List.of(new SpikeSpell(), new Fireball())));
+    }
+
+    public Quickbar getQuickbar() {
+        return quickbar;
     }
 
     public Point getCameraPosition() {
@@ -68,10 +75,15 @@ public class Player extends Entity {
         commands.forEach(c -> c.update(delta));
 
         if (!input.empty()) {
-            commands.stream()
-                .filter(c -> c.accepts(input.key))
-                .findFirst()
-                .ifPresent(command -> command.execute(this, world));
+            // quickbar
+            if (input.key.keyCode() == Input.Keys.NUM_1) {
+                quickbar.useSlot().ifPresent(this::takeAction);
+            } else {
+                commands.stream()
+                    .filter(c -> c.accepts(input.key))
+                    .findFirst()
+                    .ifPresent(command -> command.execute(this, world));
+            }
         }
 
         super.update(delta, world);

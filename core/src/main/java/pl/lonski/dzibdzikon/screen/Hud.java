@@ -1,14 +1,8 @@
 package pl.lonski.dzibdzikon.screen;
 
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
-import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import java.util.ArrayList;
-import java.util.List;
 import pl.lonski.dzibdzikon.CameraUtils;
 import pl.lonski.dzibdzikon.FontUtils;
 import pl.lonski.dzibdzikon.Point;
@@ -18,6 +12,13 @@ import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.map.TextureId;
 import pl.lonski.dzibdzikon.ui.ProgressBar;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
+import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
+
 public class Hud {
 
     private static final int MAX_MESSAGES = 5;
@@ -26,6 +27,7 @@ public class Hud {
     private final ProgressBar hpBar;
     private static final List<Point> targets = new ArrayList<>();
     public static final List<Point> debugHighlight = new ArrayList<>();
+    private List<TextureId> quickBarIcons = new ArrayList<>();
 
     public Hud() {
         this.hpBar = new ProgressBar(100, 10, new Color(0x880000ff), Color.RED);
@@ -57,6 +59,8 @@ public class Hud {
         messages.removeIf(message -> message.ttl <= 0);
         Attackable playerAttackable = world.getPlayer().getFeature(FeatureType.ATTACKABLE);
         hpBar.setProgress((float) playerAttackable.getHp() / playerAttackable.getMaxHp());
+        quickBarIcons.clear();
+        world.getPlayer().getQuickbar().getSlotIcon().ifPresent(i -> quickBarIcons.add(i));
     }
 
     public void render(float delta) {
@@ -99,6 +103,15 @@ public class Hud {
             for (Point point : targets) {
                 batch.draw(texture, point.x() * TILE_WIDTH - originX, point.y() * TILE_HEIGHT - originY);
             }
+        }
+
+        //renader quickbar
+        for (TextureId icon : quickBarIcons) {
+            var bottomRight = CameraUtils.getBottomRightCorner(camera);
+            var posX = bottomRight.x - TILE_WIDTH - 8;
+            var posY = bottomRight.y + 8;
+            var texture = getGameResources().textures.get(icon);
+            batch.draw(texture, posX, posY);
         }
 
         batch.end();

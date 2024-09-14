@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.entity.Player;
+import pl.lonski.dzibdzikon.screen.Hud;
 
 public abstract class WindowAdapter implements Window, DzibdziInput.DzibdziInputListener {
 
