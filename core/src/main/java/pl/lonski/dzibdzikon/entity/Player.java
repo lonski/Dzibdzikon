@@ -1,9 +1,5 @@
 package pl.lonski.dzibdzikon.entity;
 
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
-
-import java.util.List;
 import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
@@ -23,21 +19,27 @@ import pl.lonski.dzibdzikon.map.TextureId;
 import pl.lonski.dzibdzikon.spell.Fireball;
 import pl.lonski.dzibdzikon.spell.SpikeSpell;
 
+import java.util.List;
+
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
+
 public class Player extends Entity {
 
     private final InputListener input = new InputListener();
     private Point cameraPosition;
     private final List<Command> commands = List.of(
-            new PositionChangeCommand(),
-            new WaitCommand(),
-            new CloseCommand(),
-            new GoDownCommand(),
-            new CastSpellCommand());
+        new PositionChangeCommand(),
+        new WaitCommand(),
+        new CloseCommand(),
+        new GoDownCommand(),
+        new CastSpellCommand());
 
     public Player() {
         super("Dzibdzik", TextureId.PLAYER);
         setSpeed(1f);
-        addFeature(FeatureType.PLAYER, new EntityFeature() {});
+        addFeature(FeatureType.PLAYER, new EntityFeature() {
+        });
         addFeature(FeatureType.POSITION, new Position(new Point(0, 0), 0, 100));
         addFeature(FeatureType.FOV, new FieldOfView(this, 8));
         addFeature(FeatureType.ATTACKABLE, new Attackable(20, 20, 5, 0));
@@ -67,16 +69,16 @@ public class Player extends Entity {
 
         if (!input.empty()) {
             commands.stream()
-                    .filter(c -> c.accepts(input.key))
-                    .findFirst()
-                    .ifPresent(command -> command.execute(this, world));
+                .filter(c -> c.accepts(input.key))
+                .findFirst()
+                .ifPresent(command -> command.execute(this, world));
         }
 
         super.update(delta, world);
 
         Position pos = getFeature(FeatureType.POSITION);
         setCameraPosition(
-                new Point(pos.getCoords().x() * TILE_WIDTH, pos.getCoords().y() * TILE_HEIGHT));
+            new Point(pos.getCoords().x() * TILE_WIDTH, pos.getCoords().y() * TILE_HEIGHT));
     }
 
     @Override

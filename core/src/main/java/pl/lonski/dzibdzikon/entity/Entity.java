@@ -1,9 +1,5 @@
 package pl.lonski.dzibdzikon.entity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.Action;
 import pl.lonski.dzibdzikon.action.NoOpAction;
@@ -11,6 +7,11 @@ import pl.lonski.dzibdzikon.animation.Animation;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.EntityFeature;
 import pl.lonski.dzibdzikon.map.TextureId;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Entity {
 
@@ -123,7 +124,7 @@ public class Entity {
     public void useEnergyForAction() {
         energy -= 1.0;
         if (energy < 0.0) {
-            System.out.println("Energy dropped below 0.0 for " + name);
+            System.out.println("Energy dropped below 0.0: " + energy + " for " + name);
         }
     }
 

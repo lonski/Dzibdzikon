@@ -1,14 +1,15 @@
 package pl.lonski.dzibdzikon.animation;
 
-import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
-
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import java.util.List;
 import pl.lonski.dzibdzikon.Debouncer;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.map.Line;
 import pl.lonski.dzibdzikon.map.TextureId;
+
+import java.util.List;
+
+import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
 
 public class ThrowAnimation implements Animation {
 
@@ -18,6 +19,7 @@ public class ThrowAnimation implements Animation {
     private Debouncer debouncer = new Debouncer(0.01f);
     private boolean done = false;
     private int speed;
+    private float rotation = 0;
 
     public ThrowAnimation(TextureId textureId, Point startPix, Point endPix) {
         this(textureId, startPix, endPix, 1);
@@ -28,6 +30,13 @@ public class ThrowAnimation implements Animation {
         this.currentPosPix = startPix;
         this.line = Line.calculate(startPix, endPix);
         this.speed = speed;
+
+        double dx = startPix.x() - endPix.x();
+        double dy = startPix.y() - endPix.y();
+        rotation = (float) Math.toDegrees(Math.atan(dy / dx));
+        if (dx >= 0) {
+            rotation += 180;
+        }
     }
 
     @Override
@@ -41,6 +50,7 @@ public class ThrowAnimation implements Animation {
             while (i-- > 0 && !line.isEmpty()) {
                 currentPosPix = line.remove(0);
             }
+
             if (line.isEmpty()) {
                 done = true;
             }
@@ -53,7 +63,19 @@ public class ThrowAnimation implements Animation {
             return;
         }
 
-        getGameResources().batch.draw(texture, currentPosPix.x(), currentPosPix.y());
+        float originX = texture.getRegionWidth() / 2f;
+        float originY = texture.getRegionHeight() / 2f;
+        getGameResources().batch.draw(
+            texture,
+            currentPosPix.x() - originX,
+            currentPosPix.y() - originY,
+            originX,
+            originY,
+            texture.getRegionWidth(),
+            texture.getRegionHeight(),
+            1.0f,
+            1.0f,
+            rotation);
     }
 
     @Override

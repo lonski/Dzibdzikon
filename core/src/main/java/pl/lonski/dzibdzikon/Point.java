@@ -1,5 +1,8 @@
 package pl.lonski.dzibdzikon;
 
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
+
 public record Point(int x, int y) {
 
     public boolean isZero() {
@@ -19,6 +22,10 @@ public record Point(int x, int y) {
     }
 
     public Point toPixels() {
-        return new Point(x * Dzibdzikon.TILE_WIDTH, y * Dzibdzikon.TILE_HEIGHT);
+        return new Point(x * TILE_WIDTH, y * Dzibdzikon.TILE_HEIGHT);
+    }
+
+    public Point toCoords() {
+        return new Point(Math.round((float) x / (float) TILE_WIDTH), Math.round((float) y / (float) TILE_HEIGHT));
     }
 }

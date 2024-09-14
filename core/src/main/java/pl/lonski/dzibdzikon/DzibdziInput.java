@@ -2,8 +2,12 @@ package pl.lonski.dzibdzikon;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.math.Vector3;
+
 import java.util.HashSet;
 import java.util.Set;
+
+import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
 
 public class DzibdziInput {
 
@@ -22,7 +26,7 @@ public class DzibdziInput {
 
             var listenersCopy = new HashSet<>(listeners);
             for (DzibdziInputListener listener : listenersCopy) {
-                listener.onInput(new DzibdziKey(keycode, false));
+                listener.onInput(new DzibdziKey(keycode, false, null));
             }
 
             return true;
@@ -37,9 +41,19 @@ public class DzibdziInput {
 
             var listenersCopy = new HashSet<>(listeners);
             for (DzibdziInputListener listener : listenersCopy) {
-                listener.onInput(new DzibdziKey(keycode, true));
+                listener.onInput(new DzibdziKey(keycode, true, null));
             }
 
+            return true;
+        }
+
+        @Override
+        public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+            var pos = getGameResources().camera.unproject(new Vector3((float) screenX, (float) screenY, 0f));
+            var listenersCopy = new HashSet<>(listeners);
+            for (DzibdziInputListener listener : listenersCopy) {
+                listener.onInput(new DzibdziKey(-1, false, new Point((int) pos.x, (int) pos.y)));
+            }
             return true;
         }
     }
@@ -48,7 +62,7 @@ public class DzibdziInput {
         void onInput(DzibdziKey key);
     }
 
-    public record DzibdziKey(int keyCode, boolean released) {
+    public record DzibdziKey(int keyCode, boolean released, Point click) {
 
         public boolean isUpKey() {
             return keyCode == Input.Keys.UP || keyCode == Input.Keys.NUMPAD_8 || keyCode == Input.Keys.K;
