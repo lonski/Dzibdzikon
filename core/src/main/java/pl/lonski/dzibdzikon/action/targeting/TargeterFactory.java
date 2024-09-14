@@ -11,6 +11,8 @@ public class TargeterFactory {
                 return new SingleAttackableTargeter(player, onTargetSelected);
             case DIRECTION:
                 return new DirectionTargeter(onTargetSelected);
+            case COORDS:
+                return new CoordsTargeter(player, onTargetSelected);
             default:
                 throw new IllegalArgumentException("Unknown targeting mode: " + mode);
         }

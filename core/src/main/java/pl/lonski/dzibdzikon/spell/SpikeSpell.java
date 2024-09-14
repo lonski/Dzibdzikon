@@ -5,13 +5,17 @@ import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.DieAction;
+import pl.lonski.dzibdzikon.animation.Animation;
 import pl.lonski.dzibdzikon.animation.TextFlowUpAnimation;
+import pl.lonski.dzibdzikon.animation.ThrowAnimation;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.map.TextureId;
 import pl.lonski.dzibdzikon.action.targeting.TargetingMode;
+
+import java.util.Optional;
 
 public class SpikeSpell implements Spell {
     @Override
@@ -52,5 +56,9 @@ public class SpikeSpell implements Spell {
         if (targetAttackable.getHp() <= 0) {
             targetEntity.takeAction(new DieAction(targetEntity));
         }
+    }
+
+    public Optional<Animation> getAnimation(Point startPosPix, Point targetPix) {
+        return Optional.of(new ThrowAnimation(TextureId.SPELL_EFFECT_SPIKE, startPosPix, targetPix, 6));
     }
 }

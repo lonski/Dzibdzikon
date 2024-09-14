@@ -11,10 +11,14 @@ public enum TextureId {
     GLAZOLUD("glazolud.png"),
     BIG_ROCK("glazolud_glaz.png"),
     WND_SPELLBOOK("window/spellbook.png"),
+    HIGHLIGHT_YELLOW("yellow-highlight.png"),
+    TARGET("target.png"),
+
     SPELL_SPIKE("spell/kolec.png"),
     SPELL_EFFECT_SPIKE("spell/kolec_effect.png"),
-    HIGHLIGHT_YELLOW("yellow-highlight.png"),
-    TARGET("target.png");
+    SPELL_FIREBALL("spell/fireball.png"),
+    SPELL_EFFECT_FIREBALL("spell/fireball_effect.png"),
+    SPELL_EFFECT_BURN("spell/burn.png");
 
     private String filename;
 

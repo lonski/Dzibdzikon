@@ -2,11 +2,10 @@ package pl.lonski.dzibdzikon.action;
 
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
-import pl.lonski.dzibdzikon.animation.ThrowAnimation;
+import pl.lonski.dzibdzikon.animation.Animation;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Position;
-import pl.lonski.dzibdzikon.map.TextureId;
 import pl.lonski.dzibdzikon.spell.Spell;
 
 public class CastSpellAction implements Action {
@@ -16,7 +15,7 @@ public class CastSpellAction implements Action {
     private final Point target;
     private final Spell spell;
 
-    private final ThrowAnimation animation;
+    private final Animation animation;
 
     public CastSpellAction(Entity caster, Point target, Spell spell) {
         this.caster = caster;
@@ -24,7 +23,8 @@ public class CastSpellAction implements Action {
         this.spell = spell;
 
         var pos = caster.<Position>getFeature(FeatureType.POSITION);
-        this.animation = new ThrowAnimation(TextureId.SPELL_EFFECT_SPIKE, pos.getRenderPosition(), target.toPixels(), 6);
+        this.animation = spell.getAnimation(pos.getRenderPosition(), target.toPixels()).orElse(null);
+
         caster.addAnimation(animation);
     }
 

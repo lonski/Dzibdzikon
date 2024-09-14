@@ -1,31 +1,30 @@
 package pl.lonski.dzibdzikon.action.targeting;
 
 import com.badlogic.gdx.Input;
-import java.util.ArrayList;
-import java.util.List;
 import pl.lonski.dzibdzikon.Point;
+import pl.lonski.dzibdzikon.PositionUtils;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.Action;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
-import pl.lonski.dzibdzikon.entity.features.FieldOfView;
+import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.screen.Hud;
 
-public class SingleAttackableTargeter implements Action {
+import java.util.List;
+
+public class CoordsTargeter implements Action {
 
     private boolean done = false;
     private boolean succeeded = false;
-    private int currentTargetIdx = 0;
-    private Player.InputListener input;
-    private final TargetConsumer onTargetSelected;
-    private List<Point> possibleTargets;
+    private final TargetConsumer targetConsumer;
     private Action consumerAction;
-    private Player player;
+    private Player.InputListener input;
+    private Point currentTarget;
 
-    public SingleAttackableTargeter(Player player, TargetConsumer onTargetSelected) {
+    public CoordsTargeter(Player player, TargetConsumer targetConsumer) {
+        this.targetConsumer = targetConsumer;
         this.input = player.getInputListener();
-        this.player = player;
-        this.onTargetSelected = onTargetSelected;
+        this.currentTarget = player.<Position>getFeature(FeatureType.POSITION).getCoords();
     }
 
     @Override
@@ -38,42 +37,37 @@ public class SingleAttackableTargeter implements Action {
             return;
         }
 
-        this.possibleTargets =
-            new ArrayList<>(player.<FieldOfView>getFeature(FeatureType.FOV).getHostiles());
-
-        if (possibleTargets.isEmpty()) {
-            done = true;
-            return;
-        }
-
         if (done) {
             return;
         }
 
+        Hud.setTargets(List.of(currentTarget));
         Hud.setActionMessage("Wybierz cel..");
         if (!input.empty()) {
-            if (input.getKey().keyCode() == Input.Keys.TAB) {
-                currentTargetIdx = (currentTargetIdx + 1) % possibleTargets.size();
-            } else if (input.getKey().isEnterKey()) {
-                consumerAction = onTargetSelected.accept(possibleTargets.get(currentTargetIdx));
-                currentTargetIdx = -1;
+
+            if (input.getKey().isEnterKey()) {
+                consumerAction = targetConsumer.accept(currentTarget);
                 done = consumerAction == null || consumerAction.isDone();
                 succeeded = consumerAction != null && consumerAction.succeeded();
+                Hud.setTargets(List.of());
             } else if (input.getKey().keyCode() == Input.Keys.ESCAPE) {
                 Hud.setActionMessage("");
                 Hud.setTargets(List.of());
                 consumerAction = null;
                 done = true;
                 succeeded = false;
-                return;
+                Hud.setTargets(List.of());
+            } else {
+                var dpos = PositionUtils.getPositionChange(input.getKey());
+                var newTarget = currentTarget.add(dpos);
+                if (world.getCurrentLevel().getVisible().contains(newTarget)
+                        && !world.getCurrentLevel().isObstacle(newTarget, false)) {
+                    currentTarget = newTarget;
+                    Hud.setTargets(List.of(currentTarget));
+                }
             }
-            input.reset();
-        }
 
-        if (currentTargetIdx >= 0 && currentTargetIdx < possibleTargets.size()) {
-            Hud.setTargets(List.of(possibleTargets.get(currentTargetIdx)));
-        } else {
-            Hud.setTargets(List.of());
+            input.reset();
         }
     }
 
