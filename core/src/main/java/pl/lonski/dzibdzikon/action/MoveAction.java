@@ -4,7 +4,9 @@ import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
+import pl.lonski.dzibdzikon.entity.Player;
 import pl.lonski.dzibdzikon.entity.features.Position;
+import pl.lonski.dzibdzikon.screen.Hud;
 
 public class MoveAction implements Action {
 
@@ -24,16 +26,24 @@ public class MoveAction implements Action {
     public void update(float delta, World world) {
         moveAnimation.update(delta, world);
         if (entity.getFeature(FeatureType.PLAYER) != null) {
-            world.getPlayer().setCameraPosition(entity.<Position>getFeature(FeatureType.POSITION).getRenderPosition());
+            world.getPlayer()
+                    .setCameraPosition(
+                            entity.<Position>getFeature(FeatureType.POSITION).getRenderPosition());
         }
         if (moveAnimation.isDone()) {
-            finishMove();
+            finishMove(world);
         }
     }
 
-    private void finishMove() {
+    private void finishMove(World world) {
         Position pos = entity.getFeature(FeatureType.POSITION);
         pos.setCoords(target);
+        if (entity instanceof Player) {
+            world.getCurrentLevel()
+                    .getEntityAt(target, FeatureType.PICKABLE)
+                    .ifPresent(item ->
+                            Hud.addMessage("Leży tutaj " + item.getName().toLowerCase()));
+        }
         done = true;
     }
 

@@ -7,6 +7,7 @@ import pl.lonski.dzibdzikon.entity.features.Downstairs;
 import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.GlazoludAi;
 import pl.lonski.dzibdzikon.entity.features.MonsterAi;
+import pl.lonski.dzibdzikon.entity.features.Pickable;
 import pl.lonski.dzibdzikon.entity.features.Regeneration;
 import pl.lonski.dzibdzikon.entity.features.RollingRockAi;
 import pl.lonski.dzibdzikon.entity.features.RollingRockAttackable;
@@ -53,5 +54,11 @@ public class EntityFactory {
         rock.addFeature(FeatureType.AI, new RollingRockAi(rock, direction));
         rock.setSpeed(2f);
         return rock;
+    }
+
+    public static Entity createHealingPotion() {
+        var potion = new Entity("Mikstura leczenia", TextureId.POTION_RED);
+        potion.addFeature(FeatureType.PICKABLE, new Pickable());
+        return potion;
     }
 }

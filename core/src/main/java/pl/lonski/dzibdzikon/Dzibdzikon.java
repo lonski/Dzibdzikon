@@ -11,7 +11,7 @@ import pl.lonski.dzibdzikon.screen.GameScreen;
 // - open doors as action
 public class Dzibdzikon extends Game {
 
-    public static boolean SHOW_WHOLE_LEVEL = false;
+    public static boolean SHOW_WHOLE_LEVEL = true;
     public static final int TILE_WIDTH = 32;
     public static final int TILE_HEIGHT = 32;
 

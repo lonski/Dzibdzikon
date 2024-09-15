@@ -8,17 +8,18 @@ import pl.lonski.dzibdzikon.command.CastSpellCommand;
 import pl.lonski.dzibdzikon.command.CloseCommand;
 import pl.lonski.dzibdzikon.command.Command;
 import pl.lonski.dzibdzikon.command.GoDownCommand;
+import pl.lonski.dzibdzikon.command.PickupCommand;
 import pl.lonski.dzibdzikon.command.PositionChangeCommand;
 import pl.lonski.dzibdzikon.command.UseQuickbarCommand;
 import pl.lonski.dzibdzikon.command.WaitCommand;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.EntityFeature;
 import pl.lonski.dzibdzikon.entity.features.FieldOfView;
+import pl.lonski.dzibdzikon.entity.features.Inventory;
 import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.entity.features.Regeneration;
 import pl.lonski.dzibdzikon.entity.features.SpellBook;
 import pl.lonski.dzibdzikon.map.TextureId;
-import pl.lonski.dzibdzikon.screen.Hud;
 import pl.lonski.dzibdzikon.spell.Fireball;
 import pl.lonski.dzibdzikon.spell.SpikeSpell;
 
@@ -38,7 +39,8 @@ public class Player extends Entity {
             new CloseCommand(),
             new GoDownCommand(),
             new CastSpellCommand(),
-            new UseQuickbarCommand());
+            new UseQuickbarCommand(),
+            new PickupCommand());
     private final Quickbar quickbar;
 
     public Player() {
@@ -51,6 +53,7 @@ public class Player extends Entity {
         addFeature(FeatureType.ATTACKABLE, new Attackable(20, 20, 5, 0));
         addFeature(FeatureType.REGENERATION, new Regeneration(10, this));
         addFeature(FeatureType.SPELLBOOK, new SpellBook(List.of(new SpikeSpell(), new Fireball())));
+        addFeature(FeatureType.INVENTORY, new Inventory());
     }
 
     public Quickbar getQuickbar() {
@@ -78,18 +81,18 @@ public class Player extends Entity {
         commands.forEach(c -> c.update(delta));
 
         if (!input.empty()) {
-            if (input.key.click() != null) {
-                var click = input.key.click();
-                var center = click.toCoords();
-                if (sim == null || !sim.hasMoreSteps()) {
-                    sim = new ExplosionSimulator(center, 3, world);
-                }
-
-                Hud.debugHighlight.clear();
-                Hud.debugHighlight.addAll(sim.step());
-                input.reset();
-                return;
-            }
+            //            if (input.key.click() != null) {
+            //                var click = input.key.click();
+            //                var center = click.toCoords();
+            //                if (sim == null || !sim.hasMoreSteps()) {
+            //                    sim = new ExplosionSimulator(center, 3, world);
+            //                }
+            //
+            //                Hud.debugHighlight.clear();
+            //                Hud.debugHighlight.addAll(sim.step());
+            //                input.reset();
+            //                return;
+            //            }
 
             commands.stream()
                     .filter(c -> c.accept(input.key))

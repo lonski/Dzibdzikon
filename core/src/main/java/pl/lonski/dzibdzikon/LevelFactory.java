@@ -1,10 +1,5 @@
 package pl.lonski.dzibdzikon;
 
-import static pl.lonski.dzibdzikon.Dzibdzikon.RANDOM;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.EntityFactory;
 import pl.lonski.dzibdzikon.entity.FeatureType;
@@ -13,6 +8,12 @@ import pl.lonski.dzibdzikon.map.MapUtils;
 import pl.lonski.dzibdzikon.map.Room;
 import pl.lonski.dzibdzikon.map.RoomMapGeneratorV2;
 import pl.lonski.dzibdzikon.map.TileGrid;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static pl.lonski.dzibdzikon.Dzibdzikon.RANDOM;
 
 public class LevelFactory {
 
@@ -37,6 +38,20 @@ public class LevelFactory {
 
                     mob.addFeature(FeatureType.POSITION, new Position(pos, 0, 10));
                     level.addEntity(mob);
+                }
+            }
+        }
+
+        // spawn items
+        for (Room room : level.getMap().getRooms()) {
+            int maxItemsInRoom = RANDOM.nextInt(0, 2);
+            while (maxItemsInRoom-- > 0) {
+                var pos = room.getRandomPosition();
+                if (level.getEntityAt(pos, null).isEmpty()) {
+                    var item = EntityFactory.createHealingPotion();
+
+                    item.addFeature(FeatureType.POSITION, new Position(pos, 0, 10));
+                    level.addEntity(item);
                 }
             }
         }

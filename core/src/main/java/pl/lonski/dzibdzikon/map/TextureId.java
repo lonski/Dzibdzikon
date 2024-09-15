@@ -18,7 +18,9 @@ public enum TextureId {
     SPELL_EFFECT_SPIKE("spell/kolec_effect.png"),
     SPELL_FIREBALL("spell/fireball.png"),
     SPELL_EFFECT_FIREBALL("spell/fireball_effect.png"),
-    SPELL_EFFECT_BURN("spell/burn.png");
+    SPELL_EFFECT_BURN("spell/burn.png"),
+
+    POTION_RED("potion/red.png");
 
     private String filename;
 

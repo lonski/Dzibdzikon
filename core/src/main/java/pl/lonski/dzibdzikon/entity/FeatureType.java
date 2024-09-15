@@ -10,4 +10,6 @@ public enum FeatureType {
     DOWNSTAIRS,
     REGENERATION,
     SPELLBOOK,
+    PICKABLE,
+    INVENTORY
 }
