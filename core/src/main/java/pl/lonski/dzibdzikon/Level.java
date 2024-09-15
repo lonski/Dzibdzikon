@@ -1,17 +1,18 @@
 package pl.lonski.dzibdzikon;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Openable;
 import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.map.TextureId;
 import pl.lonski.dzibdzikon.map.TileGrid;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Level {
 
@@ -63,8 +64,8 @@ public class Level {
 
         // openables
         if (getEntityAt(pos, FeatureType.OPENABLE)
-            .map(o -> o.<Openable>getFeature(FeatureType.OPENABLE).obstacle())
-            .orElse(false)) {
+                .map(o -> o.<Openable>getFeature(FeatureType.OPENABLE).obstacle())
+                .orElse(false)) {
             return true;
         }
 
@@ -78,8 +79,8 @@ public class Level {
 
         // openables
         if (getEntityAt(pos, FeatureType.OPENABLE)
-            .map(o -> o.<Openable>getFeature(FeatureType.OPENABLE).opaque())
-            .orElse(false)) {
+                .map(o -> o.<Openable>getFeature(FeatureType.OPENABLE).opaque())
+                .orElse(false)) {
             return true;
         }
 
@@ -88,8 +89,10 @@ public class Level {
 
     public Point getRandomFreePosition() {
         while (true) {
-            Point pos = new Point(Dzibdzikon.RANDOM.nextInt(map.getWidth()), Dzibdzikon.RANDOM.nextInt(map.getHeight()));
-            if (map.getTile(pos) == TextureId.FLOOR && getEntitiesAt(pos, FeatureType.POSITION).isEmpty()) {
+            Point pos =
+                    new Point(Dzibdzikon.RANDOM.nextInt(map.getWidth()), Dzibdzikon.RANDOM.nextInt(map.getHeight()));
+            if (map.getTile(pos) == TextureId.FLOOR
+                    && getEntitiesAt(pos, FeatureType.POSITION).isEmpty()) {
                 return pos;
             }
         }
@@ -101,18 +104,28 @@ public class Level {
 
     public List<Entity> getEntitiesAt(Point targetPos, FeatureType featureType) {
         return getEntities().stream()
-            .filter(e -> {
-                var pos = e.<Position>getFeature(FeatureType.POSITION);
-                return pos != null && pos.getCoords().equals(targetPos);
-            })
-            .filter(e -> featureType == null || e.getFeature(featureType) != null)
-            .collect(Collectors.toList());
+                .filter(e -> {
+                    var pos = e.<Position>getFeature(FeatureType.POSITION);
+                    return pos != null && pos.getCoords().equals(targetPos);
+                })
+                .filter(e -> featureType == null || e.getFeature(featureType) != null)
+                .collect(Collectors.toList());
+    }
+
+    public List<Entity> getEntitiesAt(Set<Point> points, FeatureType featureType) {
+        return getEntities().stream()
+                .filter(e -> {
+                    var pos = e.<Position>getFeature(FeatureType.POSITION);
+                    return pos != null && points.contains(pos.getCoords());
+                })
+                .filter(e -> featureType == null || e.getFeature(featureType) != null)
+                .collect(Collectors.toList());
     }
 
     public Optional<Entity> getFirstEntity(FeatureType featureType) {
         return getEntities().stream()
-            .filter(e -> e.getFeature(featureType) != null)
-            .findFirst();
+                .filter(e -> e.getFeature(featureType) != null)
+                .findFirst();
     }
 
     public void removeEntity(Entity entity) {

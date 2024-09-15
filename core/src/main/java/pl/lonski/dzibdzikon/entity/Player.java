@@ -1,6 +1,7 @@
 package pl.lonski.dzibdzikon.entity;
 
 import pl.lonski.dzibdzikon.DzibdziInput;
+import pl.lonski.dzibdzikon.ExplosionSimulator;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.command.CastSpellCommand;
@@ -17,6 +18,7 @@ import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.entity.features.Regeneration;
 import pl.lonski.dzibdzikon.entity.features.SpellBook;
 import pl.lonski.dzibdzikon.map.TextureId;
+import pl.lonski.dzibdzikon.screen.Hud;
 import pl.lonski.dzibdzikon.spell.Fireball;
 import pl.lonski.dzibdzikon.spell.SpikeSpell;
 
@@ -27,6 +29,7 @@ import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
 
 public class Player extends Entity {
 
+    private ExplosionSimulator sim;
     private final InputListener input = new InputListener();
     private Point cameraPosition;
     private final List<Command> commands = List.of(
@@ -75,6 +78,19 @@ public class Player extends Entity {
         commands.forEach(c -> c.update(delta));
 
         if (!input.empty()) {
+            if (input.key.click() != null) {
+                var click = input.key.click();
+                var center = click.toCoords();
+                if (sim == null || !sim.hasMoreSteps()) {
+                    sim = new ExplosionSimulator(center, 3, world);
+                }
+
+                Hud.debugHighlight.clear();
+                Hud.debugHighlight.addAll(sim.step());
+                input.reset();
+                return;
+            }
+
             commands.stream()
                     .filter(c -> c.accept(input.key))
                     .findFirst()

@@ -2,14 +2,14 @@ package pl.lonski.dzibdzikon.spell;
 
 import com.badlogic.gdx.graphics.Color;
 import pl.lonski.dzibdzikon.Dzibdzikon;
+import pl.lonski.dzibdzikon.ExplosionSimulator;
 import pl.lonski.dzibdzikon.Point;
-import pl.lonski.dzibdzikon.PositionUtils;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.DieAction;
 import pl.lonski.dzibdzikon.action.targeting.TargetingMode;
 import pl.lonski.dzibdzikon.animation.Animation;
-import pl.lonski.dzibdzikon.animation.BurnAnimation;
 import pl.lonski.dzibdzikon.animation.ChainAnimation;
+import pl.lonski.dzibdzikon.animation.CircleExplodeAnimation;
 import pl.lonski.dzibdzikon.animation.TextFlowUpAnimation;
 import pl.lonski.dzibdzikon.animation.ThrowAnimation;
 import pl.lonski.dzibdzikon.entity.Entity;
@@ -18,7 +18,6 @@ import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.map.TextureId;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -52,10 +51,8 @@ public class Fireball implements Spell {
 
     @Override
     public void cast(World world, Entity caster, Point target) {
-        var targets = new HashSet<Entity>();
-        PositionUtils.inCircleOf(range, circlePoint -> world.getCurrentLevel()
-                .getEntityAt(target.add(circlePoint), FeatureType.ATTACKABLE)
-                .ifPresent(targets::add));
+        var targetPoints = ExplosionSimulator.simulate(target, range, world);
+        var targets = world.getCurrentLevel().getEntitiesAt(new HashSet<>(targetPoints), FeatureType.ATTACKABLE);
 
         for (Entity targetEntity : targets) {
             var targetAttackable = targetEntity.<Attackable>getFeature(FeatureType.ATTACKABLE);
@@ -73,12 +70,8 @@ public class Fireball implements Spell {
     }
 
     public Optional<Animation> getAnimation(Point startPosPix, Point targetPix) {
-        var points = new ArrayList<Point>();
-        PositionUtils.inCircleOf(
-                range, circlePoint -> points.add(targetPix.toCoords().add(circlePoint)));
-
         return Optional.of(new ChainAnimation(List.of(
                 new ThrowAnimation(TextureId.SPELL_EFFECT_FIREBALL, startPosPix, targetPix, 6),
-                new BurnAnimation(points))));
+                new CircleExplodeAnimation(targetPix.toCoords(), range))));
     }
 }
