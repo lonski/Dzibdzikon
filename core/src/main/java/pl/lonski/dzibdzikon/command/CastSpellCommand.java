@@ -15,7 +15,7 @@ import pl.lonski.dzibdzikon.ui.window.SpellBookWindow;
 
 public class CastSpellCommand implements Command {
     @Override
-    public boolean accepts(DzibdziInput.DzibdziKey key) {
+    public boolean accept(DzibdziInput.DzibdziKey key) {
         return (key.keyCode() == Input.Keys.Z && DzibdziInput.isShiftDown);
     }
 

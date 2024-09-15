@@ -16,6 +16,7 @@ public class GameResources {
     public OrthographicCamera camera;
     public SpriteBatch batch;
     public ShapeRenderer shapeRenderer;
+    public BitmapFont fontItalic12;
     public BitmapFont fontItalic15;
     public BitmapFont fontItalic20;
     public BitmapFont fontBoldItalic;
@@ -26,6 +27,7 @@ public class GameResources {
     public GameResources() {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
+        fontItalic12 = FontUtils.createFont("font/DejaVuSerif-Italic.ttf", 12);
         fontItalic15 = FontUtils.createFont("font/DejaVuSerif-Italic.ttf", 15);
         fontItalic20 = FontUtils.createFont("font/DejaVuSerif-Italic.ttf", 20);
         fontBoldItalic = FontUtils.createFont("font/DejaVuSerif-BoldItalic.ttf", 15);

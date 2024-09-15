@@ -11,6 +11,7 @@ import pl.lonski.dzibdzikon.action.targeting.TargetConsumer;
 import pl.lonski.dzibdzikon.action.targeting.TargeterFactory;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
+import pl.lonski.dzibdzikon.entity.Quickbar;
 import pl.lonski.dzibdzikon.entity.features.SpellBook;
 import pl.lonski.dzibdzikon.map.TextureId;
 import pl.lonski.dzibdzikon.screen.Hud;
@@ -39,7 +40,7 @@ public class SpellBookWindow extends WindowAdapter implements DzibdziInput.Dzibd
     @Override
     public void update(float delta) {
         if (visible()) {
-            Hud.setActionMessage("Wybierz czar to rzucenia lub wciśnij '1' aby przypisać do panelu podręcznego.");
+            Hud.setActionMessage("Wybierz czar to rzucenia lub wciśnij 1..5 aby przypisać do panelu podręcznego.");
             positionWindowInCenter();
         }
     }
@@ -126,16 +127,26 @@ public class SpellBookWindow extends WindowAdapter implements DzibdziInput.Dzibd
         } else if (key.isEnterKey()) {
             selectedSpell = spells.get(selectedSpellIdx);
             hide();
-        } else if (key.keyCode() == Input.Keys.NUM_1) {
-            var spell = spells.get(selectedSpellIdx);
-            player.getQuickbar().setSlot(spell.getIcon(), () -> {
-                TargetConsumer onTargetSelected = target -> new CastSpellAction(player, target, spell);
-                return TargeterFactory.create(player, spell.getTargetingMode(), onTargetSelected);
-            });
-            hide();
+        } else {
+            var slot =
+                    switch (key.keyCode()) {
+                        case Input.Keys.NUM_1 -> Quickbar.SlotType.NUM_1;
+                        case Input.Keys.NUM_2 -> Quickbar.SlotType.NUM_2;
+                        case Input.Keys.NUM_3 -> Quickbar.SlotType.NUM_3;
+                        case Input.Keys.NUM_4 -> Quickbar.SlotType.NUM_4;
+                        case Input.Keys.NUM_5 -> Quickbar.SlotType.NUM_5;
+                        default -> null;
+                    };
+            if (slot != null) {
+                var spell = spells.get(selectedSpellIdx);
+                player.getQuickbar().setSlot(slot, spell.getIcon(), () -> {
+                    TargetConsumer onTargetSelected = target -> new CastSpellAction(player, target, spell);
+                    return TargeterFactory.create(player, spell.getTargetingMode(), onTargetSelected);
+                });
+                hide();
+            }
         }
     }
-
 
     @Override
     public void hide() {

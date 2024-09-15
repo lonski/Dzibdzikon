@@ -15,7 +15,7 @@ public class PositionChangeCommand implements Command {
     private Point dPos = new Point(0, 0);
 
     @Override
-    public boolean accepts(DzibdziInput.DzibdziKey key) {
+    public boolean accept(DzibdziInput.DzibdziKey key) {
         dPos = PositionUtils.getPositionChange(key);
         return !dPos.isZero();
     }

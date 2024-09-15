@@ -12,7 +12,7 @@ public class WaitCommand implements Command {
     private final float waitDebounce = 0.3f;
 
     @Override
-    public boolean accepts(DzibdziInput.DzibdziKey key) {
+    public boolean accept(DzibdziInput.DzibdziKey key) {
         return (key.keyCode() == Input.Keys.NUMPAD_5 || key.keyCode() == Input.Keys.SPACE);
     }
 

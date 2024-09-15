@@ -1,6 +1,5 @@
 package pl.lonski.dzibdzikon.entity;
 
-import com.badlogic.gdx.Input;
 import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
@@ -9,6 +8,7 @@ import pl.lonski.dzibdzikon.command.CloseCommand;
 import pl.lonski.dzibdzikon.command.Command;
 import pl.lonski.dzibdzikon.command.GoDownCommand;
 import pl.lonski.dzibdzikon.command.PositionChangeCommand;
+import pl.lonski.dzibdzikon.command.UseQuickbarCommand;
 import pl.lonski.dzibdzikon.command.WaitCommand;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.EntityFeature;
@@ -30,19 +30,19 @@ public class Player extends Entity {
     private final InputListener input = new InputListener();
     private Point cameraPosition;
     private final List<Command> commands = List.of(
-        new PositionChangeCommand(),
-        new WaitCommand(),
-        new CloseCommand(),
-        new GoDownCommand(),
-        new CastSpellCommand());
+            new PositionChangeCommand(),
+            new WaitCommand(),
+            new CloseCommand(),
+            new GoDownCommand(),
+            new CastSpellCommand(),
+            new UseQuickbarCommand());
     private final Quickbar quickbar;
 
     public Player() {
         super("Dzibdzik", TextureId.PLAYER);
         this.quickbar = new Quickbar();
         setSpeed(1f);
-        addFeature(FeatureType.PLAYER, new EntityFeature() {
-        });
+        addFeature(FeatureType.PLAYER, new EntityFeature() {});
         addFeature(FeatureType.POSITION, new Position(new Point(0, 0), 0, 100));
         addFeature(FeatureType.FOV, new FieldOfView(this, 8));
         addFeature(FeatureType.ATTACKABLE, new Attackable(20, 20, 5, 0));
@@ -75,22 +75,17 @@ public class Player extends Entity {
         commands.forEach(c -> c.update(delta));
 
         if (!input.empty()) {
-            // quickbar
-            if (input.key.keyCode() == Input.Keys.NUM_1) {
-                quickbar.useSlot().ifPresent(this::takeAction);
-            } else {
-                commands.stream()
-                    .filter(c -> c.accepts(input.key))
+            commands.stream()
+                    .filter(c -> c.accept(input.key))
                     .findFirst()
                     .ifPresent(command -> command.execute(this, world));
-            }
         }
 
         super.update(delta, world);
 
         Position pos = getFeature(FeatureType.POSITION);
         setCameraPosition(
-            new Point(pos.getCoords().x() * TILE_WIDTH, pos.getCoords().y() * TILE_HEIGHT));
+                new Point(pos.getCoords().x() * TILE_WIDTH, pos.getCoords().y() * TILE_HEIGHT));
     }
 
     @Override

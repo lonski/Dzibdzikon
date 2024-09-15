@@ -10,7 +10,7 @@ import pl.lonski.dzibdzikon.screen.Hud;
 
 public class GoDownCommand implements Command {
     @Override
-    public boolean accepts(DzibdziInput.DzibdziKey key) {
+    public boolean accept(DzibdziInput.DzibdziKey key) {
         return (key.keyCode() == Input.Keys.PERIOD && DzibdziInput.isShiftDown);
     }
 

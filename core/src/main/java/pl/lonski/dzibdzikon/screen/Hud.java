@@ -8,11 +8,13 @@ import pl.lonski.dzibdzikon.FontUtils;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.FeatureType;
+import pl.lonski.dzibdzikon.entity.Quickbar;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.map.TextureId;
 import pl.lonski.dzibdzikon.ui.ProgressBar;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
@@ -27,7 +29,7 @@ public class Hud {
     private final ProgressBar hpBar;
     private static final List<Point> targets = new ArrayList<>();
     public static final List<Point> debugHighlight = new ArrayList<>();
-    private List<TextureId> quickBarIcons = new ArrayList<>();
+    private final List<Quickbar.SlotIcon> quickBarIcons = new ArrayList<>();
 
     public Hud() {
         this.hpBar = new ProgressBar(100, 10, new Color(0x880000ff), Color.RED);
@@ -60,7 +62,8 @@ public class Hud {
         Attackable playerAttackable = world.getPlayer().getFeature(FeatureType.ATTACKABLE);
         hpBar.setProgress((float) playerAttackable.getHp() / playerAttackable.getMaxHp());
         quickBarIcons.clear();
-        world.getPlayer().getQuickbar().getSlotIcon().ifPresent(i -> quickBarIcons.add(i));
+        quickBarIcons.addAll(world.getPlayer().getQuickbar().getSlotIcons());
+        quickBarIcons.sort(Comparator.comparingInt(Quickbar.SlotIcon::num));
     }
 
     public void render(float delta) {
@@ -105,13 +108,17 @@ public class Hud {
             }
         }
 
-        //renader quickbar
-        for (TextureId icon : quickBarIcons) {
+        // renader quickbar
+        getGameResources().fontItalic12.setColor(Color.WHITE);
+        for (int i = 0; i < quickBarIcons.size(); i++) {
+            var slotIcon = quickBarIcons.get(i);
+            var icon = slotIcon.icon();
             var bottomRight = CameraUtils.getBottomRightCorner(camera);
             var posX = bottomRight.x - TILE_WIDTH - 8;
-            var posY = bottomRight.y + 8;
+            var posY = bottomRight.y + 8 + i * 40;
             var texture = getGameResources().textures.get(icon);
             batch.draw(texture, posX, posY);
+            getGameResources().fontItalic12.draw(batch, String.valueOf(slotIcon.num()), posX + 4, posY + 16);
         }
 
         batch.end();

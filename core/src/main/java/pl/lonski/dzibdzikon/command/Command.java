@@ -6,7 +6,7 @@ import pl.lonski.dzibdzikon.entity.Player;
 
 public interface Command {
 
-    boolean accepts(DzibdziInput.DzibdziKey key);
+    boolean accept(DzibdziInput.DzibdziKey key);
 
     void execute(Player player, World world);
 

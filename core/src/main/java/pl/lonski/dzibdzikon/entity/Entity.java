@@ -125,6 +125,7 @@ public class Entity {
         energy -= 1.0;
         if (energy < 0.0) {
             System.out.println("Energy dropped below 0.0: " + energy + " for " + name);
+            energy = 0.0;
         }
     }
 

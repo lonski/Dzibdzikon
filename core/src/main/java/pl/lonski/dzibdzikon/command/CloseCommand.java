@@ -11,7 +11,7 @@ import pl.lonski.dzibdzikon.entity.features.Position;
 
 public class CloseCommand implements Command {
     @Override
-    public boolean accepts(DzibdziInput.DzibdziKey key) {
+    public boolean accept(DzibdziInput.DzibdziKey key) {
         return key.keyCode() == Input.Keys.C;
     }
 
