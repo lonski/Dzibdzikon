@@ -8,6 +8,7 @@ import java.util.List;
 public class ChainAction implements Action {
 
     private final List<Action> actions;
+    private boolean success = true;
 
     public ChainAction(List<Action> actions) {
         this.actions = new ArrayList<>(actions);
@@ -23,6 +24,9 @@ public class ChainAction implements Action {
         currentAction.update(delta, world);
 
         if (currentAction.isDone()) {
+            if (!currentAction.succeeded()) {
+                success = false;
+            }
             this.actions.remove(0);
         }
     }
@@ -30,5 +34,10 @@ public class ChainAction implements Action {
     @Override
     public boolean isDone() {
         return actions.isEmpty();
+    }
+
+    @Override
+    public boolean succeeded() {
+        return success;
     }
 }

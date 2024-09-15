@@ -5,6 +5,7 @@ import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.DieAction;
+import pl.lonski.dzibdzikon.action.targeting.TargetingMode;
 import pl.lonski.dzibdzikon.animation.Animation;
 import pl.lonski.dzibdzikon.animation.TextFlowUpAnimation;
 import pl.lonski.dzibdzikon.animation.ThrowAnimation;
@@ -13,7 +14,6 @@ import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.map.TextureId;
-import pl.lonski.dzibdzikon.action.targeting.TargetingMode;
 
 import java.util.Optional;
 
@@ -24,8 +24,9 @@ public class SpikeSpell implements Spell {
     }
 
     @Override
-    public String getDescription() {
-        return "Wystrzeliwuje ostry, magiczny, kolec we wskazanym kierunku.";
+    public SpellDescription getDescription() {
+        return new SpellDescription(
+                "Wystrzeliwuje ostry, magiczny, kolec we wskazanym kierunku.", "wróg", "pojedynczy wróg");
     }
 
     @Override

@@ -63,7 +63,7 @@ public class Hud {
         hpBar.setProgress((float) playerAttackable.getHp() / playerAttackable.getMaxHp());
         quickBarIcons.clear();
         quickBarIcons.addAll(world.getPlayer().getQuickbar().getSlotIcons());
-        quickBarIcons.sort(Comparator.comparingInt(Quickbar.SlotIcon::num));
+        quickBarIcons.sort(Comparator.comparingInt(Quickbar.SlotIcon::getNum));
     }
 
     public void render(float delta) {
@@ -110,15 +110,20 @@ public class Hud {
 
         // renader quickbar
         getGameResources().fontItalic12.setColor(Color.WHITE);
+        var highlightTexture = getGameResources().textures.get(TextureId.HIGHLIGHT_YELLOW);
         for (int i = 0; i < quickBarIcons.size(); i++) {
             var slotIcon = quickBarIcons.get(i);
-            var icon = slotIcon.icon();
+            var icon = slotIcon.getIcon();
             var bottomRight = CameraUtils.getBottomRightCorner(camera);
             var posX = bottomRight.x - TILE_WIDTH - 8;
             var posY = bottomRight.y + 8 + i * 40;
             var texture = getGameResources().textures.get(icon);
             batch.draw(texture, posX, posY);
-            getGameResources().fontItalic12.draw(batch, String.valueOf(slotIcon.num()), posX + 4, posY + 16);
+            getGameResources().fontItalic12.draw(batch, String.valueOf(slotIcon.getNum()), posX + 4, posY + 16);
+
+            if (slotIcon.isHighlight()) {
+                batch.draw(highlightTexture, posX, posY);
+            }
         }
 
         batch.end();

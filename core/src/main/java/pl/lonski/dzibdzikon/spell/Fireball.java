@@ -25,7 +25,7 @@ import java.util.Optional;
 
 public class Fireball implements Spell {
 
-    private int range = 3;
+    private final int range = 3;
 
     @Override
     public String getName() {
@@ -33,8 +33,11 @@ public class Fireball implements Spell {
     }
 
     @Override
-    public String getDescription() {
-        return "Wystrzeliwuje kulę ognia, która po uderzeniu w przeszkodę wybucha raniąc wszystkich przeciwników w promieniu 3 kafli.";
+    public SpellDescription getDescription() {
+        return new SpellDescription(
+                "Wystrzeliwuje kulę ognia, która po uderzeniu w przeszkodę wybucha raniąc wszystkich przeciwników w promieniu 3 kafli.",
+                "punkt",
+                "okrąg o promieniu 3 kafli");
     }
 
     @Override

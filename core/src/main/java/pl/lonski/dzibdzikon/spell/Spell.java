@@ -7,13 +7,15 @@ import pl.lonski.dzibdzikon.animation.Animation;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.map.TextureId;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public interface Spell {
 
     String getName();
 
-    String getDescription();
+    SpellDescription getDescription();
 
     TextureId getIcon();
 
@@ -22,4 +24,24 @@ public interface Spell {
     TargetingMode getTargetingMode();
 
     void cast(World world, Entity caster, Point target);
+
+    record SpellDescription(String description, String targetingMode, String range) {
+
+        private static final int MAX_LINE_WIDTH = 42;
+
+        public List<String> descriptionLines() {
+            var words = description.split(" ");
+            var lines = new ArrayList<String>();
+            var line = new StringBuilder();
+            for (var word : words) {
+                if (line.length() + word.length() > MAX_LINE_WIDTH) {
+                    lines.add(line.toString());
+                    line = new StringBuilder();
+                }
+                line.append(word).append(" ");
+            }
+            lines.add(line.toString());
+            return lines;
+        }
+    }
 }

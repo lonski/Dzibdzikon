@@ -19,7 +19,7 @@ public class GameResources {
     public BitmapFont fontItalic12;
     public BitmapFont fontItalic15;
     public BitmapFont fontItalic20;
-    public BitmapFont fontBoldItalic;
+    public BitmapFont fontItalicBold15;
     public BitmapFont bigFont;
     public final Map<TextureId, TextureRegion> textures = new HashMap<>();
     public final WindowManager windowManager = new WindowManager();
@@ -30,7 +30,7 @@ public class GameResources {
         fontItalic12 = FontUtils.createFont("font/DejaVuSerif-Italic.ttf", 12);
         fontItalic15 = FontUtils.createFont("font/DejaVuSerif-Italic.ttf", 15);
         fontItalic20 = FontUtils.createFont("font/DejaVuSerif-Italic.ttf", 20);
-        fontBoldItalic = FontUtils.createFont("font/DejaVuSerif-BoldItalic.ttf", 15);
+        fontItalicBold15 = FontUtils.createFont("font/DejaVuSerif-BoldItalic.ttf", 15);
         bigFont = FontUtils.createFont("font/DejaVuSerif-Italic.ttf", 32);
 
         for (TextureId glyph : TextureId.values()) {
@@ -45,7 +45,7 @@ public class GameResources {
         batch.dispose();
         shapeRenderer.dispose();
         fontItalic15.dispose();
-        fontBoldItalic.dispose();
+        fontItalicBold15.dispose();
         bigFont.dispose();
         textures.values().forEach(t -> t.getTexture().dispose());
     }

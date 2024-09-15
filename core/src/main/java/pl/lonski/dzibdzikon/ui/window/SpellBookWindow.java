@@ -17,7 +17,6 @@ import pl.lonski.dzibdzikon.map.TextureId;
 import pl.lonski.dzibdzikon.screen.Hud;
 import pl.lonski.dzibdzikon.spell.Spell;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,8 +24,6 @@ import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
 import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
 
 public class SpellBookWindow extends WindowAdapter implements DzibdziInput.DzibdziInputListener {
-
-    private static final int MAX_LINE_WIDTH = 42;
 
     private Spell selectedSpell;
     private int selectedSpellIdx = 0;
@@ -52,6 +49,7 @@ public class SpellBookWindow extends WindowAdapter implements DzibdziInput.Dzibd
             var textures = getGameResources().textures;
             var font = getGameResources().fontItalic20;
             var descriptionFont = getGameResources().fontItalic15;
+            var descriptionFontBold = getGameResources().fontItalicBold15;
             batch.draw(windowTexture, position.x(), position.y());
 
             var spellY = position.y() + windowTexture.getRegionHeight() - 64;
@@ -67,29 +65,23 @@ public class SpellBookWindow extends WindowAdapter implements DzibdziInput.Dzibd
                 font.draw(batch, spell.getName(), spellX + TILE_WIDTH + 6, spellY + 24 - i * 42);
 
                 if (i == selectedSpellIdx) {
-                    var desc = splitDescription(spell.getDescription());
+                    var desc = spell.getDescription().descriptionLines();
+                    // description text
                     descriptionFont.setColor(Color.NAVY);
                     for (int w = 0; w < desc.size(); w++) {
                         descriptionFont.draw(batch, desc.get(w), spellDescX, spellDescY - w * 20);
                     }
+
+                    // targeting text
+                    descriptionFontBold.setColor(Color.NAVY);
+                    var posY = spellDescY - desc.size() * 20 - 16;
+                    descriptionFontBold.draw(
+                            batch, "Cel: " + spell.getDescription().targetingMode(), spellDescX, posY);
+                    descriptionFontBold.draw(
+                            batch, "Obszar: " + spell.getDescription().range(), spellDescX, posY - 20);
                 }
             }
         }
-    }
-
-    private List<String> splitDescription(String description) {
-        var words = description.split(" ");
-        var lines = new ArrayList<String>();
-        var line = new StringBuilder();
-        for (var word : words) {
-            if (line.length() + word.length() > MAX_LINE_WIDTH) {
-                lines.add(line.toString());
-                line = new StringBuilder();
-            }
-            line.append(word).append(" ");
-        }
-        lines.add(line.toString());
-        return lines;
     }
 
     private void positionWindowInCenter() {

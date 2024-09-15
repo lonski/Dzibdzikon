@@ -37,8 +37,8 @@ public class TextFlowUpAnimation implements Animation {
 
     @Override
     public void render() {
-        getGameResources().fontBoldItalic.setColor(color);
-        getGameResources().fontBoldItalic.draw(getGameResources().batch, text, pos.x(), pos.y());
+        getGameResources().fontItalicBold15.setColor(color);
+        getGameResources().fontItalicBold15.draw(getGameResources().batch, text, pos.x(), pos.y());
     }
 
     @Override
