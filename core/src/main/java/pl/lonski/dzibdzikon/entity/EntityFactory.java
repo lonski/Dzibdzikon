@@ -12,7 +12,6 @@ import pl.lonski.dzibdzikon.entity.features.Pickable;
 import pl.lonski.dzibdzikon.entity.features.Regeneration;
 import pl.lonski.dzibdzikon.entity.features.RollingRockAi;
 import pl.lonski.dzibdzikon.entity.features.RollingRockAttackable;
-import pl.lonski.dzibdzikon.entity.features.Useable;
 import pl.lonski.dzibdzikon.map.TextureId;
 
 public class EntityFactory {

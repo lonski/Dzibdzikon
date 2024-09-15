@@ -15,6 +15,8 @@ public enum TextureId {
     HIGHLIGHT_YELLOW("yellow-highlight.png"),
     TARGET("target.png"),
     ICON_BACKGROUND("icon_bg.png"),
+    ARROW_UP("arrow_up.png"),
+    ARROW_DOWN("arrow_down.png"),
 
     SPELL_SPIKE("spell/kolec.png"),
     SPELL_EFFECT_SPIKE("spell/kolec_effect.png"),
@@ -22,7 +24,8 @@ public enum TextureId {
     SPELL_EFFECT_FIREBALL("spell/fireball_effect.png"),
     SPELL_EFFECT_BURN("spell/burn.png"),
 
-    POTION_RED("potion/red.png");
+    POTION_RED("potion/red.png"),
+    POTION_LIGHT_GREEN("potion/light_green.png");
 
     private String filename;
 

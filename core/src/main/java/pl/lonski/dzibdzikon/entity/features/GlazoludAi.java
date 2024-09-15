@@ -57,6 +57,10 @@ public class GlazoludAi extends MonsterAi {
         }
 
         var rockPos = line.get(0);
+        if (world.getCurrentLevel().isObstacle(rockPos)) {
+            return false;
+        }
+
         var direction = new Point(line.get(1).sub(line.get(0)));
         var rock = EntityFactory.createRollingRock(direction);
         rock.addAnimation(new RollingAnimation(direction.x() < 0 ? 10 : -10, rock));

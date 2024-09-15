@@ -3,6 +3,7 @@ package pl.lonski.dzibdzikon.ui.window;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import pl.lonski.dzibdzikon.Debouncer;
 import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.entity.Entity;
@@ -15,16 +16,20 @@ import pl.lonski.dzibdzikon.screen.Hud;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
 
 public class InventoryWindow extends WindowAdapter {
 
+    private static final int MAX_ITEMS_DISPLAYED = 12;
     private final int windowWidth = 400;
-    private final int windowHeight = 600;
-    private List<Entity> items = new ArrayList<>();
+    private final int windowHeight = 572;
+    private List<StackedItem> items = new ArrayList<>();
     private int selectedItemIdx = 0;
     private InventoryWindowResult result;
+    private DzibdziInput.DzibdziKey key;
+    private final Debouncer debouncer = new Debouncer(0.1f);
 
     public InventoryWindow(Player player) {
         super(player);
@@ -39,8 +44,21 @@ public class InventoryWindow extends WindowAdapter {
         if (visible()) {
             Hud.setActionMessage("");
             positionWindowInCenter(windowWidth, windowHeight);
-            items = new ArrayList<>(
-                    player.<Inventory>getFeature(FeatureType.INVENTORY).getItems());
+
+            this.items = player.<Inventory>getFeature(FeatureType.INVENTORY).getItems().stream()
+                    .collect(Collectors.groupingBy(Entity::getName))
+                    .values()
+                    .stream()
+                    .map(StackedItem::new)
+                    .toList();
+
+            if (key != null && debouncer.debounce(delta)) {
+                if (key.isUpKey()) {
+                    selectedItemIdx = Math.max(0, selectedItemIdx - 1);
+                } else if (key.isDownKey()) {
+                    selectedItemIdx = Math.min(items.size() - 1, selectedItemIdx + 1);
+                }
+            }
         }
     }
 
@@ -61,14 +79,46 @@ public class InventoryWindow extends WindowAdapter {
 
             var itemFont = getGameResources().fontItalic20;
             var itemPos = new Point(position.x() + 16, position.y() + windowHeight - 10 - 42);
-            for (int i = 0; i < items.size(); i++) {
-                var item = items.get(i);
+
+            var startIdx = 0;
+            var endIdx = items.size();
+            var displayScrollArrowUp = false;
+            var displayScrollArrowDown = false;
+            if (items.size() > MAX_ITEMS_DISPLAYED) {
+                startIdx = Math.max(0, selectedItemIdx - MAX_ITEMS_DISPLAYED);
+                endIdx = startIdx + MAX_ITEMS_DISPLAYED + 1;
+                displayScrollArrowUp = startIdx > 0;
+                displayScrollArrowDown = endIdx < items.size();
+            }
+            for (int i = startIdx; i < endIdx; i++) {
+                var item = items.get(i).entities().get(0);
+                var count = items.get(i).entities().size();
+                var offsetMultiplier = i - startIdx;
                 batch.draw(
-                        getGameResources().textures.get(TextureId.ICON_BACKGROUND), itemPos.x(), itemPos.y() - 42 * i);
-                batch.draw(getGameResources().textures.get(item.getGlyph()), itemPos.x(), itemPos.y() - 42 * i);
+                        getGameResources().textures.get(TextureId.ICON_BACKGROUND),
+                        itemPos.x(),
+                        itemPos.y() - 42 * offsetMultiplier);
+                batch.draw(
+                        getGameResources().textures.get(item.getGlyph()),
+                        itemPos.x(),
+                        itemPos.y() - 42 * offsetMultiplier);
 
                 itemFont.setColor(selectedItemIdx == i ? Color.FOREST : Color.NAVY);
-                itemFont.draw(batch, item.getName(), itemPos.x() + 38, itemPos.y() + 24 - i * 42);
+                itemFont.draw(
+                        batch,
+                        item.getName() + (count > 1 ? " (" + count + ")" : ""),
+                        itemPos.x() + 38,
+                        itemPos.y() + 24 - offsetMultiplier * 42);
+            }
+
+            if (displayScrollArrowUp) {
+                var upArrowPos = new Point(position.x() + windowWidth - 42, position.y() + windowHeight - 42);
+                batch.draw(getGameResources().textures.get(TextureId.ARROW_UP), upArrowPos.x(), upArrowPos.y());
+            }
+
+            if (displayScrollArrowDown) {
+                var upArrowPos = new Point(position.x() + windowWidth - 42, position.y() + 10);
+                batch.draw(getGameResources().textures.get(TextureId.ARROW_DOWN), upArrowPos.x(), upArrowPos.y());
             }
 
             var helpPos = new Point(position.x() + windowWidth + 12, position.y() + windowHeight - 4);
@@ -86,18 +136,18 @@ public class InventoryWindow extends WindowAdapter {
     @Override
     public void onInput(DzibdziInput.DzibdziKey key) {
         if (!visible() || key.released()) {
+            this.key = null;
             return;
         }
+
+        this.key = key;
 
         if (key.keyCode() == Input.Keys.ESCAPE) {
             result = null;
             hide();
-        } else if (key.isUpKey()) {
-            selectedItemIdx = Math.max(0, selectedItemIdx - 1);
-        } else if (key.isDownKey()) {
-            selectedItemIdx = Math.min(items.size() - 1, selectedItemIdx + 1);
         } else if (key.isEnterKey()) {
-            result = new InventoryWindowResult(items.get(selectedItemIdx), ItemAction.USE);
+            result = new InventoryWindowResult(
+                    items.get(selectedItemIdx).entities().get(0), ItemAction.USE);
             hide();
         }
     }
@@ -111,6 +161,8 @@ public class InventoryWindow extends WindowAdapter {
         Hud.setActionMessage("");
         super.hide();
     }
+
+    record StackedItem(List<Entity> entities) {}
 
     public record InventoryWindowResult(Entity item, ItemAction action) {}
 
