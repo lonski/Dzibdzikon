@@ -11,5 +11,6 @@ public enum FeatureType {
     REGENERATION,
     SPELLBOOK,
     PICKABLE,
-    INVENTORY
+    INVENTORY,
+    USEABLE
 }

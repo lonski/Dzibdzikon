@@ -8,6 +8,7 @@ import pl.lonski.dzibdzikon.command.CastSpellCommand;
 import pl.lonski.dzibdzikon.command.CloseCommand;
 import pl.lonski.dzibdzikon.command.Command;
 import pl.lonski.dzibdzikon.command.GoDownCommand;
+import pl.lonski.dzibdzikon.command.OpenInventoryCommand;
 import pl.lonski.dzibdzikon.command.PickupCommand;
 import pl.lonski.dzibdzikon.command.PositionChangeCommand;
 import pl.lonski.dzibdzikon.command.UseQuickbarCommand;
@@ -40,7 +41,8 @@ public class Player extends Entity {
             new GoDownCommand(),
             new CastSpellCommand(),
             new UseQuickbarCommand(),
-            new PickupCommand());
+            new PickupCommand(),
+            new OpenInventoryCommand());
     private final Quickbar quickbar;
 
     public Player() {

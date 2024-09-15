@@ -38,7 +38,7 @@ public class SpellBookWindow extends WindowAdapter implements DzibdziInput.Dzibd
     public void update(float delta) {
         if (visible()) {
             Hud.setActionMessage("Wybierz czar to rzucenia lub wciśnij 1..5 aby przypisać do panelu podręcznego.");
-            positionWindowInCenter();
+            positionWindowInCenter(windowTexture.getRegionWidth(), windowTexture.getRegionHeight());
         }
     }
 
@@ -46,6 +46,7 @@ public class SpellBookWindow extends WindowAdapter implements DzibdziInput.Dzibd
     public void render(float delta) {
         if (visible()) {
             var batch = getGameResources().batch;
+            batch.begin();
             var textures = getGameResources().textures;
             var font = getGameResources().fontItalic20;
             var descriptionFont = getGameResources().fontItalic15;
@@ -81,15 +82,9 @@ public class SpellBookWindow extends WindowAdapter implements DzibdziInput.Dzibd
                             batch, "Obszar: " + spell.getDescription().range(), spellDescX, posY - 20);
                 }
             }
+
+            batch.end();
         }
-    }
-
-    private void positionWindowInCenter() {
-        var bottomLeftCorner = CameraUtils.getBottomLeftCorner(getGameResources().camera);
-        var heightRem = getGameResources().camera.viewportHeight - windowTexture.getRegionHeight();
-        var widthRem = getGameResources().camera.viewportWidth - windowTexture.getRegionWidth();
-
-        position = new Point((int) (bottomLeftCorner.x + widthRem / 2f), (int) (bottomLeftCorner.y + heightRem / 2f));
     }
 
     private List<Spell> getSpells() {

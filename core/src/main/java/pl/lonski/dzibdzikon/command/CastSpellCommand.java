@@ -24,6 +24,7 @@ public class CastSpellCommand implements Command {
         getGameResources().windowManager.executeInWindow(WindowManager.WindowType.SPELL_BOOK, window -> {
             ((SpellBookWindow) window).takeSelectedSpell().ifPresent(spell -> castSpell(player, spell));
         });
+        player.getInputListener().reset();
     }
 
     private void castSpell(Player player, Spell spell) {

@@ -7,14 +7,12 @@ import pl.lonski.dzibdzikon.entity.features.Position;
 
 public class FallAnimation implements Animation {
 
-    private float speed = 0.01f;
+    private final float speed = 0.01f;
     private float time = 0;
-    private final Entity entity;
     private final Position entityPos;
     private float targetRotation = 90;
 
     public FallAnimation(Entity entity) {
-        this.entity = entity;
         this.entityPos = entity.getFeature(FeatureType.POSITION);
         if (entityPos.getRotation() >= targetRotation) {
             targetRotation += 90;

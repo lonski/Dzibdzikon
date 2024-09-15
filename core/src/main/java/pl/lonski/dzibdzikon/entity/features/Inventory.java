@@ -21,4 +21,8 @@ public class Inventory implements EntityFeature {
     public List<Entity> getItems() {
         return items;
     }
+
+    public void removeItem(Entity useableEntity) {
+        items.remove(useableEntity);
+    }
 }

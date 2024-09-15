@@ -1,8 +1,9 @@
 package pl.lonski.dzibdzikon.action;
 
-import java.util.List;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.Entity;
+
+import java.util.List;
 
 public class DieAction implements Action {
 

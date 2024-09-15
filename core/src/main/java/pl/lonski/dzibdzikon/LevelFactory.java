@@ -30,11 +30,11 @@ public class LevelFactory {
                     int mobType = RANDOM.nextInt(100);
 
                     Entity mob;
-                    if (mobType > 80) {
-                        mob = EntityFactory.createGlazolud();
-                    } else {
-                        mob = EntityFactory.createZombie();
-                    }
+                    //                    if (mobType > 80) {
+                    mob = EntityFactory.createGlazolud();
+                    //                    } else {
+                    //                        mob = EntityFactory.createZombie();
+                    //                    }
 
                     mob.addFeature(FeatureType.POSITION, new Position(pos, 0, 10));
                     level.addEntity(mob);

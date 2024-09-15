@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.Player;
+import pl.lonski.dzibdzikon.ui.window.InventoryWindow;
 import pl.lonski.dzibdzikon.ui.window.SpellBookWindow;
 import pl.lonski.dzibdzikon.ui.window.Window;
 
@@ -17,6 +18,7 @@ public class WindowManager {
     public void init(World world) {
         this.player = world.getPlayer();
         windows.put(WindowType.SPELL_BOOK, new SpellBookWindow(world.getPlayer()));
+        windows.put(WindowType.INVENTORY, new InventoryWindow(world.getPlayer()));
     }
 
     public void show(WindowType type) {
@@ -47,6 +49,7 @@ public class WindowManager {
     }
 
     public enum WindowType {
-        SPELL_BOOK
+        SPELL_BOOK,
+        INVENTORY
     }
 }

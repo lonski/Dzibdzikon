@@ -6,11 +6,13 @@ import pl.lonski.dzibdzikon.entity.features.DoorOpenable;
 import pl.lonski.dzibdzikon.entity.features.Downstairs;
 import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.GlazoludAi;
+import pl.lonski.dzibdzikon.entity.features.HealingUseable;
 import pl.lonski.dzibdzikon.entity.features.MonsterAi;
 import pl.lonski.dzibdzikon.entity.features.Pickable;
 import pl.lonski.dzibdzikon.entity.features.Regeneration;
 import pl.lonski.dzibdzikon.entity.features.RollingRockAi;
 import pl.lonski.dzibdzikon.entity.features.RollingRockAttackable;
+import pl.lonski.dzibdzikon.entity.features.Useable;
 import pl.lonski.dzibdzikon.map.TextureId;
 
 public class EntityFactory {
@@ -50,7 +52,7 @@ public class EntityFactory {
 
     public static Entity createRollingRock(Point direction) {
         var rock = new Entity("Głaz", TextureId.BIG_ROCK);
-        rock.addFeature(FeatureType.ATTACKABLE, new RollingRockAttackable(30, 30, 8));
+        rock.addFeature(FeatureType.ATTACKABLE, new RollingRockAttackable(3, 30, 8));
         rock.addFeature(FeatureType.AI, new RollingRockAi(rock, direction));
         rock.setSpeed(2f);
         return rock;
@@ -59,6 +61,7 @@ public class EntityFactory {
     public static Entity createHealingPotion() {
         var potion = new Entity("Mikstura leczenia", TextureId.POTION_RED);
         potion.addFeature(FeatureType.PICKABLE, new Pickable());
+        potion.addFeature(FeatureType.USEABLE, new HealingUseable(4, 8));
         return potion;
     }
 }

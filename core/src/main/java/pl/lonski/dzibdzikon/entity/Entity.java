@@ -136,4 +136,8 @@ public class Entity {
     public double getEnergy() {
         return energy;
     }
+
+    public void clearAnimations() {
+        this.animations.clear();
+    }
 }

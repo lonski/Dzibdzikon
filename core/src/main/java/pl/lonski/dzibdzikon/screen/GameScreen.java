@@ -127,10 +127,9 @@ public class GameScreen extends DzibdzikonScreen {
                             );
                     entity.getAnimations().forEach(Animation::render);
                 });
+        batch.end();
 
         getGameResources().windowManager.render(delta);
-
-        batch.end();
 
         hud.render(delta);
     }
