@@ -6,7 +6,7 @@ import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.map.MapUtils;
 import pl.lonski.dzibdzikon.map.Room;
-import pl.lonski.dzibdzikon.map.RoomMapGeneratorV2;
+import pl.lonski.dzibdzikon.map.RoomMapBuilder;
 import pl.lonski.dzibdzikon.map.TileGrid;
 
 import java.util.ArrayList;
@@ -20,14 +20,13 @@ public class LevelFactory {
 
     public static Level generate() {
         return new LevelBuilder()
-                .width(50)
-                .height(30)
+                .map(new RoomMapBuilder().width(50).height(30).build())
                 .minMobsPerRoom(0)
                 .maxMobsPerRoom(2)
                 .minItemsPerRoom(0)
                 .maxItemsPerRoom(1)
-                .minDoorPercentage(0.2f)
-                .maxDoorPercentage(0.7f)
+                .minDoorPercentage(0.9f)
+                .maxDoorPercentage(1.0f)
                 .openedDoorPercentage(0.2f)
                 .generateMobFn(generateMobFn())
                 .generateItemFn(generateItemFn())
@@ -59,7 +58,7 @@ public class LevelFactory {
         List<PossiblePosition> possibleDoors = new ArrayList<>();
         var map = level.getMap();
 
-        for (int rx = 0; rx < room.w(); rx++) {
+        for (int rx = 0; rx < room.width(); rx++) {
             int x = room.x() + rx;
 
             // top wall
@@ -67,21 +66,23 @@ public class LevelFactory {
             if (map.inBounds(x, y)
                     && map.getTile(x, y).isFloor()
                     && horizontalNeighboursAreWalls(x, y, map)
+                    && verticalNeighboursAreFloors(x, y, map)
                     && noDoorsNearby(x, y, level)) {
                 possibleDoors.add(new PossiblePosition(new Point(x, y), 0));
             }
 
             // bottom wall
-            y = room.y() + room.h();
+            y = room.y() + room.height();
             if (map.inBounds(x, y)
                     && map.getTile(x, y).isFloor()
                     && horizontalNeighboursAreWalls(x, y, map)
+                    && verticalNeighboursAreFloors(x, y, map)
                     && noDoorsNearby(x, y, level)) {
                 possibleDoors.add(new PossiblePosition(new Point(x, y), 0));
             }
         }
 
-        for (int ry = 0; ry < room.h(); ry++) {
+        for (int ry = 0; ry < room.height(); ry++) {
             int y = room.y() + ry;
 
             // left wall
@@ -89,15 +90,17 @@ public class LevelFactory {
             if (map.inBounds(x, y)
                     && map.getTile(x, y).isFloor()
                     && verticalNeighboursAreWalls(x, y, map)
+                    && horizontalNeighboursAreFloors(x, y, map)
                     && noDoorsNearby(x, y, level)) {
                 possibleDoors.add(new PossiblePosition(new Point(x, y), 90));
             }
 
             // right wall
-            x = room.x() + room.w();
+            x = room.x() + room.width();
             if (map.inBounds(x, y)
                     && map.getTile(x, y).isFloor()
                     && verticalNeighboursAreWalls(x, y, map)
+                    && horizontalNeighboursAreFloors(x, y, map)
                     && noDoorsNearby(x, y, level)) {
                 possibleDoors.add(new PossiblePosition(new Point(x, y), 90));
             }
@@ -124,6 +127,15 @@ public class LevelFactory {
                 && map.getTile(nbPos2).isWall());
     }
 
+    private static boolean horizontalNeighboursAreFloors(int x, int y, TileGrid map) {
+        var nbPos1 = new Point(x - 1, y);
+        var nbPos2 = new Point(x + 1, y);
+        return (map.inBounds(nbPos1)
+                && map.getTile(nbPos1).isFloor()
+                && map.inBounds(nbPos2)
+                && map.getTile(nbPos2).isFloor());
+    }
+
     private static boolean verticalNeighboursAreWalls(int x, int y, TileGrid map) {
         var nbPos1 = new Point(x, y - 1);
         var nbPos2 = new Point(x, y + 1);
@@ -133,13 +145,20 @@ public class LevelFactory {
                 && map.getTile(nbPos2).isWall());
     }
 
+    private static boolean verticalNeighboursAreFloors(int x, int y, TileGrid map) {
+        var nbPos1 = new Point(x, y - 1);
+        var nbPos2 = new Point(x, y + 1);
+        return (map.inBounds(nbPos1)
+                && map.getTile(nbPos1).isFloor()
+                && map.inBounds(nbPos2)
+                && map.getTile(nbPos2).isFloor());
+    }
+
     record PossiblePosition(Point pos, float rotation) {}
 
     public static class LevelBuilder {
 
-        // dimensions
-        private int width = 50;
-        private int height = 30;
+        private TileGrid map;
 
         // mobs
         private int minMobsPerRoom = 0;
@@ -156,13 +175,8 @@ public class LevelFactory {
         private float maxDoorPercentage = 0.8f;
         private float openedDoorPercentage = 0.2f;
 
-        public LevelBuilder width(int width) {
-            this.width = width;
-            return this;
-        }
-
-        public LevelBuilder height(int height) {
-            this.height = height;
+        public LevelBuilder map(TileGrid map) {
+            this.map = map;
             return this;
         }
 
@@ -212,7 +226,7 @@ public class LevelFactory {
         }
 
         public Level build() {
-            var level = new Level(RoomMapGeneratorV2.generate(width, height));
+            var level = new Level(map);
 
             // spawn mobs
             for (Room room : level.getMap().getRooms()) {

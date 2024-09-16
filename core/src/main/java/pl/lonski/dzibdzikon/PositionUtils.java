@@ -50,6 +50,32 @@ public class PositionUtils {
         }
     }
 
+    public static void inFilledEllipseOf(int a, int b, Consumer<Point> consumer) {
+        int x = a;
+        int y = 0;
+        int dx = 1 - 2 * a;
+        int dy = 2 * b;
+        int error = dx + dy;
+
+        while (x >= y) {
+            // Add points for the current ellipse section
+            for (int i = -x; i <= x; i++) {
+                consumer.accept(new Point(i, y));
+                consumer.accept(new Point(i, -y));
+            }
+
+            if (error >= 0) {
+                x -= 1;
+                dx += 2 * (1 - x);
+                error += dx;
+            } else {
+                y += 1;
+                dy -= 2 * (1 - y);
+                error += dy;
+            }
+        }
+    }
+
     public static void inCircleOf(int radius, Consumer<Point> consumer) {
 
         int x = radius;

@@ -25,6 +25,13 @@ public class TileGrid {
         return inBounds(pos.x(), pos.y());
     }
 
+    public boolean inBoundsWithFrame(Point pos) {
+        int x = pos.x();
+        int y = pos.y();
+
+        return x > 0 && (x + 1) < width && y > 0 && (y + 1) < height;
+    }
+
     public int getWidth() {
         return width;
     }
