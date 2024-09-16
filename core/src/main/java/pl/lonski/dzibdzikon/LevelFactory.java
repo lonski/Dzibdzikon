@@ -12,79 +12,47 @@ import pl.lonski.dzibdzikon.map.TileGrid;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static pl.lonski.dzibdzikon.Dzibdzikon.RANDOM;
 
 public class LevelFactory {
 
     public static Level generate() {
+        return new LevelBuilder()
+                .width(50)
+                .height(30)
+                .minMobsPerRoom(0)
+                .maxMobsPerRoom(2)
+                .minItemsPerRoom(0)
+                .maxItemsPerRoom(1)
+                .minDoorPercentage(0.2f)
+                .maxDoorPercentage(0.7f)
+                .openedDoorPercentage(0.2f)
+                .generateMobFn(generateMobFn())
+                .generateItemFn(generateItemFn())
+                .build();
+    }
 
-        var level = new Level(RoomMapGeneratorV2.generate(50, 30));
+    private static Supplier<Entity> generateMobFn() {
+        return () -> {
+            int mobType = RANDOM.nextInt(100);
 
-        // spawn mobs
-        for (Room room : level.getMap().getRooms()) {
-            int mobsCountInRoom = RANDOM.nextInt(0, 3);
-            while (mobsCountInRoom-- > 0) {
-                var pos = room.getRandomPosition();
-                if (level.getEntityAt(pos, null).isEmpty()) {
-                    int mobType = RANDOM.nextInt(100);
-
-                    Entity mob;
-                    //                    if (mobType > 80) {
-                    mob = EntityFactory.createGlazolud();
-                    //                    } else {
-                    //                        mob = EntityFactory.createZombie();
-                    //                    }
-
-                    mob.addFeature(FeatureType.POSITION, new Position(pos, 0, 10));
-                    level.addEntity(mob);
-                }
+            Entity mob;
+            if (mobType > 80) {
+                mob = EntityFactory.createGlazolud();
+            } else {
+                mob = EntityFactory.createZombie();
             }
-        }
 
-        // spawn items
-        for (Room room : level.getMap().getRooms()) {
-            int maxItemsInRoom = RANDOM.nextInt(0, 2);
-            while (maxItemsInRoom-- > 0) {
-                var pos = room.getRandomPosition();
-                if (level.getEntityAt(pos, null).isEmpty()) {
-                    var item = EntityFactory.createHealingPotion();
+            return mob;
+        };
+    }
 
-                    item.addFeature(FeatureType.POSITION, new Position(pos, 0, 10));
-                    level.addEntity(item);
-                }
-            }
-        }
-
-        // put doors
-        var map = level.getMap();
-        Collections.shuffle(map.getRooms());
-        int minDoors = map.getRooms().size() / 2;
-        int maxDoors = map.getRooms().size();
-        for (Room room : map.getRooms().subList(0, RANDOM.nextInt(minDoors, maxDoors))) {
-            var possibleDoors = findPossibleDoorPositions(level, room);
-            Collections.shuffle(possibleDoors);
-            if (!possibleDoors.isEmpty()) {
-                var doorInRoom = RANDOM.nextInt(1, possibleDoors.size() + 1);
-                for (int i = 0; i < doorInRoom; i++) {
-                    var possiblePos = possibleDoors.get(i);
-                    if (level.getEntityAt(possiblePos.pos, null).isEmpty()) {
-                        var door = EntityFactory.createDoor(RANDOM.nextInt(10) > 7);
-                        door.addFeature(FeatureType.POSITION, new Position(possiblePos.pos, 0, 1));
-                        level.addEntity(door);
-                    }
-                }
-            }
-        }
-
-        // put downstairs
-        var downstairs = EntityFactory.createDownstairs();
-        var downstairsPos =
-                map.getRooms().get(RANDOM.nextInt(map.getRooms().size())).getCenter();
-        downstairs.addFeature(FeatureType.POSITION, new Position(downstairsPos));
-        level.addEntity(downstairs);
-
-        return level;
+    private static Supplier<Entity> generateItemFn() {
+        return () -> {
+            return EntityFactory.createHealingPotion();
+        };
     }
 
     private static List<PossiblePosition> findPossibleDoorPositions(Level level, Room room) {
@@ -166,4 +134,141 @@ public class LevelFactory {
     }
 
     record PossiblePosition(Point pos, float rotation) {}
+
+    public static class LevelBuilder {
+
+        // dimensions
+        private int width = 50;
+        private int height = 30;
+
+        // mobs
+        private int minMobsPerRoom = 0;
+        private int maxMobsPerRoom = 2;
+        private Supplier<Entity> mobGenerateFn;
+
+        // items
+        private int minItemsPerRoom = 0;
+        private int maxItemsPerRoom = 1;
+        private Supplier<Entity> itemGenerateFn;
+
+        // doors
+        private float minDoorPercentage = 0.8f;
+        private float maxDoorPercentage = 0.8f;
+        private float openedDoorPercentage = 0.2f;
+
+        public LevelBuilder width(int width) {
+            this.width = width;
+            return this;
+        }
+
+        public LevelBuilder height(int height) {
+            this.height = height;
+            return this;
+        }
+
+        public LevelBuilder minMobsPerRoom(int val) {
+            this.minMobsPerRoom = val;
+            return this;
+        }
+
+        public LevelBuilder maxMobsPerRoom(int val) {
+            this.maxMobsPerRoom = val;
+            return this;
+        }
+
+        public LevelBuilder minItemsPerRoom(int val) {
+            this.minItemsPerRoom = val;
+            return this;
+        }
+
+        public LevelBuilder maxItemsPerRoom(int val) {
+            this.maxItemsPerRoom = val;
+            return this;
+        }
+
+        public LevelBuilder minDoorPercentage(float val) {
+            this.minDoorPercentage = val;
+            return this;
+        }
+
+        public LevelBuilder maxDoorPercentage(float val) {
+            this.maxDoorPercentage = val;
+            return this;
+        }
+
+        public LevelBuilder openedDoorPercentage(float val) {
+            this.openedDoorPercentage = val;
+            return this;
+        }
+
+        public LevelBuilder generateMobFn(Supplier<Entity> fn) {
+            this.mobGenerateFn = fn;
+            return this;
+        }
+
+        public LevelBuilder generateItemFn(Supplier<Entity> fn) {
+            this.itemGenerateFn = fn;
+            return this;
+        }
+
+        public Level build() {
+            var level = new Level(RoomMapGeneratorV2.generate(width, height));
+
+            // spawn mobs
+            for (Room room : level.getMap().getRooms()) {
+                int mobsCountInRoom = RANDOM.nextInt(minMobsPerRoom, maxMobsPerRoom + 1);
+                while (mobsCountInRoom-- > 0) {
+                    var pos = room.getRandomPosition();
+                    if (level.getEntityAt(pos, null).isEmpty()) {
+                        Entity mob = mobGenerateFn.get();
+                        mob.addFeature(FeatureType.POSITION, new Position(pos, 0, 10));
+                        level.addEntity(mob);
+                    }
+                }
+            }
+
+            // spawn items
+            for (Room room : level.getMap().getRooms()) {
+                int maxItemsInRoom = RANDOM.nextInt(minItemsPerRoom, maxItemsPerRoom + 1);
+                while (maxItemsInRoom-- > 0) {
+                    var pos = room.getRandomPosition();
+                    if (level.getEntityAt(pos, null).isEmpty()) {
+                        Entity item = itemGenerateFn.get();
+                        item.addFeature(FeatureType.POSITION, new Position(pos, 0, 10));
+                        level.addEntity(item);
+                    }
+                }
+            }
+
+            // put doors
+            var map = level.getMap();
+            Collections.shuffle(map.getRooms());
+            int minDoors = Math.round(map.getRooms().size() * minDoorPercentage);
+            int maxDoors = Math.round(map.getRooms().size() * maxDoorPercentage);
+            for (Room room : map.getRooms().subList(0, RANDOM.nextInt(minDoors, maxDoors))) {
+                var possibleDoors = findPossibleDoorPositions(level, room);
+                Collections.shuffle(possibleDoors);
+                if (!possibleDoors.isEmpty()) {
+                    var doorInRoom = RANDOM.nextInt(1, possibleDoors.size() + 1);
+                    for (int i = 0; i < doorInRoom; i++) {
+                        var possiblePos = possibleDoors.get(i);
+                        if (level.getEntityAt(possiblePos.pos, null).isEmpty()) {
+                            var door = EntityFactory.createDoor(RANDOM.nextFloat() < openedDoorPercentage);
+                            door.addFeature(FeatureType.POSITION, new Position(possiblePos.pos, 0, 1));
+                            level.addEntity(door);
+                        }
+                    }
+                }
+            }
+
+            // put downstairs
+            var downstairs = EntityFactory.createDownstairs();
+            var downstairsPos =
+                    map.getRooms().get(RANDOM.nextInt(map.getRooms().size())).getCenter();
+            downstairs.addFeature(FeatureType.POSITION, new Position(downstairsPos));
+            level.addEntity(downstairs);
+
+            return level;
+        }
+    }
 }

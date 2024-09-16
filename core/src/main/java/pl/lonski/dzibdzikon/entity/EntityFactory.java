@@ -9,6 +9,7 @@ import pl.lonski.dzibdzikon.entity.features.GlazoludAi;
 import pl.lonski.dzibdzikon.entity.features.HealingUseable;
 import pl.lonski.dzibdzikon.entity.features.MonsterAi;
 import pl.lonski.dzibdzikon.entity.features.Pickable;
+import pl.lonski.dzibdzikon.entity.features.PtakodrzewoAi;
 import pl.lonski.dzibdzikon.entity.features.Regeneration;
 import pl.lonski.dzibdzikon.entity.features.RollingRockAi;
 import pl.lonski.dzibdzikon.entity.features.RollingRockAttackable;
@@ -17,7 +18,7 @@ import pl.lonski.dzibdzikon.map.TextureId;
 public class EntityFactory {
 
     public static Entity createZombie() {
-        var zombie = new Entity("Zombie", TextureId.ZOMBIE);
+        var zombie = new Entity("Zombie", TextureId.MOB_ZOMBIE);
         zombie.addFeature(FeatureType.ATTACKABLE, new Attackable(8, 10, 1, 0));
         zombie.addFeature(FeatureType.AI, new MonsterAi(zombie));
         zombie.addFeature(FeatureType.FOV, new FieldOfView(zombie, 8));
@@ -40,7 +41,7 @@ public class EntityFactory {
     }
 
     public static Entity createGlazolud() {
-        var glazolud = new Entity("Głazolud", TextureId.GLAZOLUD);
+        var glazolud = new Entity("Głazolud", TextureId.MOB_GLAZOLUD);
         glazolud.addFeature(FeatureType.ATTACKABLE, new Attackable(15, 15, 2, 1));
         glazolud.addFeature(FeatureType.AI, new GlazoludAi(glazolud));
         glazolud.addFeature(FeatureType.FOV, new FieldOfView(glazolud, 8));
@@ -50,7 +51,7 @@ public class EntityFactory {
     }
 
     public static Entity createRollingRock(Point direction) {
-        var rock = new Entity("Głaz", TextureId.BIG_ROCK);
+        var rock = new Entity("Głaz", TextureId.MOB_BIG_ROCK);
         rock.addFeature(FeatureType.ATTACKABLE, new RollingRockAttackable(3, 30, 8));
         rock.addFeature(FeatureType.AI, new RollingRockAi(rock, direction));
         rock.setSpeed(2f);
@@ -62,5 +63,14 @@ public class EntityFactory {
         potion.addFeature(FeatureType.PICKABLE, new Pickable());
         potion.addFeature(FeatureType.USEABLE, new HealingUseable(4, 8));
         return potion;
+    }
+
+    public static Entity createPtakodrzewo() {
+        var ptakodrzewo = new Entity("Ptakodrzewo", TextureId.MOB_PTAKODRZEWO);
+        ptakodrzewo.addFeature(FeatureType.ATTACKABLE, new Attackable(40, 40, 0, 4));
+        ptakodrzewo.addFeature(FeatureType.AI, new PtakodrzewoAi(ptakodrzewo));
+        ptakodrzewo.addFeature(FeatureType.FOV, new FieldOfView(ptakodrzewo, 10));
+        ptakodrzewo.addFeature(FeatureType.REGENERATION, new Regeneration(5, ptakodrzewo));
+        return ptakodrzewo;
     }
 }

@@ -1,22 +1,27 @@
 package pl.lonski.dzibdzikon.map;
 
 public enum TextureId {
-    WALL("wall_1.png"),
-    FLOOR("floor_1.png"),
     PLAYER("dzibdzik.png"),
-    ZOMBIE("zombie.png"),
-    DOOR_OPEN("door_open.png"),
-    DOOR_CLOSED("door_closed.png"),
-    DOWNSTAIRS("downstairs.png"),
-    GLAZOLUD("glazolud.png"),
-    BIG_ROCK("glazolud_glaz.png"),
-    WND_SPELLBOOK("window/spellbook.png"),
 
     HIGHLIGHT_YELLOW("yellow-highlight.png"),
     TARGET("target.png"),
     ICON_BACKGROUND("icon_bg.png"),
     ARROW_UP("arrow_up.png"),
     ARROW_DOWN("arrow_down.png"),
+
+    WALL("wall_1.png"),
+    FLOOR("floor_1.png"),
+
+    DOOR_OPEN("door_open.png"),
+    DOOR_CLOSED("door_closed.png"),
+    DOWNSTAIRS("downstairs.png"),
+
+    WND_SPELLBOOK("window/spellbook.png"),
+
+    MOB_ZOMBIE("mob/zombie.png"),
+    MOB_GLAZOLUD("mob/glazolud.png"),
+    MOB_BIG_ROCK("mob/glazolud_glaz.png"),
+    MOB_PTAKODRZEWO("mob/ptakodrzewo.png"),
 
     SPELL_SPIKE("spell/kolec.png"),
     SPELL_EFFECT_SPIKE("spell/kolec_effect.png"),
