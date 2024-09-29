@@ -24,6 +24,9 @@ public enum TextureId {
     MOB_GLAZOLUD("mob/glazolud.png"),
     MOB_BIG_ROCK("mob/glazolud_glaz.png"),
     MOB_PTAKODRZEWO("mob/ptakodrzewo.png"),
+    MOB_BIRD_PLANKER("mob/bird_planker.png"),
+    MOB_BIRD_THROWER("mob/bird_thrower.png"),
+    MOB_BIRD_BITER("mob/bird_biter.png"),
 
     SPELL_SPIKE("spell/kolec.png"),
     SPELL_EFFECT_SPIKE("spell/kolec_effect.png"),

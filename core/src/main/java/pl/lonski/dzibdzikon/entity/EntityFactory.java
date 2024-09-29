@@ -67,10 +67,37 @@ public class EntityFactory {
 
     public static Entity createPtakodrzewo() {
         var ptakodrzewo = new Entity("Ptakodrzewo", TextureId.MOB_PTAKODRZEWO);
-        ptakodrzewo.addFeature(FeatureType.ATTACKABLE, new Attackable(40, 40, 0, 4));
+        ptakodrzewo.addFeature(FeatureType.ATTACKABLE, new Attackable(50, 50, 0, 4));
         ptakodrzewo.addFeature(FeatureType.AI, new PtakodrzewoAi(ptakodrzewo));
         ptakodrzewo.addFeature(FeatureType.FOV, new FieldOfView(ptakodrzewo, 10));
-        ptakodrzewo.addFeature(FeatureType.REGENERATION, new Regeneration(5, ptakodrzewo));
+        ptakodrzewo.addFeature(FeatureType.REGENERATION, new Regeneration(3, ptakodrzewo));
         return ptakodrzewo;
+    }
+
+    public static Entity createBirdPlanker() {
+        var bird = new Entity("Kłodoptak", TextureId.MOB_BIRD_PLANKER);
+        bird.addFeature(FeatureType.ATTACKABLE, new Attackable(10, 10, 1, 1));
+        bird.addFeature(FeatureType.AI, new MonsterAi(bird));
+        bird.addFeature(FeatureType.FOV, new FieldOfView(bird, 8));
+        bird.addFeature(FeatureType.REGENERATION, new Regeneration(8, bird));
+        return bird;
+    }
+
+    public static Entity createBirdThrower() {
+        var bird = new Entity("Rzucoptak", TextureId.MOB_BIRD_THROWER);
+        bird.addFeature(FeatureType.ATTACKABLE, new Attackable(10, 10, 1, 1));
+        bird.addFeature(FeatureType.AI, new MonsterAi(bird));
+        bird.addFeature(FeatureType.FOV, new FieldOfView(bird, 8));
+        bird.addFeature(FeatureType.REGENERATION, new Regeneration(8, bird));
+        return bird;
+    }
+
+    public static Entity createBirdBiter() {
+        var bird = new Entity("Dzioboptak", TextureId.MOB_BIRD_BITER);
+        bird.addFeature(FeatureType.ATTACKABLE, new Attackable(10, 10, 3, 1));
+        bird.addFeature(FeatureType.AI, new MonsterAi(bird));
+        bird.addFeature(FeatureType.FOV, new FieldOfView(bird, 8));
+        bird.addFeature(FeatureType.REGENERATION, new Regeneration(8, bird));
+        return bird;
     }
 }

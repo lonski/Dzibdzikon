@@ -231,6 +231,12 @@ public class LevelFactory {
             var downstairs = EntityFactory.createDownstairs();
             var downstairsPos =
                     map.getRooms().get(RANDOM.nextInt(map.getRooms().size())).getCenter();
+            var maxTries = 5;
+            while (level.isObstacle(downstairsPos, true) && maxTries-- > 0) {
+                downstairsPos = map.getRooms()
+                        .get(RANDOM.nextInt(map.getRooms().size()))
+                        .getCenter();
+            }
             downstairs.addFeature(FeatureType.POSITION, new Position(downstairsPos));
             level.addEntity(downstairs);
 

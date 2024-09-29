@@ -4,7 +4,6 @@ import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Openable;
 import pl.lonski.dzibdzikon.entity.features.Position;
-import pl.lonski.dzibdzikon.map.TextureId;
 import pl.lonski.dzibdzikon.map.TileGrid;
 
 import java.util.ArrayList;
@@ -107,6 +106,19 @@ public class Level {
                 .filter(e -> {
                     var pos = e.<Position>getFeature(FeatureType.POSITION);
                     return pos != null && pos.getCoords().equals(targetPos);
+                })
+                .filter(e -> featureType == null || e.getFeature(featureType) != null)
+                .collect(Collectors.toList());
+    }
+
+    public List<Entity> getEntitiesAtCircle(Point center, int radius, FeatureType featureType) {
+        var points = new HashSet<Point>();
+        PositionUtils.inFilledCircleOf(radius, cp -> points.add(cp.add(center)));
+
+        return getEntities().stream()
+                .filter(e -> {
+                    var pos = e.<Position>getFeature(FeatureType.POSITION);
+                    return pos != null && points.contains(pos.getCoords());
                 })
                 .filter(e -> featureType == null || e.getFeature(featureType) != null)
                 .collect(Collectors.toList());
