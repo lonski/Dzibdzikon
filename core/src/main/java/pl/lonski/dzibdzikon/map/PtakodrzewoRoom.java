@@ -4,15 +4,15 @@ import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 
-public class DzibdzidrzewoRoom extends CircleRoom {
+public class PtakodrzewoRoom extends CircleRoom {
 
-    public DzibdzidrzewoRoom(int x, int y, int w, int h) {
+    public PtakodrzewoRoom(int x, int y, int w, int h) {
         super(x, y, Math.max(w, 5), Math.max(h, 5));
     }
 
     @Override
     public RoomType getRoomType() {
-        return RoomType.DZIBDZIDRZEWO;
+        return RoomType.PTAKODRZEWO;
     }
 
     @Override

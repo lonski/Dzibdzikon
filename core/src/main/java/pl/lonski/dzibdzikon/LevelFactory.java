@@ -5,7 +5,7 @@ import pl.lonski.dzibdzikon.entity.EntityFactory;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.map.CircleRoom;
-import pl.lonski.dzibdzikon.map.DzibdzidrzewoRoom;
+import pl.lonski.dzibdzikon.map.PtakodrzewoRoom;
 import pl.lonski.dzibdzikon.map.MapUtils;
 import pl.lonski.dzibdzikon.map.Room;
 import pl.lonski.dzibdzikon.map.RoomMapBuilder;
@@ -47,7 +47,7 @@ public class LevelFactory {
         @Override
         public Room createRoom(int x, int y, int w, int h) {
             if (!lastPlaced) {
-                return new DzibdzidrzewoRoom(x, y, w, h);
+                return new PtakodrzewoRoom(x, y, w, h);
             }
 
             return RANDOM.nextDouble() > 0.7 ? new CircleRoom(x, y, w, h) : new Room(x, y, w, h);
@@ -183,7 +183,7 @@ public class LevelFactory {
             }
 
             map.getRooms().stream()
-                    .filter(room -> room.getRoomType() == RoomType.DZIBDZIDRZEWO)
+                    .filter(room -> room.getRoomType() == RoomType.PTAKODRZEWO)
                     .forEach(dzibdziDrzewoRoom -> {
                         var center = dzibdziDrzewoRoom.getCenter();
                         Entity mob = EntityFactory.createPtakodrzewo();
