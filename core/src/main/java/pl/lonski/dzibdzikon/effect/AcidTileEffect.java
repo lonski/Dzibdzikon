@@ -1,14 +1,10 @@
 package pl.lonski.dzibdzikon.effect;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
-import pl.lonski.dzibdzikon.action.DieAction;
-import pl.lonski.dzibdzikon.animation.TextFlowUpAnimation;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
-import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.map.TextureId;
 
 import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
@@ -39,13 +35,7 @@ public class AcidTileEffect implements TileEffect {
                 continue;
             }
 
-            var attackable = entity.<Attackable>getFeature(FeatureType.ATTACKABLE);
-            var newHp = attackable.getHp() - 1;
-            attackable.setHp(newHp);
-            entity.addAnimation(new TextFlowUpAnimation("-1", pos, Color.SCARLET));
-            if (attackable.getHp() <= 0) {
-                entity.takeAction(new DieAction(entity));
-            }
+            new DamageEffect(1).apply(entity);
         }
 
         ttl -= 1;

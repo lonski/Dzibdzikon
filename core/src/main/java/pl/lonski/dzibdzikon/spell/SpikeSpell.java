@@ -1,18 +1,14 @@
 package pl.lonski.dzibdzikon.spell;
 
-import com.badlogic.gdx.graphics.Color;
 import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
-import pl.lonski.dzibdzikon.action.DieAction;
 import pl.lonski.dzibdzikon.action.targeting.TargetingMode;
 import pl.lonski.dzibdzikon.animation.Animation;
-import pl.lonski.dzibdzikon.animation.TextFlowUpAnimation;
 import pl.lonski.dzibdzikon.animation.ThrowAnimation;
+import pl.lonski.dzibdzikon.effect.DamageEffect;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
-import pl.lonski.dzibdzikon.entity.features.Attackable;
-import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.map.TextureId;
 
 import java.util.Optional;
@@ -47,16 +43,8 @@ public class SpikeSpell implements Spell {
         }
 
         var targetEntity = targetEntityOpt.get();
-        var targetAttackable = targetEntity.<Attackable>getFeature(FeatureType.ATTACKABLE);
-        var targetPos = targetEntity.<Position>getFeature(FeatureType.POSITION).getCoords();
-
         var damage = Dzibdzikon.RANDOM.nextInt(2, 6);
-
-        targetAttackable.setHp(targetAttackable.getHp() - damage);
-        targetEntity.addAnimation(new TextFlowUpAnimation("-" + damage, targetPos, Color.SCARLET));
-        if (targetAttackable.getHp() <= 0) {
-            targetEntity.takeAction(new DieAction(targetEntity));
-        }
+        new DamageEffect(damage).apply(targetEntity);
     }
 
     public Optional<Animation> getAnimation(Point startPosPix, Point targetPix) {

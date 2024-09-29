@@ -3,6 +3,7 @@ package pl.lonski.dzibdzikon.entity.features;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.MoveAction;
+import pl.lonski.dzibdzikon.effect.DamageEffect;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.map.MapUtils;
@@ -63,10 +64,8 @@ public class BirdPlankerAi extends RangeAttackerAi {
                 .findFirst();
         if (neighbourTree.isPresent()) {
             hasPlank = true;
-            var treeAttackable = neighbourTree.get().<Attackable>getFeature(FeatureType.ATTACKABLE);
-            // TODO: apply effect damage
-            // take tree hp
-            return false;
+            new DamageEffect(3).apply(neighbourTree.get());
+            return true;
         }
 
         // on a path to tree, follow

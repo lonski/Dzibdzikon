@@ -5,9 +5,9 @@ import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.animation.Animation;
 import pl.lonski.dzibdzikon.animation.TextFlowUpAnimation;
 import pl.lonski.dzibdzikon.animation.ThrowAnimation;
+import pl.lonski.dzibdzikon.effect.DamageEffect;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
-import pl.lonski.dzibdzikon.entity.Player;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.entity.features.RangeAttackable;
@@ -46,15 +46,10 @@ public class RangeAttackAction implements Action {
         RangeAttackable attacking = attacker.getFeature(FeatureType.RANGE_ATTACKABLE);
         Attackable defending = target.getFeature(FeatureType.ATTACKABLE);
         var targetPos = target.<Position>getFeature(FeatureType.POSITION).getCoords();
-
         var result = attacking.attack(defending);
 
         if (result.hit()) {
-            defending.setHp(defending.getHp() - result.damage());
-            target.addAnimation(new TextFlowUpAnimation("-" + result.damage(), targetPos, Color.SCARLET));
-            if (defending.getHp() <= 0 && !(target instanceof Player)) {
-                target.takeAction(new DieAction(target));
-            }
+            new DamageEffect(result.damage()).apply(target);
         } else {
             target.addAnimation(new TextFlowUpAnimation("unik", targetPos, Color.YELLOW));
         }

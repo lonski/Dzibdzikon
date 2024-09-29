@@ -12,11 +12,8 @@ import pl.lonski.dzibdzikon.screen.GameScreen;
 // - finish Acid Potion
 // - add mana
 // kłodoptak
-//   - kłooda więcej obrażeń
-//   - po rzuceniu kłody leci do drzewa i bierze nową kłodę i zabiera hp drzewu
 //   - kłoda powala na 2 tury
 //     - podczas powalenia postać przewrócona
-// - apply effect damage żeby nie powtarzać zadawania obrażeń
 public class Dzibdzikon extends Game {
 
     public static boolean SHOW_WHOLE_LEVEL = true;
