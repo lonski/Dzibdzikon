@@ -3,14 +3,16 @@ package pl.lonski.dzibdzikon.map;
 import pl.lonski.dzibdzikon.Point;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TileGrid {
     private final int width;
     private final int height;
     private final TextureId[][] tiles;
 
-    private final List<Room> rooms = new ArrayList<>();
+    private final Set<Room> rooms = new HashSet<>();
 
     public TileGrid(int width, int height) {
         this.width = width;
@@ -46,11 +48,11 @@ public class TileGrid {
     }
 
     public List<Room> getRooms() {
-        return rooms;
+        return new ArrayList<>(rooms);
     }
 
     public Room getRandomRoom() {
-        return rooms.get((int) (Math.random() * rooms.size()));
+        return getRooms().get((int) (Math.random() * rooms.size()));
     }
 
     public void addRoom(Room room) {

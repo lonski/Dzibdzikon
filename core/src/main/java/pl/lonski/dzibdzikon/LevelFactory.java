@@ -9,6 +9,7 @@ import pl.lonski.dzibdzikon.map.DzibdzidrzewoRoom;
 import pl.lonski.dzibdzikon.map.MapUtils;
 import pl.lonski.dzibdzikon.map.Room;
 import pl.lonski.dzibdzikon.map.RoomMapBuilder;
+import pl.lonski.dzibdzikon.map.RoomType;
 import pl.lonski.dzibdzikon.map.TileGrid;
 
 import java.util.ArrayList;
@@ -173,11 +174,22 @@ public class LevelFactory {
                     var pos = room.getRandomPosition();
                     if (level.getEntityAt(pos, null).isEmpty()) {
                         Entity mob = mobGenerateFn.get();
-                        mob.addFeature(FeatureType.POSITION, new Position(pos, 0, 10));
-                        level.addEntity(mob);
+                        if (room.acceptsEntity(mob)) {
+                            mob.addFeature(FeatureType.POSITION, new Position(pos, 0, 10));
+                            level.addEntity(mob);
+                        }
                     }
                 }
             }
+
+            map.getRooms().stream()
+                    .filter(room -> room.getRoomType() == RoomType.DZIBDZIDRZEWO)
+                    .forEach(dzibdziDrzewoRoom -> {
+                        var center = dzibdziDrzewoRoom.getCenter();
+                        Entity mob = EntityFactory.createPtakodrzewo();
+                        mob.addFeature(FeatureType.POSITION, new Position(center, 0, 10));
+                        level.addEntity(mob);
+                    });
 
             // spawn items
             for (Room room : level.getMap().getRooms()) {
@@ -186,8 +198,10 @@ public class LevelFactory {
                     var pos = room.getRandomPosition();
                     if (level.getEntityAt(pos, null).isEmpty()) {
                         Entity item = itemGenerateFn.get();
-                        item.addFeature(FeatureType.POSITION, new Position(pos, 0, 10));
-                        level.addEntity(item);
+                        if (room.acceptsEntity(item)) {
+                            item.addFeature(FeatureType.POSITION, new Position(pos, 0, 10));
+                            level.addEntity(item);
+                        }
                     }
                 }
             }

@@ -1,6 +1,8 @@
 package pl.lonski.dzibdzikon.map;
 
 import pl.lonski.dzibdzikon.Point;
+import pl.lonski.dzibdzikon.entity.Entity;
+import pl.lonski.dzibdzikon.entity.FeatureType;
 
 public class DzibdzidrzewoRoom extends CircleRoom {
 
@@ -27,5 +29,13 @@ public class DzibdzidrzewoRoom extends CircleRoom {
         for (Point point : points) {
             map.setTile(point, TextureId.FLOOR_GREEN);
         }
+    }
+
+    public boolean acceptsEntity(Entity entity) {
+        if (entity.getFeature(FeatureType.ATTACKABLE) != null) {
+            return entity.getGlyph() == TextureId.MOB_PTAKODRZEWO;
+        }
+
+        return true;
     }
 }

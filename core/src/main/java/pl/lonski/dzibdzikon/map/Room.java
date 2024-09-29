@@ -2,10 +2,12 @@ package pl.lonski.dzibdzikon.map;
 
 import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
+import pl.lonski.dzibdzikon.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class Room {
@@ -37,6 +39,10 @@ public class Room {
                 points.add(new Point(x + i, y + j));
             }
         }
+    }
+
+    public boolean acceptsEntity(Entity entity) {
+        return true;
     }
 
     public boolean canPlace(TileGrid tileGrid) {
@@ -213,5 +219,30 @@ public class Room {
         //        }
 
         return entrances;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Room room = (Room) o;
+        return x == room.x
+                && y == room.y
+                && w == room.w
+                && h == room.h
+                && Objects.equals(perimeterPoints, room.perimeterPoints)
+                && Objects.equals(points, room.points);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = x;
+        result = 31 * result + y;
+        result = 31 * result + w;
+        result = 31 * result + h;
+        result = 31 * result + Objects.hashCode(perimeterPoints);
+        result = 31 * result + Objects.hashCode(points);
+        return result;
     }
 }
