@@ -11,11 +11,16 @@ import pl.lonski.dzibdzikon.entity.features.MonsterAi;
 import pl.lonski.dzibdzikon.entity.features.Pickable;
 import pl.lonski.dzibdzikon.entity.features.PtakodrzewoAi;
 import pl.lonski.dzibdzikon.entity.features.RangeAttackable;
+import pl.lonski.dzibdzikon.entity.features.RangeAttackerAi;
 import pl.lonski.dzibdzikon.entity.features.Regeneration;
 import pl.lonski.dzibdzikon.entity.features.RollingRockAi;
 import pl.lonski.dzibdzikon.entity.features.RollingRockAttackable;
-import pl.lonski.dzibdzikon.entity.features.RangeAttackerAi;
+import pl.lonski.dzibdzikon.entity.features.RzucoptakAi;
+import pl.lonski.dzibdzikon.entity.features.SpellEffect;
+import pl.lonski.dzibdzikon.entity.features.ThrowerAi;
 import pl.lonski.dzibdzikon.map.TextureId;
+import pl.lonski.dzibdzikon.spell.AcidPuddle;
+import pl.lonski.dzibdzikon.spell.Fireball;
 
 public class EntityFactory {
 
@@ -69,7 +74,7 @@ public class EntityFactory {
 
     public static Entity createPtakodrzewo() {
         var ptakodrzewo = new Entity("Ptakodrzewo", TextureId.MOB_PTAKODRZEWO);
-        ptakodrzewo.addFeature(FeatureType.ATTACKABLE, new Attackable(50, 50, 0, 4));
+        ptakodrzewo.addFeature(FeatureType.ATTACKABLE, new Attackable(100, 100, 0, 4));
         ptakodrzewo.addFeature(FeatureType.AI, new PtakodrzewoAi(ptakodrzewo));
         ptakodrzewo.addFeature(FeatureType.FOV, new FieldOfView(ptakodrzewo, 10));
         ptakodrzewo.addFeature(FeatureType.REGENERATION, new Regeneration(3, ptakodrzewo));
@@ -81,17 +86,20 @@ public class EntityFactory {
         bird.addFeature(FeatureType.ATTACKABLE, new Attackable(10, 10, 1, 1));
         bird.addFeature(FeatureType.RANGE_ATTACKABLE, new RangeAttackable(TextureId.PLANK, 2, 2));
         bird.addFeature(FeatureType.AI, new RangeAttackerAi(bird));
-        bird.addFeature(FeatureType.FOV, new FieldOfView(bird, 8));
+        bird.addFeature(FeatureType.FOV, new FieldOfView(bird, 9));
         bird.addFeature(FeatureType.REGENERATION, new Regeneration(8, bird));
+        bird.setFlying(true);
         return bird;
     }
 
     public static Entity createBirdThrower() {
-        var bird = new Entity("Rzucoptak", TextureId.MOB_BIRD_THROWER);
+        var bird = new Entity("Rzucoptak", TextureId.MOB_BIRD_THROWER_2BOTTLE);
         bird.addFeature(FeatureType.ATTACKABLE, new Attackable(10, 10, 1, 1));
-        bird.addFeature(FeatureType.AI, new MonsterAi(bird));
-        bird.addFeature(FeatureType.FOV, new FieldOfView(bird, 8));
+        bird.addFeature(FeatureType.RANGE_ATTACKABLE, new RangeAttackable(3));
+        bird.addFeature(FeatureType.AI, new RzucoptakAi(bird, EntityFactory.createAcidPotion(), 2, 5));
+        bird.addFeature(FeatureType.FOV, new FieldOfView(bird, 9));
         bird.addFeature(FeatureType.REGENERATION, new Regeneration(8, bird));
+        bird.setFlying(true);
         return bird;
     }
 
@@ -99,8 +107,18 @@ public class EntityFactory {
         var bird = new Entity("Dzioboptak", TextureId.MOB_BIRD_BITER);
         bird.addFeature(FeatureType.ATTACKABLE, new Attackable(10, 10, 3, 1));
         bird.addFeature(FeatureType.AI, new MonsterAi(bird));
-        bird.addFeature(FeatureType.FOV, new FieldOfView(bird, 8));
+        bird.addFeature(FeatureType.FOV, new FieldOfView(bird, 9));
         bird.addFeature(FeatureType.REGENERATION, new Regeneration(8, bird));
+        bird.setFlying(true);
         return bird;
+    }
+
+    public static Entity createAcidPotion() {
+        var potion = new Entity("Kwas", TextureId.POTION_LIGHT_GREEN);
+        potion.addFeature(FeatureType.PICKABLE, new Pickable());
+        potion.addFeature(FeatureType.SPELL_EFFECT, new SpellEffect(new AcidPuddle()));
+        // TODO: useable
+        // TODO: throwable
+        return potion;
     }
 }

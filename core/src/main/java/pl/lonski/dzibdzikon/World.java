@@ -1,10 +1,16 @@
 package pl.lonski.dzibdzikon;
 
+import pl.lonski.dzibdzikon.effect.TileEffect;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
 import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.Position;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static pl.lonski.dzibdzikon.Dzibdzikon.SHOW_WHOLE_LEVEL;
 import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
@@ -36,14 +42,18 @@ public class World {
     public boolean visible(Entity entity) {
         var entityPos = entity.<Position>getFeature(FeatureType.POSITION).getCoords();
         return SHOW_WHOLE_LEVEL
-            || getCurrentLevel().getVisible().contains(entityPos)
-            || (getCurrentLevel().getVisited().contains(entityPos) && entity.isVisibleInFog());
+                || getCurrentLevel().getVisible().contains(entityPos)
+                || (getCurrentLevel().getVisited().contains(entityPos) && entity.isVisibleInFog());
+    }
+
+    public boolean visible(Point pos) {
+        return SHOW_WHOLE_LEVEL || getCurrentLevel().getVisible().contains(pos);
     }
 
     public void update(float delta) {
         // update all entities
         while (currentLevel.getEntities().indexOf(currentEntity)
-            < currentLevel.getEntities().size()) {
+                < currentLevel.getEntities().size()) {
 
             // take new turn
             if (currentEntity.getCurrentAction() == null) {
@@ -92,6 +102,17 @@ public class World {
             if (!currentEntity.canTakeAction()) {
                 if (isLastEntity()) {
                     turn++;
+                    var remainedTileEffects = new HashMap<Point, List<TileEffect>>();
+                    currentLevel.getTileEffects().forEach((point, tileEffects) -> {
+                        var remainedEffectOnTile = new ArrayList<TileEffect>();
+                        for (TileEffect tileEffect : tileEffects) {
+                            if (!tileEffect.takeTurn(point, this)) {
+                                remainedEffectOnTile.add(tileEffect);
+                            }
+                        }
+                        remainedTileEffects.put(point, remainedEffectOnTile);
+                    });
+                    currentLevel.setTileEffects(remainedTileEffects);
                 }
                 proceedToNextEntity();
             }

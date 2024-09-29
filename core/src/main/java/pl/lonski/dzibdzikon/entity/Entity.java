@@ -23,6 +23,7 @@ public class Entity {
     private List<Animation> animations = new ArrayList<>();
     private double speed = 1.0;
     private double energy = 0.0;
+    private boolean flying = false;
 
     public Entity(String name, TextureId glyph) {
         this.name = name;
@@ -34,7 +35,9 @@ public class Entity {
     }
 
     public void addAnimation(Animation animation) {
-        this.animations.add(animation);
+        if (animation != null) {
+            this.animations.add(animation);
+        }
     }
 
     public void setGlyph(TextureId glyph) {
@@ -139,5 +142,13 @@ public class Entity {
 
     public void clearAnimations() {
         this.animations.clear();
+    }
+
+    public boolean isFlying() {
+        return flying;
+    }
+
+    public void setFlying(boolean flying) {
+        this.flying = flying;
     }
 }

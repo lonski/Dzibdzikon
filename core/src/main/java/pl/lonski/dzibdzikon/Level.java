@@ -1,5 +1,6 @@
 package pl.lonski.dzibdzikon;
 
+import pl.lonski.dzibdzikon.effect.TileEffect;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Openable;
@@ -7,8 +8,10 @@ import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.map.TileGrid;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -19,6 +22,7 @@ public class Level {
     private final List<Entity> entities = new ArrayList<>();
     private final Set<Point> visited = new HashSet<>();
     private final Set<Point> visible = new HashSet<>();
+    private Map<Point, List<TileEffect>> tileEffects = new HashMap<>();
 
     public Level(TileGrid map) {
         this.map = map;
@@ -46,6 +50,19 @@ public class Level {
 
     public boolean isObstacle(Point pos) {
         return isObstacle(pos, true);
+    }
+
+    public Map<Point, List<TileEffect>> getTileEffects() {
+        return tileEffects;
+    }
+
+    public void setTileEffects(Map<Point, List<TileEffect>> tileEffects) {
+        this.tileEffects = tileEffects;
+    }
+
+    public void addTileEffect(Point pos, TileEffect effect) {
+        tileEffects.computeIfAbsent(pos, point -> new ArrayList<>());
+        tileEffects.get(pos).add(effect);
     }
 
     public boolean isObstacle(Point pos, boolean includeMonsters) {

@@ -26,7 +26,9 @@ public enum TextureId {
     MOB_BIG_ROCK("mob/glazolud_glaz.png"),
     MOB_PTAKODRZEWO("mob/ptakodrzewo.png"),
     MOB_BIRD_PLANKER("mob/bird_planker.png"),
-    MOB_BIRD_THROWER("mob/bird_thrower.png"),
+    MOB_BIRD_THROWER_2BOTTLE("mob/bird_thrower_2.png"),
+    MOB_BIRD_THROWER_1BOTTLE("mob/bird_thrower_1.png"),
+    MOB_BIRD_THROWER_0BOTTLE("mob/bird_thrower_0.png"),
     MOB_BIRD_BITER("mob/bird_biter.png"),
 
     SPELL_SPIKE("spell/kolec.png"),
@@ -34,6 +36,8 @@ public enum TextureId {
     SPELL_FIREBALL("spell/fireball.png"),
     SPELL_EFFECT_FIREBALL("spell/fireball_effect.png"),
     SPELL_EFFECT_BURN("spell/burn.png"),
+    SPELL_ACID_PUDDLE("spell/acid_puddle_icon.png"),
+    SPELL_EFFECT_ACID_PUDDLE("spell/acid_puddle.png"),
 
     POTION_RED("potion/red.png"),
     POTION_LIGHT_GREEN("potion/light_green.png");

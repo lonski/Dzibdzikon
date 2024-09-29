@@ -1,23 +1,27 @@
 package pl.lonski.dzibdzikon.entity.features;
 
+import com.badlogic.gdx.graphics.Color;
 import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.World;
+import pl.lonski.dzibdzikon.action.MoveAction;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.EntityFactory;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.map.MapUtils;
-import pl.lonski.dzibdzikon.map.TextureId;
+import pl.lonski.dzibdzikon.screen.Hud;
 
 import java.util.List;
 
 public class PtakodrzewoAi extends MonsterAi {
 
-    private static final List<TextureId> BIRDS =
-            List.of(TextureId.MOB_BIRD_PLANKER, TextureId.MOB_BIRD_THROWER, TextureId.MOB_BIRD_BITER);
-    private static final int MAX_BIRDS_SPAWNED = 3;
-    private static final float BIRD_SPAWN_CHANCE = 0.4f;
-    private static final int BIRD_SPAWN_COOLDOWN_TURNS = 5;
-    private int birdsLeft = 7;
+    private static final List<String> BIRDS = List.of(
+            EntityFactory.createBirdPlanker().getName(),
+            EntityFactory.createBirdBiter().getName(),
+            EntityFactory.createBirdThrower().getName());
+    private static final int MAX_BIRDS_SPAWNED = 6;
+    private static final float BIRD_SPAWN_CHANCE = 0.8f;
+    private static final int BIRD_SPAWN_COOLDOWN_TURNS = 2;
+    private int birdsLeft = 50;
     private int currentBirdSpawnCd = 0;
 
     public PtakodrzewoAi(Entity entity) {
@@ -64,25 +68,23 @@ public class PtakodrzewoAi extends MonsterAi {
             return;
         }
 
-        Entity spawnedBird = EntityFactory.createBirdPlanker();
-        //                switch (BIRDS.get(Dzibdzikon.RANDOM.nextInt(BIRDS.size()))) {
-        //                    case MOB_BIRD_BITER -> EntityFactory.createBirdBiter();
-        //                    case MOB_BIRD_PLANKER -> EntityFactory.createBirdPlanker();
-        //                    case MOB_BIRD_THROWER -> EntityFactory.createBirdThrower();
-        //                    default -> null;
-        //                };
-
-        if (spawnedBird == null) {
-            return;
-        }
+        Entity spawnedBird =
+                switch (Dzibdzikon.RANDOM.nextInt(3)) {
+                    case 0 -> EntityFactory.createBirdBiter();
+                    case 1 -> EntityFactory.createBirdPlanker();
+                    case 2 -> EntityFactory.createBirdThrower();
+                    default -> null;
+                };
 
         var possiblePositions = MapUtils.getNeighbourPositions(myPos.getCoords()).stream()
                 .filter(p -> !world.getCurrentLevel().isObstacle(p, true))
                 .toList();
-        var position = possiblePositions.get(Dzibdzikon.RANDOM.nextInt(possiblePositions.size()));
-        spawnedBird.addFeature(FeatureType.POSITION, new Position(position));
-
+        var birdPos = possiblePositions.get(Dzibdzikon.RANDOM.nextInt(possiblePositions.size()));
+        spawnedBird.addFeature(FeatureType.POSITION, new Position(myPos.getCoords()));
         world.getCurrentLevel().addEntity(spawnedBird);
+
+        Hud.addMessage("Z drzewa wylatuje ptak, aby go bronić!", Color.ORANGE);
+        entity.takeAction(new MoveAction(spawnedBird, birdPos));
 
         birdsLeft -= 1;
         currentBirdSpawnCd = BIRD_SPAWN_COOLDOWN_TURNS;
@@ -90,7 +92,7 @@ public class PtakodrzewoAi extends MonsterAi {
 
     private List<Entity> getNearbyBirds(World world) {
         return world.getCurrentLevel().getEntitiesAtCircle(myPos.getCoords(), 10, FeatureType.ATTACKABLE).stream()
-                .filter(e -> BIRDS.contains(e.getGlyph()))
+                .filter(e -> BIRDS.contains(e.getName()))
                 .toList();
     }
 }

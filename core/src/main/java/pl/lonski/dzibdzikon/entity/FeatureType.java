@@ -13,5 +13,6 @@ public enum FeatureType {
     SPELLBOOK,
     PICKABLE,
     INVENTORY,
-    USEABLE
+    USEABLE,
+    SPELL_EFFECT
 }

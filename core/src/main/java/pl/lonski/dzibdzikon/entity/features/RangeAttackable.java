@@ -9,6 +9,10 @@ public class RangeAttackable implements EntityFeature {
     private final int attack;
     private final TextureId ammo;
 
+    public RangeAttackable(int range) {
+        this(null, range, 0);
+    }
+
     public RangeAttackable(TextureId ammo, int range, int attack) {
         this.range = range;
         this.attack = attack;

@@ -1,10 +1,5 @@
 package pl.lonski.dzibdzikon.screen;
 
-import static pl.lonski.dzibdzikon.Dzibdzikon.SHOW_WHOLE_LEVEL;
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
-import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ScreenUtils;
 import pl.lonski.dzibdzikon.DzibdziInput;
@@ -12,8 +7,14 @@ import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.animation.Animation;
+import pl.lonski.dzibdzikon.effect.TileEffect;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Position;
+
+import static pl.lonski.dzibdzikon.Dzibdzikon.SHOW_WHOLE_LEVEL;
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
+import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
 
 public class GameScreen extends DzibdzikonScreen {
 
@@ -100,6 +101,12 @@ public class GameScreen extends DzibdzikonScreen {
             }
         }
 
+        world.getCurrentLevel().getTileEffects().forEach(((point, tileEffects) -> {
+            if (world.visible(point)) {
+                tileEffects.forEach(e -> e.render(point));
+            }
+        }));
+
         world.getCurrentLevel().getEntities().stream()
                 .filter(e -> e.getFeature(FeatureType.POSITION) != null)
                 .filter(world::visible)
@@ -127,6 +134,7 @@ public class GameScreen extends DzibdzikonScreen {
                             );
                     entity.getAnimations().forEach(Animation::render);
                 });
+
         batch.end();
 
         getGameResources().windowManager.render(delta);
