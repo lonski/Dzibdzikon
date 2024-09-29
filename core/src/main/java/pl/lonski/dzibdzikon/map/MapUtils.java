@@ -52,6 +52,7 @@ public class MapUtils {
     }
 
     public static List<Point> pathfind(Point start, Point end, CanEnterTile canEnterTile, boolean allowDiagonal) {
+        CanEnterTile canEnterTileExcludeEnd = p -> end.equals(p) || canEnterTile.canEnter(p);
         var frontier = new PriorityQueue<>(Comparator.comparing(QueueElement::priority));
         frontier.add(new QueueElement(start, 0.0));
 
@@ -66,7 +67,7 @@ public class MapUtils {
                 break;
             }
             for (var next : getNeighbourPositions(current, allowDiagonal)) {
-                if (next != end && (cameFrom.containsKey(next) || !canEnterTile.canEnter(next))) {
+                if (next != end && (cameFrom.containsKey(next) || !canEnterTileExcludeEnd.canEnter(next))) {
                     continue;
                 }
                 var newCost = Optional.ofNullable(costSoFar.get(current)).orElse(0.0) + cost(current, next);

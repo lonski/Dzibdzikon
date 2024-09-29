@@ -14,5 +14,6 @@ public enum FeatureType {
     PICKABLE,
     INVENTORY,
     USEABLE,
-    SPELL_EFFECT
+    SPELL_EFFECT,
+    PTAKODRZEWO
 }

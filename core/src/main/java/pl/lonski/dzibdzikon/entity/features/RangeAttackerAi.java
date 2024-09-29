@@ -8,6 +8,8 @@ import pl.lonski.dzibdzikon.map.MapUtils;
 
 public class RangeAttackerAi extends MonsterAi {
 
+    protected boolean allowRangeAttackOnNeighbourTile = false;
+
     public RangeAttackerAi(Entity entity) {
         super(entity);
     }
@@ -45,7 +47,7 @@ public class RangeAttackerAi extends MonsterAi {
         var enemyPos = playerPos.getCoords();
         var distance = MapUtils.euclideanDistance(enemyPos, myPos.getCoords());
 
-        if (distance < 1.5) { // on neighbour tile
+        if (distance < 1.5 && !allowRangeAttackOnNeighbourTile) { // on neighbour tile
             return false;
         }
 

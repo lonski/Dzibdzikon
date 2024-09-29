@@ -66,6 +66,69 @@ public class PositionUtils {
             }
         }
 
+        for (Point p : new HashSet<>(perimeterPoints)) {
+
+            //      *
+            //     ###
+            //    #   #
+            //   ##    ##
+            //    #   #
+            //     ###
+            //      #
+            if (perimeterPoints.contains(new Point(p.x(), p.y() + 1))
+                    && perimeterPoints.contains(new Point(p.x() - 1, p.y()))
+                    && perimeterPoints.contains(new Point(p.x() + 1, p.y()))
+                    && !perimeterPoints.contains(new Point(p.x() - 1, p.y() + 1))
+                    && !perimeterPoints.contains(new Point(p.x() + 1, p.y() + 1))) {
+                perimeterPoints.remove(new Point(p.x(), p.y() + 1));
+            }
+
+            //      #
+            //     ###
+            //    #   #
+            //   ##    ##
+            //    #   #
+            //     ###
+            //      *
+            if (perimeterPoints.contains(new Point(p.x(), p.y() - 1))
+                    && perimeterPoints.contains(new Point(p.x() - 1, p.y()))
+                    && perimeterPoints.contains(new Point(p.x() + 1, p.y()))
+                    && !perimeterPoints.contains(new Point(p.x() - 1, p.y() - 1))
+                    && !perimeterPoints.contains(new Point(p.x() + 1, p.y() - 1))) {
+                perimeterPoints.remove(new Point(p.x(), p.y() - 1));
+            }
+
+            //      #
+            //     ###
+            //    #   #
+            //   *#    ##
+            //    #   #
+            //     ###
+            //      #
+            if (perimeterPoints.contains(new Point(p.x() - 1, p.y()))
+                    && perimeterPoints.contains(new Point(p.x(), p.y() + 1))
+                    && perimeterPoints.contains(new Point(p.x(), p.y() - 1))
+                    && !perimeterPoints.contains(new Point(p.x() - 1, p.y() - 1))
+                    && !perimeterPoints.contains(new Point(p.x() - 1, p.y() + 1))) {
+                perimeterPoints.remove(new Point(p.x() - 1, p.y()));
+            }
+
+            //      #
+            //     ###
+            //    #   #
+            //   ##    #*
+            //    #   #
+            //     ###
+            //      #
+            if (perimeterPoints.contains(new Point(p.x() + 1, p.y()))
+                    && perimeterPoints.contains(new Point(p.x(), p.y() + 1))
+                    && perimeterPoints.contains(new Point(p.x(), p.y() - 1))
+                    && !perimeterPoints.contains(new Point(p.x() + 1, p.y() - 1))
+                    && !perimeterPoints.contains(new Point(p.x() + 1, p.y() + 1))) {
+                perimeterPoints.remove(new Point(p.x() + 1, p.y()));
+            }
+        }
+
         return new CirclePoints(points, perimeterPoints);
     }
 

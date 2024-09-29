@@ -26,6 +26,7 @@ public enum TextureId {
     MOB_BIG_ROCK("mob/glazolud_glaz.png"),
     MOB_PTAKODRZEWO("mob/ptakodrzewo.png"),
     MOB_BIRD_PLANKER("mob/bird_planker.png"),
+    MOB_BIRD_PLANKER_EMPTY("mob/bird_planker_empty.png"),
     MOB_BIRD_THROWER_2BOTTLE("mob/bird_thrower_2.png"),
     MOB_BIRD_THROWER_1BOTTLE("mob/bird_thrower_1.png"),
     MOB_BIRD_THROWER_0BOTTLE("mob/bird_thrower_0.png"),

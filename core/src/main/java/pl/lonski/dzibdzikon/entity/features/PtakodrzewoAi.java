@@ -18,7 +18,7 @@ public class PtakodrzewoAi extends MonsterAi {
             EntityFactory.createBirdPlanker().getName(),
             EntityFactory.createBirdBiter().getName(),
             EntityFactory.createBirdThrower().getName());
-    private static final int MAX_BIRDS_SPAWNED = 6;
+    private static final int MAX_BIRDS_SPAWNED = 10;
     private static final float BIRD_SPAWN_CHANCE = 0.8f;
     private static final int BIRD_SPAWN_COOLDOWN_TURNS = 2;
     private int birdsLeft = 50;

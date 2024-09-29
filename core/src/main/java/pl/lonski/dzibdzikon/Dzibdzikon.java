@@ -10,10 +10,13 @@ import pl.lonski.dzibdzikon.screen.GameScreen;
 // - pathfinding coś chyba nie bangla na 100%
 // - open doors as action
 // - finish Acid Potion
+// - add mana
 // kłodoptak
 //   - kłooda więcej obrażeń
 //   - po rzuceniu kłody leci do drzewa i bierze nową kłodę i zabiera hp drzewu
-//   - kłoda ogłusza na 2 tury
+//   - kłoda powala na 2 tury
+//     - podczas powalenia postać przewrócona
+// - apply effect damage żeby nie powtarzać zadawania obrażeń
 public class Dzibdzikon extends Game {
 
     public static boolean SHOW_WHOLE_LEVEL = true;
