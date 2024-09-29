@@ -1,5 +1,7 @@
 package pl.lonski.dzibdzikon.map;
 
+import pl.lonski.dzibdzikon.Point;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -9,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Set;
-import pl.lonski.dzibdzikon.Point;
 
 public class MapUtils {
 
@@ -37,8 +38,7 @@ public class MapUtils {
         return neighbours;
     }
 
-    record QueueElement(Point pos, Double priority) {
-    }
+    record QueueElement(Point pos, Double priority) {}
 
     private static double cost(Point a, Point b) {
         if (a.x() == b.x() || a.y() == b.y()) {
@@ -94,7 +94,11 @@ public class MapUtils {
         return path;
     }
 
-    public static int distance(Point a, Point b) {
+    public static double euclideanDistance(Point a, Point b) {
+        return Math.sqrt((a.x() - b.x()) * (a.x() - b.x()) + (a.y() - b.y()) * (a.y() - b.y()));
+    }
+
+    public static int manhattanDistance(Point a, Point b) {
         return Math.abs(a.x() - b.x()) + Math.abs(a.y() - b.y());
     }
 

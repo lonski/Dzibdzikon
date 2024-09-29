@@ -31,7 +31,7 @@ public class MonsterAi implements EntityFeature {
             return;
         }
 
-        if (attackPlayerIfAtNeighbourTile(world)) {
+        if (seesPlayer(world) && attackEnemyAtNeighbourTile(world)) {
             return;
         }
 
@@ -73,7 +73,7 @@ public class MonsterAi implements EntityFeature {
         return true;
     }
 
-    protected boolean attackPlayerIfAtNeighbourTile(World world) {
+    protected boolean attackEnemyAtNeighbourTile(World world) {
         Set<Point> nbPositions = MapUtils.getNeighbourPositions(myPos.getCoords());
         if (nbPositions.contains(playerPos.getCoords())) {
             lastSeenPlayerPos = playerPos.getCoords();

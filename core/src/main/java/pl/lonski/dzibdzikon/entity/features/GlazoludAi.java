@@ -26,7 +26,7 @@ public class GlazoludAi extends MonsterAi {
             return;
         }
 
-        if (attackPlayerIfAtNeighbourTile(world)) {
+        if (attackEnemyAtNeighbourTile(world)) {
             return;
         }
 

@@ -64,13 +64,13 @@ public class PtakodrzewoAi extends MonsterAi {
             return;
         }
 
-        Entity spawnedBird =
-                switch (BIRDS.get(Dzibdzikon.RANDOM.nextInt(BIRDS.size()))) {
-                    case MOB_BIRD_BITER -> EntityFactory.createBirdBiter();
-                    case MOB_BIRD_PLANKER -> EntityFactory.createBirdPlanker();
-                    case MOB_BIRD_THROWER -> EntityFactory.createBirdThrower();
-                    default -> null;
-                };
+        Entity spawnedBird = EntityFactory.createBirdPlanker();
+        //                switch (BIRDS.get(Dzibdzikon.RANDOM.nextInt(BIRDS.size()))) {
+        //                    case MOB_BIRD_BITER -> EntityFactory.createBirdBiter();
+        //                    case MOB_BIRD_PLANKER -> EntityFactory.createBirdPlanker();
+        //                    case MOB_BIRD_THROWER -> EntityFactory.createBirdThrower();
+        //                    default -> null;
+        //                };
 
         if (spawnedBird == null) {
             return;

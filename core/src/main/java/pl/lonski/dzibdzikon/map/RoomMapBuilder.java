@@ -131,17 +131,17 @@ public class RoomMapBuilder {
 
     private static Room findClosestRoom(Room currentRoom, ArrayList<Room> unconnectedRooms) {
         return unconnectedRooms.stream()
-                .min(Comparator.comparingInt(r -> calculateDistance(currentRoom, r)))
+                .min(Comparator.comparingDouble(r -> calculateDistance(currentRoom, r)))
                 .orElseThrow();
     }
 
-    private static int calculateDistance(Room r1, Room r2) {
+    private static double calculateDistance(Room r1, Room r2) {
         var candidateCenterX = r1.x() + r2.width() / 2;
         var candidateCenterY = r1.y() + r2.height() / 2;
         var currentCenterX = r2.x() + r2.width() / 2;
         var currentCenterY = r2.y() + r2.height() / 2;
 
-        return MapUtils.distance(
+        return MapUtils.euclideanDistance(
                 new Point(candidateCenterX, candidateCenterY), new Point(currentCenterX, currentCenterY));
     }
 

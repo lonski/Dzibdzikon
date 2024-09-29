@@ -17,6 +17,7 @@ public enum TextureId {
     DOOR_OPEN("door_open.png"),
     DOOR_CLOSED("door_closed.png"),
     DOWNSTAIRS("downstairs.png"),
+    PLANK("plank.png"),
 
     WND_SPELLBOOK("window/spellbook.png"),
 

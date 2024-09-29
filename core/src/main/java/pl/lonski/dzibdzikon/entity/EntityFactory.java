@@ -10,9 +10,11 @@ import pl.lonski.dzibdzikon.entity.features.HealingUseable;
 import pl.lonski.dzibdzikon.entity.features.MonsterAi;
 import pl.lonski.dzibdzikon.entity.features.Pickable;
 import pl.lonski.dzibdzikon.entity.features.PtakodrzewoAi;
+import pl.lonski.dzibdzikon.entity.features.RangeAttackable;
 import pl.lonski.dzibdzikon.entity.features.Regeneration;
 import pl.lonski.dzibdzikon.entity.features.RollingRockAi;
 import pl.lonski.dzibdzikon.entity.features.RollingRockAttackable;
+import pl.lonski.dzibdzikon.entity.features.RangeAttackerAi;
 import pl.lonski.dzibdzikon.map.TextureId;
 
 public class EntityFactory {
@@ -77,7 +79,8 @@ public class EntityFactory {
     public static Entity createBirdPlanker() {
         var bird = new Entity("Kłodoptak", TextureId.MOB_BIRD_PLANKER);
         bird.addFeature(FeatureType.ATTACKABLE, new Attackable(10, 10, 1, 1));
-        bird.addFeature(FeatureType.AI, new MonsterAi(bird));
+        bird.addFeature(FeatureType.RANGE_ATTACKABLE, new RangeAttackable(TextureId.PLANK, 2, 2));
+        bird.addFeature(FeatureType.AI, new RangeAttackerAi(bird));
         bird.addFeature(FeatureType.FOV, new FieldOfView(bird, 8));
         bird.addFeature(FeatureType.REGENERATION, new Regeneration(8, bird));
         return bird;

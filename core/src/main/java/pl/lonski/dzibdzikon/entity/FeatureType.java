@@ -5,6 +5,7 @@ public enum FeatureType {
     POSITION,
     FOV,
     ATTACKABLE,
+    RANGE_ATTACKABLE,
     AI,
     OPENABLE,
     DOWNSTAIRS,
