@@ -1,8 +1,9 @@
 package pl.lonski.dzibdzikon.map;
 
+import pl.lonski.dzibdzikon.Point;
+
 import java.util.ArrayList;
 import java.util.List;
-import pl.lonski.dzibdzikon.Point;
 
 public class TileGrid {
     private final int width;
@@ -74,5 +75,41 @@ public class TileGrid {
 
     public boolean isBorderTile(Point pos) {
         return pos.x() == 0 || pos.y() == 0 || pos.x() == width - 1 || pos.y() == height - 1;
+    }
+
+    public boolean horizontalNeighboursAreWalls(Point p) {
+        var nbPos1 = new Point(p.x() - 1, p.y());
+        var nbPos2 = new Point(p.x() + 1, p.y());
+        return (inBounds(nbPos1)
+                && getTile(nbPos1).isWall()
+                && inBounds(nbPos2)
+                && getTile(nbPos2).isWall());
+    }
+
+    public boolean horizontalNeighboursAreFloors(Point p) {
+        var nbPos1 = new Point(p.x() - 1, p.y());
+        var nbPos2 = new Point(p.x() + 1, p.y());
+        return (inBounds(nbPos1)
+                && getTile(nbPos1).isFloor()
+                && inBounds(nbPos2)
+                && getTile(nbPos2).isFloor());
+    }
+
+    public boolean verticalNeighboursAreWalls(Point p) {
+        var nbPos1 = new Point(p.x(), p.y() - 1);
+        var nbPos2 = new Point(p.x(), p.y() + 1);
+        return (inBounds(nbPos1)
+                && getTile(nbPos1).isWall()
+                && inBounds(nbPos2)
+                && getTile(nbPos2).isWall());
+    }
+
+    public boolean verticalNeighboursAreFloors(Point p) {
+        var nbPos1 = new Point(p.x(), p.y() - 1);
+        var nbPos2 = new Point(p.x(), p.y() + 1);
+        return (inBounds(nbPos1)
+                && getTile(nbPos1).isFloor()
+                && inBounds(nbPos2)
+                && getTile(nbPos2).isFloor());
     }
 }

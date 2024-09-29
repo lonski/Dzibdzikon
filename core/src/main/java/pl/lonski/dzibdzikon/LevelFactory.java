@@ -4,6 +4,8 @@ import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.EntityFactory;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Position;
+import pl.lonski.dzibdzikon.map.CircleRoom;
+import pl.lonski.dzibdzikon.map.DzibdzidrzewoRoom;
 import pl.lonski.dzibdzikon.map.MapUtils;
 import pl.lonski.dzibdzikon.map.Room;
 import pl.lonski.dzibdzikon.map.RoomMapBuilder;
@@ -20,17 +22,40 @@ public class LevelFactory {
 
     public static Level generate() {
         return new LevelBuilder()
-                .map(new RoomMapBuilder().width(50).height(30).build())
+                .map(new RoomMapBuilder()
+                        .width(50)
+                        .height(30)
+                        .roomGenerator(new RoomGeneratorFn())
+                        .build())
                 .minMobsPerRoom(0)
                 .maxMobsPerRoom(2)
-                .minItemsPerRoom(0)
+                .minItemsPerRoom(-1)
                 .maxItemsPerRoom(1)
-                .minDoorPercentage(0.9f)
-                .maxDoorPercentage(1.0f)
+                .minDoorPercentage(0.2f)
+                .maxDoorPercentage(0.7f)
                 .openedDoorPercentage(0.2f)
                 .generateMobFn(generateMobFn())
                 .generateItemFn(generateItemFn())
                 .build();
+    }
+
+    private static class RoomGeneratorFn implements RoomMapBuilder.RoomGenerator {
+
+        private boolean lastPlaced = false;
+
+        @Override
+        public Room createRoom(int x, int y, int w, int h) {
+            if (!lastPlaced) {
+                return new DzibdzidrzewoRoom(x, y, w, h);
+            }
+
+            return RANDOM.nextDouble() > 0.7 ? new CircleRoom(x, y, w, h) : new Room(x, y, w, h);
+        }
+
+        @Override
+        public void placed() {
+            lastPlaced = true;
+        }
     }
 
     private static Supplier<Entity> generateMobFn() {
@@ -54,59 +79,10 @@ public class LevelFactory {
         };
     }
 
-    private static List<PossiblePosition> findPossibleDoorPositions(Level level, Room room) {
-        List<PossiblePosition> possibleDoors = new ArrayList<>();
-        var map = level.getMap();
-
-        for (int rx = 0; rx < room.width(); rx++) {
-            int x = room.x() + rx;
-
-            // top wall
-            int y = room.y() - 1;
-            if (map.inBounds(x, y)
-                    && map.getTile(x, y).isFloor()
-                    && horizontalNeighboursAreWalls(x, y, map)
-                    && verticalNeighboursAreFloors(x, y, map)
-                    && noDoorsNearby(x, y, level)) {
-                possibleDoors.add(new PossiblePosition(new Point(x, y), 0));
-            }
-
-            // bottom wall
-            y = room.y() + room.height();
-            if (map.inBounds(x, y)
-                    && map.getTile(x, y).isFloor()
-                    && horizontalNeighboursAreWalls(x, y, map)
-                    && verticalNeighboursAreFloors(x, y, map)
-                    && noDoorsNearby(x, y, level)) {
-                possibleDoors.add(new PossiblePosition(new Point(x, y), 0));
-            }
-        }
-
-        for (int ry = 0; ry < room.height(); ry++) {
-            int y = room.y() + ry;
-
-            // left wall
-            int x = room.x() - 1;
-            if (map.inBounds(x, y)
-                    && map.getTile(x, y).isFloor()
-                    && verticalNeighboursAreWalls(x, y, map)
-                    && horizontalNeighboursAreFloors(x, y, map)
-                    && noDoorsNearby(x, y, level)) {
-                possibleDoors.add(new PossiblePosition(new Point(x, y), 90));
-            }
-
-            // right wall
-            x = room.x() + room.width();
-            if (map.inBounds(x, y)
-                    && map.getTile(x, y).isFloor()
-                    && verticalNeighboursAreWalls(x, y, map)
-                    && horizontalNeighboursAreFloors(x, y, map)
-                    && noDoorsNearby(x, y, level)) {
-                possibleDoors.add(new PossiblePosition(new Point(x, y), 90));
-            }
-        }
-
-        return possibleDoors;
+    private static List<Point> findPossibleDoorPositions(Level level, Room room) {
+        return new ArrayList<>(room.getEntrances(level.getMap()).stream()
+                .filter(p -> noDoorsNearby(p.x(), p.y(), level))
+                .toList());
     }
 
     private static boolean noDoorsNearby(int x, int y, Level level) {
@@ -117,44 +93,6 @@ public class LevelFactory {
         }
         return true;
     }
-
-    private static boolean horizontalNeighboursAreWalls(int x, int y, TileGrid map) {
-        var nbPos1 = new Point(x - 1, y);
-        var nbPos2 = new Point(x + 1, y);
-        return (map.inBounds(nbPos1)
-                && map.getTile(nbPos1).isWall()
-                && map.inBounds(nbPos2)
-                && map.getTile(nbPos2).isWall());
-    }
-
-    private static boolean horizontalNeighboursAreFloors(int x, int y, TileGrid map) {
-        var nbPos1 = new Point(x - 1, y);
-        var nbPos2 = new Point(x + 1, y);
-        return (map.inBounds(nbPos1)
-                && map.getTile(nbPos1).isFloor()
-                && map.inBounds(nbPos2)
-                && map.getTile(nbPos2).isFloor());
-    }
-
-    private static boolean verticalNeighboursAreWalls(int x, int y, TileGrid map) {
-        var nbPos1 = new Point(x, y - 1);
-        var nbPos2 = new Point(x, y + 1);
-        return (map.inBounds(nbPos1)
-                && map.getTile(nbPos1).isWall()
-                && map.inBounds(nbPos2)
-                && map.getTile(nbPos2).isWall());
-    }
-
-    private static boolean verticalNeighboursAreFloors(int x, int y, TileGrid map) {
-        var nbPos1 = new Point(x, y - 1);
-        var nbPos2 = new Point(x, y + 1);
-        return (map.inBounds(nbPos1)
-                && map.getTile(nbPos1).isFloor()
-                && map.inBounds(nbPos2)
-                && map.getTile(nbPos2).isFloor());
-    }
-
-    record PossiblePosition(Point pos, float rotation) {}
 
     public static class LevelBuilder {
 
@@ -259,16 +197,16 @@ public class LevelFactory {
             Collections.shuffle(map.getRooms());
             int minDoors = Math.round(map.getRooms().size() * minDoorPercentage);
             int maxDoors = Math.round(map.getRooms().size() * maxDoorPercentage);
-            for (Room room : map.getRooms().subList(0, RANDOM.nextInt(minDoors, maxDoors))) {
+            for (Room room : map.getRooms().subList(0, RANDOM.nextInt(minDoors, maxDoors + 1))) {
                 var possibleDoors = findPossibleDoorPositions(level, room);
                 Collections.shuffle(possibleDoors);
                 if (!possibleDoors.isEmpty()) {
                     var doorInRoom = RANDOM.nextInt(1, possibleDoors.size() + 1);
                     for (int i = 0; i < doorInRoom; i++) {
                         var possiblePos = possibleDoors.get(i);
-                        if (level.getEntityAt(possiblePos.pos, null).isEmpty()) {
+                        if (level.getEntityAt(possiblePos, null).isEmpty()) {
                             var door = EntityFactory.createDoor(RANDOM.nextFloat() < openedDoorPercentage);
-                            door.addFeature(FeatureType.POSITION, new Position(possiblePos.pos, 0, 1));
+                            door.addFeature(FeatureType.POSITION, new Position(possiblePos, 0, 1));
                             level.addEntity(door);
                         }
                     }

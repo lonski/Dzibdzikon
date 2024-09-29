@@ -17,8 +17,16 @@ public class RoomMapBuilder {
     private TextureId floor = TextureId.FLOOR;
     private int roomSizeMin = 3;
     private int roomSizeMax = 8;
-    private RoomGenerator roomGenerator = Room::new;
     private float connectWithClosesRoomPercent = 0.7f;
+    private RoomGenerator roomGenerator = new RoomGenerator() {
+        @Override
+        public Room createRoom(int x, int y, int w, int h) {
+            return new Room(x, y, w, h);
+        }
+
+        @Override
+        public void placed() {}
+    };
 
     public RoomMapBuilder width(int val) {
         this.width = val;
@@ -88,6 +96,7 @@ public class RoomMapBuilder {
             if (room.canPlace(map)) {
                 room.put(map, floor);
                 map.addRoom(room);
+                roomGenerator.placed();
             }
         }
 
@@ -103,15 +112,19 @@ public class RoomMapBuilder {
             unconnectedRooms.remove(toConnectWith);
 
             // connect rooms
-            Point room1p = currentRoom.getRandomPosition();
-            Point room2p = toConnectWith.getRandomPosition();
+            Point room1p = currentRoom.getRandomNonCornerPerimeterPosition();
+            Point room2p = toConnectWith.getRandomNonCornerPerimeterPosition();
 
             MapUtils.pathfind(room1p, room2p, pos -> MapUtils.inBounds(pos, width, height), false)
                     .forEach(pos -> map.setTile(pos.x(), pos.y(), floor));
+            map.setTile(room1p.x(), room1p.y(), floor);
+            map.setTile(room2p.x(), room2p.y(), floor);
 
             // go to next room
             currentRoom = toConnectWith;
         }
+
+        map.getRooms().forEach(r -> r.afterMapGenerated(map));
 
         return map;
     }
@@ -134,5 +147,7 @@ public class RoomMapBuilder {
 
     public interface RoomGenerator {
         Room createRoom(int x, int y, int w, int h);
+
+        void placed();
     }
 }

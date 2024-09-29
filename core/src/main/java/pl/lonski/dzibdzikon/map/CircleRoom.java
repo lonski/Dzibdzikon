@@ -6,15 +6,19 @@ import pl.lonski.dzibdzikon.PositionUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
 public class CircleRoom extends Room {
 
-    private List<Point> points = new ArrayList<>();
-
     public CircleRoom(int x, int y, int w, int h) {
         super(x, y, w, h);
-        PositionUtils.inFilledEllipseOf(h, w, p -> points.add(p.add(new Point(x, y))));
+
+        final int radius = Math.max(w, h);
+
+        var circlePoints = PositionUtils.inFilledCircleWithPerimeterOf(radius);
+        points.clear();
+        perimeterPoints.clear();
+        circlePoints.points().stream().map(p -> p.add(new Point(x, y))).forEach(points::add);
+        circlePoints.perimeter().stream().map(p -> p.add(new Point(x, y))).forEach(perimeterPoints::add);
 
         this.w = points.stream().map(Point::x).max(Comparator.naturalOrder()).get()
                 - points.stream().map(Point::x).min(Comparator.naturalOrder()).get();
@@ -29,7 +33,7 @@ public class CircleRoom extends Room {
 
     @Override
     public Point getRandomPosition() {
-        return points.get(Dzibdzikon.RANDOM.nextInt(0, points.size()));
+        return new ArrayList<>(points).get(Dzibdzikon.RANDOM.nextInt(0, points.size()));
     }
 
     @Override
@@ -43,6 +47,12 @@ public class CircleRoom extends Room {
             }
         }
 
+        for (Point point : perimeterPoints) {
+            if (!tileGrid.inBoundsWithFrame(point)) {
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -52,5 +62,9 @@ public class CircleRoom extends Room {
             map.setTile(point, floor);
         }
         map.addRoom(this);
+    }
+
+    public RoomType getRoomType() {
+        return RoomType.CIRCLE;
     }
 }

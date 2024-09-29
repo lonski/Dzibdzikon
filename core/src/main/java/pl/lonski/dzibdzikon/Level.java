@@ -54,7 +54,7 @@ public class Level {
             return true;
         }
 
-        if (map.getTile(pos) == TextureId.WALL) {
+        if (map.getTile(pos).isWall()) {
             return true;
         }
 
@@ -84,14 +84,14 @@ public class Level {
             return true;
         }
 
-        return map.getTile(pos) == TextureId.WALL;
+        return map.getTile(pos).isWall();
     }
 
     public Point getRandomFreePosition() {
         while (true) {
             Point pos =
                     new Point(Dzibdzikon.RANDOM.nextInt(map.getWidth()), Dzibdzikon.RANDOM.nextInt(map.getHeight()));
-            if (map.getTile(pos) == TextureId.FLOOR
+            if (map.getTile(pos).isFloor()
                     && getEntitiesAt(pos, FeatureType.POSITION).isEmpty()) {
                 return pos;
             }

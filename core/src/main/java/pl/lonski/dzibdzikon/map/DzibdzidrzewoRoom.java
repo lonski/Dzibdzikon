@@ -1,0 +1,31 @@
+package pl.lonski.dzibdzikon.map;
+
+import pl.lonski.dzibdzikon.Point;
+
+public class DzibdzidrzewoRoom extends CircleRoom {
+
+    public DzibdzidrzewoRoom(int x, int y, int w, int h) {
+        super(x, y, Math.max(w, 5), Math.max(h, 5));
+    }
+
+    @Override
+    public RoomType getRoomType() {
+        return RoomType.DZIBDZIDRZEWO;
+    }
+
+    @Override
+    public void afterMapGenerated(TileGrid map) {
+
+        for (Point point : perimeterPoints) {
+            if (map.getTile(point).isWall()) {
+                map.setTile(point, TextureId.WALL_GREEN);
+            } else if (map.getTile(point).isFloor()) {
+                map.setTile(point, TextureId.FLOOR_GREEN);
+            }
+        }
+
+        for (Point point : points) {
+            map.setTile(point, TextureId.FLOOR_GREEN);
+        }
+    }
+}

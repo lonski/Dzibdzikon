@@ -9,8 +9,10 @@ public enum TextureId {
     ARROW_UP("arrow_up.png"),
     ARROW_DOWN("arrow_down.png"),
 
-    WALL("wall_1.png"),
-    FLOOR("floor_1.png"),
+    WALL("terrian/wall_1.png"),
+    FLOOR("terrian/floor_1.png"),
+    WALL_GREEN("terrian/wall_green.png"),
+    FLOOR_GREEN("terrian/floor_green.png"),
 
     DOOR_OPEN("door_open.png"),
     DOOR_CLOSED("door_closed.png"),
@@ -43,10 +45,10 @@ public enum TextureId {
     }
 
     public boolean isWall() {
-        return this == WALL;
+        return this == WALL || this == WALL_GREEN;
     }
 
     public boolean isFloor() {
-        return this == FLOOR;
+        return this == FLOOR || this == FLOOR_GREEN;
     }
 }
