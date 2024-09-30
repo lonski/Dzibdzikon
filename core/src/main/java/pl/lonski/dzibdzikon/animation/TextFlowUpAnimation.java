@@ -14,9 +14,11 @@ public class TextFlowUpAnimation implements Animation {
     private final String text;
     private final Color color;
     private Point pos;
+    private Point startCoord;
 
     public TextFlowUpAnimation(String text, Point startingCoords, Color color) {
         this.text = text;
+        this.startCoord = startingCoords;
         this.pos = startingCoords.toPixels();
         this.targetPos = pos.add(new Point(0, 1).toPixels());
         this.color = color;
@@ -24,6 +26,11 @@ public class TextFlowUpAnimation implements Animation {
 
     @Override
     public void update(float delta, World world) {
+        if (!world.visible(startCoord)) {
+            this.pos = this.targetPos;
+            return;
+        }
+
         time += delta;
         if (time >= speed && !isDone()) {
             time = 0;

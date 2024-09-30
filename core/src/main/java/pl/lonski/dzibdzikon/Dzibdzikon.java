@@ -11,6 +11,7 @@ import pl.lonski.dzibdzikon.screen.GameScreen;
 // - open doors as action
 // - finish Acid Potion
 // - add mana
+// - text flow actions ran when not visible
 // kłodoptak
 //   - kłoda powala na 2 tury
 //     - podczas powalenia postać przewrócona

@@ -25,7 +25,7 @@ public class EntityFactory {
 
     public static Entity createZombie() {
         var zombie = new Entity("Zombie", TextureId.MOB_ZOMBIE);
-        zombie.addFeature(FeatureType.ATTACKABLE, new Attackable(8, 10, 1, 0));
+        zombie.addFeature(FeatureType.ATTACKABLE, new Attackable(10, 10, 1, 0));
         zombie.addFeature(FeatureType.AI, new MonsterAi(zombie));
         zombie.addFeature(FeatureType.FOV, new FieldOfView(zombie, 8));
         zombie.addFeature(FeatureType.REGENERATION, new Regeneration(7, zombie));
