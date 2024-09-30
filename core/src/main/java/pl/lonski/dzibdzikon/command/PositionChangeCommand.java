@@ -23,6 +23,9 @@ public class PositionChangeCommand implements Command {
     public boolean accept(DzibdziInput.DzibdziKey key) {
         var pos = player.<Position>getFeature(FeatureType.POSITION);
         dPos = PositionUtils.getPositionChange(pos.getCoords(), key);
+        if (!dPos.isZero()) {
+            player.getInputListener().resetClick();
+        }
         return !dPos.isZero();
     }
 

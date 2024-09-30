@@ -139,5 +139,11 @@ public class Player extends Entity {
         public DzibdziInput.DzibdziKey getKey() {
             return key;
         }
+
+        public void resetClick() {
+            if (this.key.click() != null) {
+                reset();
+            }
+        }
     }
 }

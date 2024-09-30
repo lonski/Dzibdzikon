@@ -1,5 +1,6 @@
 package pl.lonski.dzibdzikon.screen;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import pl.lonski.dzibdzikon.Dzibdzikon;
 
@@ -14,35 +15,29 @@ public class DzibdzikonScreen implements Screen {
     }
 
     @Override
-    public void show() {
-    }
+    public void show() {}
 
     @Override
-    public void render(float v) {
-    }
+    public void render(float v) {}
 
     @Override
     public void resize(int width, int height) {
-//        float aspectRatio = (float) width / (float) height;
-//        getGameResources().camera.setToOrtho(false, Gdx.graphics.getWidth() * aspectRatio, Gdx.graphics.getHeight());
-//        getGameResources().camera.viewportWidth = Gdx.graphics.getWidth();
-//        getGameResources().camera.viewportHeight = Gdx.graphics.getHeight();
-//        getGameResources().camera.update();
+        float aspectRatio = (float) width / (float) height;
+        getGameResources().camera.setToOrtho(false, Gdx.graphics.getWidth() * aspectRatio, Gdx.graphics.getHeight());
+        getGameResources().camera.viewportWidth = Gdx.graphics.getWidth();
+        getGameResources().camera.viewportHeight = Gdx.graphics.getHeight();
+        getGameResources().camera.update();
     }
 
     @Override
-    public void pause() {
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-    }
+    public void resume() {}
 
     @Override
-    public void hide() {
-    }
+    public void hide() {}
 
     @Override
-    public void dispose() {
-    }
+    public void dispose() {}
 }
