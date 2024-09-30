@@ -1,4 +1,4 @@
-package pl.lonski.dzibdzikon.effect;
+package pl.lonski.dzibdzikon.effect.tile;
 
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;

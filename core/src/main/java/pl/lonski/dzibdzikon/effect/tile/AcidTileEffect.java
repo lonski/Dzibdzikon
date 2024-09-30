@@ -1,8 +1,9 @@
-package pl.lonski.dzibdzikon.effect;
+package pl.lonski.dzibdzikon.effect.tile;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
+import pl.lonski.dzibdzikon.effect.DamageEffect;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.map.TextureId;
@@ -35,7 +36,7 @@ public class AcidTileEffect implements TileEffect {
                 continue;
             }
 
-            new DamageEffect(1).apply(entity);
+            entity.applyEffect(new DamageEffect(1));
         }
 
         ttl -= 1;

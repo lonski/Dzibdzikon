@@ -8,7 +8,6 @@ import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.animation.Animation;
-import pl.lonski.dzibdzikon.effect.TileEffect;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Position;
 

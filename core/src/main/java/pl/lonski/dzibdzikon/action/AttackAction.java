@@ -50,7 +50,7 @@ public class AttackAction implements Action {
         var result = attacking.attack(defending);
 
         if (result.hit()) {
-            new DamageEffect(result.damage()).apply(target);
+            target.applyEffect(new DamageEffect(result.damage()));
         } else {
             target.addAnimation(new TextFlowUpAnimation("unik", targetPos, Color.YELLOW));
         }

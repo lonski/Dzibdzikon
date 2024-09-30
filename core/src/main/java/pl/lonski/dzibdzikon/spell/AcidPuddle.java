@@ -5,7 +5,7 @@ import pl.lonski.dzibdzikon.PositionUtils;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.targeting.TargetingMode;
 import pl.lonski.dzibdzikon.animation.Animation;
-import pl.lonski.dzibdzikon.effect.AcidTileEffect;
+import pl.lonski.dzibdzikon.effect.tile.AcidTileEffect;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.map.TextureId;
 

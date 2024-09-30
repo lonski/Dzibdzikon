@@ -53,7 +53,7 @@ public class Fireball implements Spell {
 
         for (Entity targetEntity : targets) {
             var damage = DzibdziRandom.nextInt(4, 12);
-            new DamageEffect(damage).apply(targetEntity);
+            targetEntity.applyEffect(new DamageEffect(damage));
         }
     }
 

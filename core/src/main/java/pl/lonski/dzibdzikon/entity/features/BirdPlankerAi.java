@@ -1,9 +1,14 @@
 package pl.lonski.dzibdzikon.entity.features;
 
+import pl.lonski.dzibdzikon.DzibdziRandom;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
+import pl.lonski.dzibdzikon.action.ChainAction;
+import pl.lonski.dzibdzikon.action.CustomAction;
 import pl.lonski.dzibdzikon.action.MoveAction;
+import pl.lonski.dzibdzikon.action.RangeAttackAction;
 import pl.lonski.dzibdzikon.effect.DamageEffect;
+import pl.lonski.dzibdzikon.effect.KnockDownEffect;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.map.MapUtils;
@@ -64,7 +69,7 @@ public class BirdPlankerAi extends RangeAttackerAi {
                 .findFirst();
         if (neighbourTree.isPresent()) {
             hasPlank = true;
-            new DamageEffect(3).apply(neighbourTree.get());
+            neighbourTree.get().applyEffect(new DamageEffect(3));
             return true;
         }
 
@@ -112,5 +117,15 @@ public class BirdPlankerAi extends RangeAttackerAi {
         }
 
         return false;
+    }
+
+    @Override
+    protected boolean takeRangeAttackAction() {
+        entity.takeAction(new ChainAction(List.of(new RangeAttackAction(entity, player), new CustomAction(() -> {
+            if (DzibdziRandom.nextDouble() > 0.7) {
+                player.applyEffect(new KnockDownEffect(2));
+            }
+        }))));
+        return true;
     }
 }

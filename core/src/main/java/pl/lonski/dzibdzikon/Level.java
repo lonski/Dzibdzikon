@@ -1,6 +1,6 @@
 package pl.lonski.dzibdzikon;
 
-import pl.lonski.dzibdzikon.effect.TileEffect;
+import pl.lonski.dzibdzikon.effect.tile.TileEffect;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Openable;

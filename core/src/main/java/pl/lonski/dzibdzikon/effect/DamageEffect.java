@@ -28,4 +28,9 @@ public class DamageEffect implements Effect {
             target.takeAction(new DieAction(target));
         }
     }
+
+    @Override
+    public boolean isActive() {
+        return false;
+    }
 }

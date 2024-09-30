@@ -1,6 +1,6 @@
 package pl.lonski.dzibdzikon;
 
-import pl.lonski.dzibdzikon.effect.TileEffect;
+import pl.lonski.dzibdzikon.effect.tile.TileEffect;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
@@ -10,7 +10,6 @@ import pl.lonski.dzibdzikon.entity.features.Position;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static pl.lonski.dzibdzikon.Dzibdzikon.SHOW_WHOLE_LEVEL;
 import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
@@ -59,7 +58,7 @@ public class World {
             if (currentEntity.getCurrentAction() == null) {
 
                 // cant take turn because has no energy, recharge energy and proceed to next entity
-                if (!currentEntity.canTakeAction()) {
+                if (!currentEntity.hasEnergyForAction()) {
                     currentEntity.rechargeEnergy();
                     proceedToNextEntity();
                     continue;
@@ -99,9 +98,10 @@ public class World {
             currentEntity.clearAction();
 
             // check if entity can take another action, if not proceed to next entity
-            if (!currentEntity.canTakeAction()) {
+            if (!currentEntity.hasEnergyForAction()) {
                 if (isLastEntity()) {
                     turn++;
+                    // update tile effects
                     var remainedTileEffects = new HashMap<Point, List<TileEffect>>();
                     currentLevel.getTileEffects().forEach((point, tileEffects) -> {
                         var remainedEffectOnTile = new ArrayList<TileEffect>();
@@ -113,6 +113,9 @@ public class World {
                         remainedTileEffects.put(point, remainedEffectOnTile);
                     });
                     currentLevel.setTileEffects(remainedTileEffects);
+
+                    // notify entities turn finished; tick entities effects
+                    getCurrentLevel().getEntities().forEach(e -> e.onWorldTurnFinished(this));
                 }
                 proceedToNextEntity();
             }

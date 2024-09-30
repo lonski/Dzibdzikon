@@ -4,6 +4,7 @@ import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.Action;
 import pl.lonski.dzibdzikon.action.NoOpAction;
 import pl.lonski.dzibdzikon.animation.Animation;
+import pl.lonski.dzibdzikon.effect.Effect;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.EntityFeature;
 import pl.lonski.dzibdzikon.map.TextureId;
@@ -13,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.stream.Collectors.toList;
+
 public class Entity {
 
     private final Map<FeatureType, EntityFeature> features = new HashMap<>();
@@ -21,6 +24,7 @@ public class Entity {
     private boolean visibleInFog = false;
     private Action currentAction;
     private List<Animation> animations = new ArrayList<>();
+    private List<Effect> activeEffects = new ArrayList<>();
     private double speed = 1.0;
     private double energy = 0.0;
     private boolean flying = false;
@@ -32,6 +36,23 @@ public class Entity {
 
     public void setSpeed(double speed) {
         this.speed = speed;
+    }
+
+    public void applyEffect(Effect effect) {
+        effect.apply(this);
+        if (effect.isActive()) {
+            activeEffects.add(effect);
+        }
+    }
+
+    public void onWorldTurnFinished(World world) {
+        for (Effect effect : activeEffects) {
+            effect.takeTurn(world, this);
+            if (!effect.isActive()) {
+                effect.remove(this);
+            }
+        }
+        this.activeEffects = activeEffects.stream().filter(Effect::isActive).collect(toList());
     }
 
     public void addAnimation(Animation animation) {
@@ -88,6 +109,11 @@ public class Entity {
     }
 
     public void update(float delta, World world) {
+        if (activeEffects.stream().anyMatch(Effect::blockEntityActingPossibility)) {
+            takeAction(new NoOpAction());
+            return;
+        }
+
         features.values().forEach(f -> f.update(delta, world));
         // make sure non-player entity always take a turn
         if (getFeature(FeatureType.PLAYER) == null && currentAction == null) {
@@ -113,7 +139,7 @@ public class Entity {
         this.energy += speed;
     }
 
-    public boolean canTakeAction() {
+    public boolean hasEnergyForAction() {
         return energy >= 1.0;
     }
 

@@ -45,7 +45,7 @@ public class SpikeSpell implements Spell {
 
         var targetEntity = targetEntityOpt.get();
         var damage = DzibdziRandom.nextInt(2, 6);
-        new DamageEffect(damage).apply(targetEntity);
+        targetEntity.applyEffect(new DamageEffect(damage));
     }
 
     public Optional<Animation> getAnimation(Point startPosPix, Point targetPix) {
