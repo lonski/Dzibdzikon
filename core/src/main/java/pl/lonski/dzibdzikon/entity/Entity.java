@@ -108,8 +108,12 @@ public class Entity {
         this.features.put(type, feature);
     }
 
+    public boolean anyActionBlockingEffectsActive() {
+        return activeEffects.stream().anyMatch(Effect::blockEntityActingPossibility);
+    }
+
     public void update(float delta, World world) {
-        if (activeEffects.stream().anyMatch(Effect::blockEntityActingPossibility)) {
+        if (anyActionBlockingEffectsActive()) {
             takeAction(new NoOpAction());
             return;
         }

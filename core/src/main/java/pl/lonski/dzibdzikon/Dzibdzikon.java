@@ -15,13 +15,9 @@ import static com.badlogic.gdx.graphics.glutils.HdpiUtils.glViewport;
 // - open doors as action
 // - finish Acid Potion
 // - add mana
-// - text flow actions ran when not visible
-// kłodoptak
-//   - kłoda powala na 2 tury
-//     - podczas powalenia postać przewrócona
 public class Dzibdzikon extends Game {
 
-    public static boolean SHOW_WHOLE_LEVEL = true;
+    public static boolean SHOW_WHOLE_LEVEL = false;
     public static final int TILE_WIDTH = 32;
     public static final int TILE_HEIGHT = 32;
 

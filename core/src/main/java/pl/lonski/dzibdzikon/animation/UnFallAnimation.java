@@ -11,6 +11,7 @@ public class UnFallAnimation implements Animation {
     private float time = 0;
     private final Position entityPos;
     private final float targetRotation;
+    private boolean done = false;
 
     public UnFallAnimation(Entity entity, float targetRotation) {
         this.targetRotation = targetRotation;
@@ -23,8 +24,9 @@ public class UnFallAnimation implements Animation {
         if (time >= speed) {
             time = 0;
             entityPos.setRotation((entityPos.getRotation() - 10));
-            if (entityPos.getRotation() < targetRotation) {
+            if (entityPos.getRotation() <= targetRotation) {
                 entityPos.setRotation(targetRotation);
+                done = true;
             }
         }
     }
@@ -34,6 +36,6 @@ public class UnFallAnimation implements Animation {
 
     @Override
     public boolean isDone() {
-        return entityPos.getRotation() == targetRotation;
+        return done;
     }
 }
