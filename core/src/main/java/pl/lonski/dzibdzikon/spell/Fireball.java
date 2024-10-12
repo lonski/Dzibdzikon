@@ -1,7 +1,9 @@
 package pl.lonski.dzibdzikon.spell;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import pl.lonski.dzibdzikon.DzibdziRandom;
-import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.ExplosionSimulator;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
@@ -15,13 +17,13 @@ import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.map.TextureId;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-
-public class Fireball implements Spell {
+public class Fireball extends SpellBase {
 
     private final int range = 3;
+
+    public Fireball() {
+        super(10);
+    }
 
     @Override
     public String getName() {
@@ -33,7 +35,8 @@ public class Fireball implements Spell {
         return new SpellDescription(
                 "Wystrzeliwuje kulę ognia, która po uderzeniu w przeszkodę wybucha raniąc wszystkich przeciwników w promieniu 3 kafli.",
                 "punkt",
-                "okrąg o promieniu 3 kafli");
+                "okrąg o promieniu 3 kafli",
+                mpCost + " MP");
     }
 
     @Override
@@ -55,6 +58,7 @@ public class Fireball implements Spell {
             var damage = DzibdziRandom.nextInt(4, 12);
             targetEntity.applyEffect(new DamageEffect(damage));
         }
+        consumeResources(caster);
     }
 
     public Optional<Animation> getAnimation(Point startPosPix, Point targetPix) {

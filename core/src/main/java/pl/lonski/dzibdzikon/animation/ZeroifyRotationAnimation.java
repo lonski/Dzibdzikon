@@ -5,16 +5,16 @@ import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Position;
 
-public class UnFallAnimation implements Animation {
+public class ZeroifyRotationAnimation implements Animation {
 
     private final float speed = 0.01f;
     private float time = 0;
     private final Position entityPos;
-    private final float targetRotation;
     private boolean done = false;
 
-    public UnFallAnimation(Entity entity, float targetRotation) {
-        this.targetRotation = targetRotation;
+    private int updatesCounter = 0;
+
+    public ZeroifyRotationAnimation(Entity entity) {
         this.entityPos = entity.getFeature(FeatureType.POSITION);
     }
 
@@ -23,10 +23,13 @@ public class UnFallAnimation implements Animation {
         time += delta;
         if (time >= speed) {
             time = 0;
-            entityPos.setRotation((entityPos.getRotation() - 10));
-            if (entityPos.getRotation() <= targetRotation) {
-                entityPos.setRotation(targetRotation);
-                done = true;
+            updatesCounter += 1;
+
+            var rotDiff = Math.min(10, entityPos.getRotation());
+            entityPos.setRotation((entityPos.getRotation() - rotDiff));
+
+            if (entityPos.getRotation() <= 0 || updatesCounter > 15) {
+                finish();
             }
         }
     }
@@ -37,5 +40,11 @@ public class UnFallAnimation implements Animation {
     @Override
     public boolean isDone() {
         return done;
+    }
+
+    @Override
+    public void finish() {
+        entityPos.setRotation(0);
+        done = true;
     }
 }

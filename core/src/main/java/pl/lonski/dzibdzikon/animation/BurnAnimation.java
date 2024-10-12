@@ -32,7 +32,7 @@ public class BurnAnimation implements Animation {
         }
 
         if (!appearing && alpha <= 0.0f) {
-            done = true;
+            finish();
             return;
         }
 
@@ -75,5 +75,10 @@ public class BurnAnimation implements Animation {
     @Override
     public boolean isDone() {
         return done;
+    }
+
+    @Override
+    public void finish() {
+        done = true;
     }
 }

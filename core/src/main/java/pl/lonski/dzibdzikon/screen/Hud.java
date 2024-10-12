@@ -10,6 +10,7 @@ import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Quickbar;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
+import pl.lonski.dzibdzikon.entity.features.MagicUser;
 import pl.lonski.dzibdzikon.map.TextureId;
 import pl.lonski.dzibdzikon.ui.ProgressBar;
 
@@ -27,12 +28,14 @@ public class Hud {
     private static final List<Message> messages = new ArrayList<>();
     private static String actionMessage = "";
     private final ProgressBar hpBar;
+    private final ProgressBar mpBar;
     private static final List<Point> targets = new ArrayList<>();
     public static final List<Point> debugHighlight = new ArrayList<>();
     private final List<Quickbar.SlotIcon> quickBarIcons = new ArrayList<>();
 
     public Hud() {
         this.hpBar = new ProgressBar(100, 10, new Color(0x880000ff), Color.RED);
+        this.mpBar = new ProgressBar(100, 10, new Color(0x000e88ff), Color.BLUE);
         messages.clear();
     }
 
@@ -61,6 +64,8 @@ public class Hud {
         messages.removeIf(message -> message.ttl <= 0);
         Attackable playerAttackable = world.getPlayer().getFeature(FeatureType.ATTACKABLE);
         hpBar.setProgress((float) playerAttackable.getHp() / playerAttackable.getMaxHp());
+        MagicUser playerMagicUser = world.getPlayer().getFeature(FeatureType.MAGIC_USER);
+        mpBar.setProgress((float) playerMagicUser.getMana() / playerMagicUser.getManaMax());
         quickBarIcons.clear();
         quickBarIcons.addAll(world.getPlayer().getQuickbar().getSlotIcons());
         quickBarIcons.sort(Comparator.comparingInt(Quickbar.SlotIcon::getNum));
@@ -131,10 +136,12 @@ public class Hud {
         // render hp bar
         var shapeRenderer = getGameResources().shapeRenderer;
         var bottomLeft = CameraUtils.getBottomLeftCorner(camera);
-        var hpBarPos = new Vector2(bottomLeft.x + 10, bottomLeft.y + 10);
+        var mpBarPos = new Vector2(bottomLeft.x + 10, bottomLeft.y + 10);
+        var hpBarPos = new Vector2(mpBarPos.x, mpBarPos.y + mpBar.getHeight());
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         hpBar.render(hpBarPos, shapeRenderer);
+        mpBar.render(mpBarPos, shapeRenderer);
 
         shapeRenderer.end();
     }

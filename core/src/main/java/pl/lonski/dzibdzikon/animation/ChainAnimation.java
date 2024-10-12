@@ -18,7 +18,7 @@ public class ChainAnimation implements Animation {
     @Override
     public void update(float delta, World world) {
         if (animations.isEmpty() && (currentAnimation == null || currentAnimation.isDone())) {
-            done = true;
+            finish();
             return;
         }
 
@@ -39,5 +39,10 @@ public class ChainAnimation implements Animation {
     @Override
     public boolean isDone() {
         return done;
+    }
+
+    @Override
+    public void finish() {
+        done = true;
     }
 }

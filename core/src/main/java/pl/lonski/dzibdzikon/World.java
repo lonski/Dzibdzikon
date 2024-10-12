@@ -1,19 +1,18 @@
 package pl.lonski.dzibdzikon;
 
+import static pl.lonski.dzibdzikon.Dzibdzikon.SHOW_WHOLE_LEVEL;
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import pl.lonski.dzibdzikon.effect.tile.TileEffect;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
 import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.Position;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import static pl.lonski.dzibdzikon.Dzibdzikon.SHOW_WHOLE_LEVEL;
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
 
 public class World {
 
@@ -152,7 +151,7 @@ public class World {
         int maxTries = 5;
         while (maxTries-- > 0) {
             var pos = currentLevel.getMap().getRandomRoom().getCenter();
-            if (currentLevel.getEntitiesAt(pos, null).isEmpty()) {
+            if (currentLevel.getEntitiesAt(pos, null).isEmpty() && !currentLevel.isObstacle(pos)) {
                 player.<Position>getFeature(FeatureType.POSITION).setCoords(pos);
                 player.setCameraPosition(new Point(pos.x() * TILE_WIDTH, pos.y() * TILE_HEIGHT));
                 break;

@@ -5,6 +5,10 @@ import pl.lonski.dzibdzikon.entity.Entity;
 
 public interface Effect {
 
+    default boolean stackable()  {
+        return true;
+    }
+
     void apply(Entity target);
 
     boolean isActive();

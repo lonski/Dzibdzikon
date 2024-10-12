@@ -1,5 +1,7 @@
 package pl.lonski.dzibdzikon.spell;
 
+import java.util.List;
+import java.util.Optional;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.PositionUtils;
 import pl.lonski.dzibdzikon.World;
@@ -9,10 +11,11 @@ import pl.lonski.dzibdzikon.effect.tile.AcidTileEffect;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.map.TextureId;
 
-import java.util.List;
-import java.util.Optional;
+public class AcidPuddle extends SpellBase {
+    public AcidPuddle() {
+        super(2);
+    }
 
-public class AcidPuddle implements Spell {
     @Override
     public String getName() {
         return "Kałuża kwasu";
@@ -23,7 +26,8 @@ public class AcidPuddle implements Spell {
         return new SpellDescription(
                 "We wskazanym miejscu rozlewa się kałuża kwasu zadając obrażenia wszyskim nie-latającym istotom na obszarze. Kałuża wyparowywuje po upływie 5 tur.",
                 "punkt",
-                "okrąg o promieniu 2 kafli");
+                "okrąg o promieniu 2 kafli",
+                mpCost + " MP");
     }
 
     @Override
@@ -54,5 +58,6 @@ public class AcidPuddle implements Spell {
                 world.getCurrentLevel().addTileEffect(target.add(p), new AcidTileEffect(15));
             }
         });
+        consumeResources(caster);
     }
 }

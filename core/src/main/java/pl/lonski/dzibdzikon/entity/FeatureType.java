@@ -10,7 +10,7 @@ public enum FeatureType {
     OPENABLE,
     DOWNSTAIRS,
     REGENERATION,
-    SPELLBOOK,
+    MAGIC_USER,
     PICKABLE,
     INVENTORY,
     USEABLE,

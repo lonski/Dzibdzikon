@@ -39,7 +39,7 @@ public class CircleExplodeAnimation implements Animation {
         }
 
         if (!simulator.hasMoreSteps()) {
-            done = true;
+            finish();
         }
 
         burningPoints.clear();
@@ -76,5 +76,10 @@ public class CircleExplodeAnimation implements Animation {
     @Override
     public boolean isDone() {
         return done;
+    }
+
+    @Override
+    public void finish() {
+        done = true;
     }
 }

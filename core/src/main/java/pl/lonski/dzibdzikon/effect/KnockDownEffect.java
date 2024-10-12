@@ -2,7 +2,7 @@ package pl.lonski.dzibdzikon.effect;
 
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.animation.FallAnimation;
-import pl.lonski.dzibdzikon.animation.UnFallAnimation;
+import pl.lonski.dzibdzikon.animation.ZeroifyRotationAnimation;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Position;
@@ -27,7 +27,8 @@ public class KnockDownEffect implements Effect {
 
     @Override
     public void remove(Entity target) {
-        target.addAnimation(new UnFallAnimation(target, 0));
+        target.finishAllAnimation();
+        target.addAnimation(new ZeroifyRotationAnimation(target));
     }
 
     @Override
@@ -43,5 +44,10 @@ public class KnockDownEffect implements Effect {
     @Override
     public boolean blockEntityActingPossibility() {
         return true;
+    }
+
+    @Override
+    public boolean stackable() {
+        return false;
     }
 }

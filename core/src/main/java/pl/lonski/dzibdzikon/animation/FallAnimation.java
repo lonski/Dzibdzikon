@@ -11,6 +11,8 @@ public class FallAnimation implements Animation {
     private float time = 0;
     private final Position entityPos;
     private static final float targetRotation = 90;
+    private boolean done = false;
+    private int updatesCounter = 0;
 
     public FallAnimation(Entity entity) {
         this.entityPos = entity.getFeature(FeatureType.POSITION);
@@ -20,8 +22,14 @@ public class FallAnimation implements Animation {
     public void update(float delta, World world) {
         time += delta;
         if (time >= speed) {
+            updatesCounter += 1;
             time = 0;
-            entityPos.setRotation((entityPos.getRotation() + 10) % 360);
+            if (entityPos.getRotation() < 0 || entityPos.getRotation() >= targetRotation || updatesCounter > 15) {
+                finish();
+                return;
+            }
+            var rotDiff = Math.min(10, targetRotation - entityPos.getRotation());
+            entityPos.setRotation(entityPos.getRotation() + rotDiff);
         }
     }
 
@@ -30,6 +38,12 @@ public class FallAnimation implements Animation {
 
     @Override
     public boolean isDone() {
-        return entityPos.getRotation() >= targetRotation;
+        return done;
+    }
+
+    @Override
+    public void finish() {
+        entityPos.setRotation(targetRotation);
+        done = true;
     }
 }

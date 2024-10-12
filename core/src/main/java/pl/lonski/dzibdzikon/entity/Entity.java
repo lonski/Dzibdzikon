@@ -1,5 +1,9 @@
 package pl.lonski.dzibdzikon.entity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.Action;
 import pl.lonski.dzibdzikon.action.NoOpAction;
@@ -9,13 +13,6 @@ import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.EntityFeature;
 import pl.lonski.dzibdzikon.map.TextureId;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static java.util.stream.Collectors.toList;
-
 public class Entity {
 
     private final Map<FeatureType, EntityFeature> features = new HashMap<>();
@@ -23,7 +20,7 @@ public class Entity {
     private TextureId glyph;
     private boolean visibleInFog = false;
     private Action currentAction;
-    private List<Animation> animations = new ArrayList<>();
+    private final List<Animation> animations = new ArrayList<>();
     private List<Effect> activeEffects = new ArrayList<>();
     private double speed = 1.0;
     private double energy = 0.0;
@@ -39,9 +36,20 @@ public class Entity {
     }
 
     public void applyEffect(Effect effect) {
+        if (!effect.stackable()) {
+            boolean effectExistsAlready = activeEffects.stream().anyMatch(e -> e.getClass()
+                    .getSimpleName()
+                    .equals(effect.getClass().getSimpleName()));
+            if (effectExistsAlready) {
+                return;
+            }
+        }
+
         effect.apply(this);
         if (effect.isActive()) {
             activeEffects.add(effect);
+        } else {
+            effect.remove(this);
         }
     }
 
@@ -173,15 +181,16 @@ public class Entity {
         return energy;
     }
 
-    public void clearAnimations() {
-        this.animations.clear();
-    }
-
     public boolean isFlying() {
         return flying;
     }
 
     public void setFlying(boolean flying) {
         this.flying = flying;
+    }
+
+    public void finishAllAnimation() {
+        this.animations.forEach(Animation::finish);
+        this.animations.clear();
     }
 }

@@ -13,6 +13,10 @@ import java.util.Optional;
 
 public interface Spell {
 
+    boolean hasResources(Entity caster);
+
+    void consumeResources(Entity caster);
+
     String getName();
 
     SpellDescription getDescription();
@@ -25,7 +29,7 @@ public interface Spell {
 
     void cast(World world, Entity caster, Point target);
 
-    record SpellDescription(String description, String targetingMode, String range) {
+    record SpellDescription(String description, String targetingMode, String range, String cost) {
 
         private static final int MAX_LINE_WIDTH = 42;
 

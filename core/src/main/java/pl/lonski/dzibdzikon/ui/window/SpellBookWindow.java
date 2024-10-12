@@ -3,16 +3,14 @@ package pl.lonski.dzibdzikon.ui.window;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import pl.lonski.dzibdzikon.CameraUtils;
 import pl.lonski.dzibdzikon.DzibdziInput;
-import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.action.CastSpellAction;
 import pl.lonski.dzibdzikon.action.targeting.TargetConsumer;
 import pl.lonski.dzibdzikon.action.targeting.TargeterFactory;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
 import pl.lonski.dzibdzikon.entity.Quickbar;
-import pl.lonski.dzibdzikon.entity.features.SpellBook;
+import pl.lonski.dzibdzikon.entity.features.MagicUser;
 import pl.lonski.dzibdzikon.map.TextureId;
 import pl.lonski.dzibdzikon.screen.Hud;
 import pl.lonski.dzibdzikon.spell.Spell;
@@ -80,6 +78,10 @@ public class SpellBookWindow extends WindowAdapter implements DzibdziInput.Dzibd
                             batch, "Cel: " + spell.getDescription().targetingMode(), spellDescX, posY);
                     descriptionFontBold.draw(
                             batch, "Obszar: " + spell.getDescription().range(), spellDescX, posY - 20);
+
+                    descriptionFontBold.setColor(Color.BLUE);
+                    descriptionFontBold.draw(
+                        batch, "Koszt: " + spell.getDescription().cost(), spellDescX, posY - 40);
                 }
             }
 
@@ -88,7 +90,7 @@ public class SpellBookWindow extends WindowAdapter implements DzibdziInput.Dzibd
     }
 
     private List<Spell> getSpells() {
-        return player.<SpellBook>getFeature(FeatureType.SPELLBOOK).getSpells();
+        return player.<MagicUser>getFeature(FeatureType.MAGIC_USER).getSpells();
     }
 
     public Optional<Spell> takeSelectedSpell() {

@@ -72,7 +72,7 @@ public class BirdPlankerAi extends RangeAttackerAi {
             }
 
             hasPlank = true;
-            neighbourTree.get().applyEffect(new DamageEffect(3));
+            neighbourTree.get().applyEffect(new DamageEffect(1));
             return true;
         }
 

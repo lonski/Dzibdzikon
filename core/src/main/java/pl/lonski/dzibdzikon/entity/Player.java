@@ -1,5 +1,9 @@
 package pl.lonski.dzibdzikon.entity;
 
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
+
+import java.util.List;
 import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.ExplosionSimulator;
 import pl.lonski.dzibdzikon.Point;
@@ -17,18 +21,13 @@ import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.EntityFeature;
 import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.Inventory;
+import pl.lonski.dzibdzikon.entity.features.MagicUser;
 import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.entity.features.Regeneration;
-import pl.lonski.dzibdzikon.entity.features.SpellBook;
 import pl.lonski.dzibdzikon.map.TextureId;
 import pl.lonski.dzibdzikon.spell.AcidPuddle;
 import pl.lonski.dzibdzikon.spell.Fireball;
 import pl.lonski.dzibdzikon.spell.SpikeSpell;
-
-import java.util.List;
-
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
 
 public class Player extends Entity {
 
@@ -54,8 +53,10 @@ public class Player extends Entity {
         addFeature(FeatureType.POSITION, new Position(new Point(0, 0), 0, 100));
         addFeature(FeatureType.FOV, new FieldOfView(this, 8));
         addFeature(FeatureType.ATTACKABLE, new Attackable(2000, 2000, 5, 0));
-        addFeature(FeatureType.REGENERATION, new Regeneration(10, this));
-        addFeature(FeatureType.SPELLBOOK, new SpellBook(List.of(new SpikeSpell(), new Fireball(), new AcidPuddle())));
+        addFeature(FeatureType.REGENERATION, new Regeneration(10, 5, this));
+        addFeature(
+                FeatureType.MAGIC_USER,
+                new MagicUser(List.of(new SpikeSpell(), new Fireball(), new AcidPuddle()), 100, 100));
         addFeature(FeatureType.INVENTORY, new Inventory());
     }
 

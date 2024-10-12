@@ -9,4 +9,6 @@ public interface Animation {
     void render();
 
     boolean isDone();
+
+    void finish();
 }

@@ -40,4 +40,9 @@ public class RollingAnimation implements Animation {
     public boolean isDone() {
         return false;
     }
+
+    @Override
+    public void finish() {
+
+    }
 }

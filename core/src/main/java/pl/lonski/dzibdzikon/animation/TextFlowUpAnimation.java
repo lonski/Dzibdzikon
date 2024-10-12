@@ -15,6 +15,7 @@ public class TextFlowUpAnimation implements Animation {
     private final Color color;
     private Point pos;
     private Point startCoord;
+    private int updatesCounter = 0;
 
     public TextFlowUpAnimation(String text, Point startingCoords, Color color) {
         this.text = text;
@@ -26,14 +27,15 @@ public class TextFlowUpAnimation implements Animation {
 
     @Override
     public void update(float delta, World world) {
-        if (!world.visible(startCoord)) {
-            this.pos = this.targetPos;
+        if (!world.visible(startCoord) || updatesCounter > 40) {
+            finish();
             return;
         }
 
         time += delta;
         if (time >= speed && !isDone()) {
             time = 0;
+            updatesCounter += 1;
             var dx = targetPos.x() - pos.x();
             var dy = targetPos.y() - pos.y();
             var xi = dx > 0 ? 1 : -1;
@@ -51,5 +53,10 @@ public class TextFlowUpAnimation implements Animation {
     @Override
     public boolean isDone() {
         return pos.equals(targetPos);
+    }
+
+    @Override
+    public void finish() {
+        pos = targetPos;
     }
 }

@@ -52,7 +52,7 @@ public class ThrowAnimation implements Animation {
             }
 
             if (line.isEmpty()) {
-                done = true;
+                finish();
             }
         }
     }
@@ -81,5 +81,10 @@ public class ThrowAnimation implements Animation {
     @Override
     public boolean isDone() {
         return done;
+    }
+
+    @Override
+    public void finish() {
+        done = true;
     }
 }

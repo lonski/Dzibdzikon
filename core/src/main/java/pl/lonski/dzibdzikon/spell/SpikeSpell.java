@@ -1,7 +1,7 @@
 package pl.lonski.dzibdzikon.spell;
 
+import java.util.Optional;
 import pl.lonski.dzibdzikon.DzibdziRandom;
-import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.targeting.TargetingMode;
@@ -12,9 +12,12 @@ import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.map.TextureId;
 
-import java.util.Optional;
+public class SpikeSpell extends SpellBase {
 
-public class SpikeSpell implements Spell {
+    public SpikeSpell() {
+        super(1);
+    }
+
     @Override
     public String getName() {
         return "Kolec";
@@ -23,7 +26,10 @@ public class SpikeSpell implements Spell {
     @Override
     public SpellDescription getDescription() {
         return new SpellDescription(
-                "Wystrzeliwuje ostry, magiczny, kolec we wskazanym kierunku.", "wróg", "pojedynczy wróg");
+                "Wystrzeliwuje ostry, magiczny, kolec we wskazanym kierunku.",
+                "wróg",
+                "pojedynczy wróg",
+                mpCost + " MP");
     }
 
     @Override
@@ -46,6 +52,8 @@ public class SpikeSpell implements Spell {
         var targetEntity = targetEntityOpt.get();
         var damage = DzibdziRandom.nextInt(2, 6);
         targetEntity.applyEffect(new DamageEffect(damage));
+
+        consumeResources(caster);
     }
 
     public Optional<Animation> getAnimation(Point startPosPix, Point targetPix) {
