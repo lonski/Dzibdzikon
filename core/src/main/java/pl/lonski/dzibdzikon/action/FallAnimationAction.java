@@ -9,7 +9,6 @@ public class FallAnimationAction implements Action {
     private FallAnimation animation;
 
     public FallAnimationAction(Entity entity) {
-        entity.clearAnimations();
         this.animation = new FallAnimation(entity);
     }
 

@@ -113,9 +113,6 @@ public class World {
                         remainedTileEffects.put(point, remainedEffectOnTile);
                     });
                     currentLevel.setTileEffects(remainedTileEffects);
-
-                    // notify entities turn finished; tick entities effects
-                    getCurrentLevel().getEntities().forEach(e -> e.onWorldTurnFinished(this));
                 }
                 proceedToNextEntity();
             }
@@ -136,7 +133,12 @@ public class World {
         // calculate index to handle entities removed during update
         var currentEntityIdx = currentLevel.getEntities().indexOf(currentEntity);
         var nextEntityIdx = (currentEntityIdx + 1) % currentLevel.getEntities().size();
+
+        // set next entity as current
         currentEntity = currentLevel.getEntities().get(nextEntityIdx);
+
+        // notify entity new turn started to eg. tick entity effects
+        currentEntity.onTurnStarted(this);
     }
 
     private boolean isLastEntity() {

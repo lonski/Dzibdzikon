@@ -53,7 +53,7 @@ public class Player extends Entity {
         addFeature(FeatureType.PLAYER, new EntityFeature() {});
         addFeature(FeatureType.POSITION, new Position(new Point(0, 0), 0, 100));
         addFeature(FeatureType.FOV, new FieldOfView(this, 8));
-        addFeature(FeatureType.ATTACKABLE, new Attackable(20, 20, 5, 0));
+        addFeature(FeatureType.ATTACKABLE, new Attackable(2000, 2000, 5, 0));
         addFeature(FeatureType.REGENERATION, new Regeneration(10, this));
         addFeature(FeatureType.SPELLBOOK, new SpellBook(List.of(new SpikeSpell(), new Fireball(), new AcidPuddle())));
         addFeature(FeatureType.INVENTORY, new Inventory());

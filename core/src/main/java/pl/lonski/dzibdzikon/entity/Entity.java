@@ -45,14 +45,17 @@ public class Entity {
         }
     }
 
-    public void onWorldTurnFinished(World world) {
+    public void onTurnStarted(World world) {
+        var remainedEffects = new ArrayList<Effect>();
         for (Effect effect : activeEffects) {
             effect.takeTurn(world, this);
             if (!effect.isActive()) {
                 effect.remove(this);
+            } else {
+                remainedEffects.add(effect);
             }
         }
-        this.activeEffects = activeEffects.stream().filter(Effect::isActive).collect(toList());
+        this.activeEffects = remainedEffects;
     }
 
     public void addAnimation(Animation animation) {

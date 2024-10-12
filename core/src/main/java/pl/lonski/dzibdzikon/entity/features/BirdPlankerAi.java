@@ -1,5 +1,7 @@
 package pl.lonski.dzibdzikon.entity.features;
 
+import java.util.List;
+import java.util.Optional;
 import pl.lonski.dzibdzikon.DzibdziRandom;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
@@ -13,9 +15,6 @@ import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.map.MapUtils;
 import pl.lonski.dzibdzikon.map.TextureId;
-
-import java.util.List;
-import java.util.Optional;
 
 public class BirdPlankerAi extends RangeAttackerAi {
 
@@ -68,6 +67,10 @@ public class BirdPlankerAi extends RangeAttackerAi {
                 .flatMap(Optional::stream)
                 .findFirst();
         if (neighbourTree.isPresent()) {
+            if (hpPercent(neighbourTree.get()) < 0.3) {
+                return false; // tree is too weak to take plank
+            }
+
             hasPlank = true;
             neighbourTree.get().applyEffect(new DamageEffect(3));
             return true;
@@ -91,6 +94,10 @@ public class BirdPlankerAi extends RangeAttackerAi {
         }
 
         var tree = treesNearby.get(0);
+        if (hpPercent(tree) < 0.3) {
+            return false; // tree is too weak to take plank
+        }
+
         var treePos = tree.<Position>getFeature(FeatureType.POSITION);
         pathToTree = MapUtils.pathfind(myPos.getCoords(), treePos.getCoords(), p -> !world.getCurrentLevel()
                 .isObstacle(p));
@@ -103,6 +110,11 @@ public class BirdPlankerAi extends RangeAttackerAi {
         entity.takeAction(new MoveAction(entity, newPos));
 
         return true;
+    }
+
+    private float hpPercent(Entity entity) {
+        final Attackable attackable = entity.getFeature(FeatureType.ATTACKABLE);
+        return (float) attackable.getHp() / attackable.getMaxHp();
     }
 
     @Override
