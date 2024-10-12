@@ -6,8 +6,6 @@ import pl.lonski.dzibdzikon.screen.GameOver;
 import pl.lonski.dzibdzikon.screen.GameScreen;
 
 // TODO:
-// - pathfinding coś chyba nie bangla na 100%
-// - open doors as action
 // - finish Acid Potion
 public class Dzibdzikon extends Game {
 

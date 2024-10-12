@@ -25,8 +25,6 @@ import pl.lonski.dzibdzikon.entity.features.MagicUser;
 import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.entity.features.Regeneration;
 import pl.lonski.dzibdzikon.map.TextureId;
-import pl.lonski.dzibdzikon.spell.AcidPuddle;
-import pl.lonski.dzibdzikon.spell.Fireball;
 import pl.lonski.dzibdzikon.spell.SpikeSpell;
 
 public class Player extends Entity {
@@ -54,9 +52,7 @@ public class Player extends Entity {
         addFeature(FeatureType.FOV, new FieldOfView(this, 8));
         addFeature(FeatureType.ATTACKABLE, new Attackable(20, 20, 5, 0));
         addFeature(FeatureType.REGENERATION, new Regeneration(10, 3, this));
-        addFeature(
-                FeatureType.MAGIC_USER,
-                new MagicUser(List.of(new SpikeSpell(), new Fireball(), new AcidPuddle()), 100, 100));
+        addFeature(FeatureType.MAGIC_USER, new MagicUser(List.of(new SpikeSpell()), 100, 100));
         addFeature(FeatureType.INVENTORY, new Inventory());
     }
 

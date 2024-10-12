@@ -1,16 +1,16 @@
 package pl.lonski.dzibdzikon.action;
 
+import java.util.List;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.Entity;
-
-import java.util.List;
 
 public class DieAction implements Action {
 
     private final Action action;
 
     public DieAction(Entity entity) {
-        action = new ChainAction(List.of(new FallAnimationAction(entity), new RemoveEntityAction(entity)));
+        action = new ChainAction(List.of(
+                new FallAnimationAction(entity), new RemoveEntityAction(entity), new CustomAction(entity::onAfterDeath)));
     }
 
     @Override

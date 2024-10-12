@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.Action;
 import pl.lonski.dzibdzikon.action.NoOpAction;
@@ -25,6 +26,7 @@ public class Entity {
     private double speed = 1.0;
     private double energy = 0.0;
     private boolean flying = false;
+    private BiConsumer<Entity, World> onAfterDeath;
 
     public Entity(String name, TextureId glyph) {
         this.name = name;
@@ -192,5 +194,15 @@ public class Entity {
     public void finishAllAnimation() {
         this.animations.forEach(Animation::finish);
         this.animations.clear();
+    }
+
+    public void setOnAfterDeath(BiConsumer<Entity, World> onAfterDeath) {
+        this.onAfterDeath = onAfterDeath;
+    }
+
+    public void onAfterDeath(World world) {
+        if (onAfterDeath != null) {
+            onAfterDeath.accept(this, world);
+        }
     }
 }

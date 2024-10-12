@@ -2,9 +2,7 @@ package pl.lonski.dzibdzikon.entity.features;
 
 import com.badlogic.gdx.graphics.Color;
 import java.util.List;
-
 import pl.lonski.dzibdzikon.DzibdziRandom;
-import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.Action;
@@ -65,7 +63,7 @@ public class RollingRockAi extends MonsterAi {
                         new AttackAction(entity, mob, false),
                         new RemoveEntityAction(entity),
                         new CustomAction(
-                                () -> Hud.addMessage("Głaz uderza w ścianę i rozbija się na kawałki", Color.ORANGE))));
+                                w -> Hud.addMessage("Głaz uderza w ścianę i rozbija się na kawałki", Color.ORANGE))));
             }
 
             // cant push back mob because another blocking entity behind this mob
@@ -77,7 +75,7 @@ public class RollingRockAi extends MonsterAi {
         // - it has to be 'obstacle' because of check above at line 39
         var openableOpt = level.getEntityAt(newPos, FeatureType.OPENABLE);
         if (openableOpt.isPresent()) {
-            return new ChainAction(List.of(new MoveAction(entity, newPos), new CustomAction(() -> {
+            return new ChainAction(List.of(new MoveAction(entity, newPos), new CustomAction(w -> {
                 var openable = openableOpt.get();
                 level.removeEntity(openable);
                 Hud.addMessage("Głaz niszczy " + openable.getName().toLowerCase() + "!", Color.ORANGE);
@@ -87,7 +85,7 @@ public class RollingRockAi extends MonsterAi {
         // if on next rock position is a wall
         if (map.getTile(newPos).isWall()) {
             if (!map.isBorderTile(newPos) && DzibdziRandom.nextBoolean()) {
-                return new ChainAction(List.of(new AttackAnimationAction(entity, newPos), new CustomAction(() -> {
+                return new ChainAction(List.of(new AttackAnimationAction(entity, newPos), new CustomAction(w -> {
                     // destroy wall
                     var floorTile = map.getTile(myPos.getCoords());
                     map.setTile(newPos, floorTile);
@@ -95,7 +93,7 @@ public class RollingRockAi extends MonsterAi {
                     Hud.addMessage("Głaz kruszy ścianę po uderzeniu w nią z wielkim impetem!", Color.ORANGE);
                 })));
             } else {
-                return new ChainAction(List.of(new AttackAnimationAction(entity, newPos), new CustomAction(() -> {
+                return new ChainAction(List.of(new AttackAnimationAction(entity, newPos), new CustomAction(w -> {
                     Hud.addMessage("Głaz uderza w ścianę i rozbija się na kawałki", Color.ORANGE);
                     level.removeEntity(entity);
                 })));

@@ -18,7 +18,7 @@ public class Quickbar {
     public Optional<Action> useSlot(SlotType slotType) {
         return Optional.ofNullable(slots.get(slotType)).map(s -> {
             s.icon().highlight = true;
-            return new ChainAction(List.of(s.actionSupplier.get(), new CustomAction(() -> s.icon().highlight = false)));
+            return new ChainAction(List.of(s.actionSupplier.get(), new CustomAction(w -> s.icon().highlight = false)));
         });
     }
 

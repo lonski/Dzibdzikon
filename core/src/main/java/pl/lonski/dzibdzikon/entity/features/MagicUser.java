@@ -20,6 +20,10 @@ public class MagicUser implements EntityFeature {
         return spells;
     }
 
+    public boolean knowsSpell(Spell spell) {
+       return getSpells().stream().anyMatch(s -> s.getName().equals(spell.getName()));
+    }
+
     public int getManaMax() {
         return manaMax;
     }

@@ -9,8 +9,11 @@ import pl.lonski.dzibdzikon.entity.features.EntityFeature;
 import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.GlazoludAi;
 import pl.lonski.dzibdzikon.entity.features.HealingUseable;
+import pl.lonski.dzibdzikon.entity.features.LearnSpellUseable;
+import pl.lonski.dzibdzikon.entity.features.MagicUser;
 import pl.lonski.dzibdzikon.entity.features.MonsterAi;
 import pl.lonski.dzibdzikon.entity.features.Pickable;
+import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.entity.features.PtakodrzewoAi;
 import pl.lonski.dzibdzikon.entity.features.RangeAttackable;
 import pl.lonski.dzibdzikon.entity.features.Regeneration;
@@ -78,6 +81,15 @@ public class EntityFactory {
         ptakodrzewo.addFeature(FeatureType.FOV, new FieldOfView(ptakodrzewo, 10));
         ptakodrzewo.addFeature(FeatureType.REGENERATION, new Regeneration(3, ptakodrzewo));
         ptakodrzewo.addFeature(FeatureType.PTAKODRZEWO, new EntityFeature() {});
+        ptakodrzewo.setOnAfterDeath((e, world) -> {
+            MagicUser magicUser = world.getPlayer().getFeature(FeatureType.MAGIC_USER);
+            if (!magicUser.knowsSpell(new AcidPuddle())) {
+                Position pos = e.getFeature(FeatureType.POSITION);
+                Entity acidPuddleSpellbookPage = EntityFactory.createAcidPuddleSpellbookPage();
+                acidPuddleSpellbookPage.addFeature(FeatureType.POSITION, new Position(pos.getCoords()));
+                world.getCurrentLevel().addEntity(acidPuddleSpellbookPage);
+            }
+        });
         return ptakodrzewo;
     }
 
@@ -120,5 +132,12 @@ public class EntityFactory {
         // TODO: useable
         // TODO: throwable
         return potion;
+    }
+
+    public static Entity createAcidPuddleSpellbookPage() {
+        var page = new Entity("Zaklęta strona - kałuża kwasu", TextureId.SPELLBOOK_PAGE);
+        page.addFeature(FeatureType.PICKABLE, new Pickable());
+        page.addFeature(FeatureType.USEABLE, new LearnSpellUseable(new AcidPuddle()));
+        return page;
     }
 }

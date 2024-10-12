@@ -133,7 +133,7 @@ public class BirdPlankerAi extends RangeAttackerAi {
 
     @Override
     protected boolean takeRangeAttackAction() {
-        entity.takeAction(new ChainAction(List.of(new RangeAttackAction(entity, player), new CustomAction(() -> {
+        entity.takeAction(new ChainAction(List.of(new RangeAttackAction(entity, player), new CustomAction(w -> {
             if (DzibdziRandom.nextDouble() > 0.75) {
                 player.applyEffect(new KnockDownEffect(1));
             }
