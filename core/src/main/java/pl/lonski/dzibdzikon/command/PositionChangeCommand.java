@@ -6,9 +6,9 @@ import pl.lonski.dzibdzikon.PositionUtils;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.AttackAction;
 import pl.lonski.dzibdzikon.action.MoveAction;
+import pl.lonski.dzibdzikon.action.OpenAction;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
-import pl.lonski.dzibdzikon.entity.features.Openable;
 import pl.lonski.dzibdzikon.entity.features.Position;
 
 public class PositionChangeCommand implements Command {
@@ -48,12 +48,10 @@ public class PositionChangeCommand implements Command {
                     .ifPresentOrElse(
                             mob -> player.takeAction(new AttackAction(player, mob)),
                             // check openable
-                            // TODO: change to action
                             () -> world.getCurrentLevel()
                                     .getEntityAt(targetPos, FeatureType.OPENABLE)
                                     .ifPresent(openable -> {
-                                        openable.<Openable>getFeature(FeatureType.OPENABLE)
-                                                .open(world);
+                                        player.takeAction(new OpenAction(player, openable));
                                         player.getInputListener().reset();
                                     }));
         }

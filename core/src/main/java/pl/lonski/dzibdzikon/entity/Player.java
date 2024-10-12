@@ -52,8 +52,8 @@ public class Player extends Entity {
         addFeature(FeatureType.PLAYER, new EntityFeature() {});
         addFeature(FeatureType.POSITION, new Position(new Point(0, 0), 0, 100));
         addFeature(FeatureType.FOV, new FieldOfView(this, 8));
-        addFeature(FeatureType.ATTACKABLE, new Attackable(2000, 2000, 5, 0));
-        addFeature(FeatureType.REGENERATION, new Regeneration(10, 5, this));
+        addFeature(FeatureType.ATTACKABLE, new Attackable(20, 20, 5, 0));
+        addFeature(FeatureType.REGENERATION, new Regeneration(10, 3, this));
         addFeature(
                 FeatureType.MAGIC_USER,
                 new MagicUser(List.of(new SpikeSpell(), new Fireball(), new AcidPuddle()), 100, 100));
