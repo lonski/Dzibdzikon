@@ -10,7 +10,7 @@ import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.map.TextureId;
 
-public class BurnAnimation implements Animation {
+public class BurnAnimation extends BaseAnimation {
 
     private final Debouncer debouncer = new Debouncer(0.05f);
     private final Supplier<Point> coords;

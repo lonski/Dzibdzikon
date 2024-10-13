@@ -5,7 +5,7 @@ import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Position;
 
-public class RollingAnimation implements Animation {
+public class RollingAnimation extends BaseAnimation {
 
     private final int rollSpeedDeg;
     private float time = 0;

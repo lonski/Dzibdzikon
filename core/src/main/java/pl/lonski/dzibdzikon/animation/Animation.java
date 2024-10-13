@@ -11,4 +11,6 @@ public interface Animation {
     boolean isDone();
 
     void finish();
+
+    Object getOwner();
 }

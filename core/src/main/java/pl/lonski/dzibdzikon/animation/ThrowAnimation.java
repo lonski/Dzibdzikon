@@ -11,7 +11,7 @@ import java.util.List;
 
 import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
 
-public class ThrowAnimation implements Animation {
+public class ThrowAnimation extends BaseAnimation {
 
     private final TextureRegion texture;
     private Point currentPosPix;

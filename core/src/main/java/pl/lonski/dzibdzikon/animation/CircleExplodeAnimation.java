@@ -12,7 +12,7 @@ import java.util.List;
 
 import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
 
-public class CircleExplodeAnimation implements Animation {
+public class CircleExplodeAnimation extends BaseAnimation {
 
     private final Debouncer debouncer = new Debouncer(0.06f);
     private final Point center;

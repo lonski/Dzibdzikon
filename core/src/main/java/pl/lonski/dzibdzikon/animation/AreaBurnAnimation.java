@@ -10,7 +10,7 @@ import java.util.List;
 
 import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
 
-public class AreaBurnAnimation implements Animation {
+public class AreaBurnAnimation extends BaseAnimation {
 
     private final Debouncer debouncer = new Debouncer(0.01f);
     private final List<Point> points;

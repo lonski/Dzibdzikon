@@ -39,12 +39,19 @@ public class Entity {
 
     public void applyEffect(Effect effect) {
         if (!effect.stackable()) {
-            boolean effectExistsAlready = activeEffects.stream().anyMatch(e -> e.getClass()
-                    .getSimpleName()
-                    .equals(effect.getClass().getSimpleName()));
-            if (effectExistsAlready) {
-                return;
-            }
+
+            activeEffects.stream()
+                    .filter(e -> e.getClass()
+                            .getSimpleName()
+                            .equals(effect.getClass().getSimpleName()))
+                    .findFirst()
+                    .ifPresent(e -> {
+                        e.remove(this);
+                        activeEffects.remove(e);
+                        System.out.println(
+                                "removed not stackable effect " + e.getClass().getSimpleName());
+                        System.out.println(activeEffects);
+                    });
         }
 
         effect.apply(this);
@@ -56,11 +63,18 @@ public class Entity {
     }
 
     public void onTurnStarted(World world) {
+        if (activeEffects.isEmpty()) {
+            return;
+        }
+
         var remainedEffects = new ArrayList<Effect>();
+        System.out.println("### effects on " + name + " ###");
         for (Effect effect : activeEffects) {
+            System.out.println(effect.getClass().getSimpleName());
             effect.takeTurn(world, this);
             if (!effect.isActive()) {
                 effect.remove(this);
+                System.out.println("    Effect removed");
             } else {
                 remainedEffects.add(effect);
             }
@@ -203,6 +217,12 @@ public class Entity {
     public void onAfterDeath(World world) {
         if (onAfterDeath != null) {
             onAfterDeath.accept(this, world);
+        }
+    }
+
+    public void removeAnimationByOwner(Object owner) {
+        if (owner != null) {
+            animations.removeIf(a -> owner.equals(a.getOwner()));
         }
     }
 }

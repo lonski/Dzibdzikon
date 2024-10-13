@@ -5,7 +5,7 @@ import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Position;
 
-public class ZeroifyRotationAnimation implements Animation {
+public class ZeroifyRotationAnimation extends BaseAnimation {
 
     private final float speed = 0.01f;
     private float time = 0;

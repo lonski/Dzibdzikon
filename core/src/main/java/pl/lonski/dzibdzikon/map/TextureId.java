@@ -40,6 +40,7 @@ public enum TextureId {
     SPELL_EFFECT_BURN("spell/burn.png"),
     SPELL_ACID_PUDDLE("spell/acid_puddle_icon.png"),
     SPELL_EFFECT_ACID_PUDDLE("spell/acid_puddle.png"),
+    SPELL_ENTITY_BURN("spell/entity_burn.png"),
 
     POTION_RED("potion/red.png"),
     POTION_LIGHT_GREEN("potion/light_green.png"),

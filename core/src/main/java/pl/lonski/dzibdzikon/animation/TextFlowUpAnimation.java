@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 
-public class TextFlowUpAnimation implements Animation {
+public class TextFlowUpAnimation extends BaseAnimation {
 
     private float speed = 0.01f;
     private float time = 0;

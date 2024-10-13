@@ -5,7 +5,7 @@ import pl.lonski.dzibdzikon.World;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChainAnimation implements Animation {
+public class ChainAnimation extends BaseAnimation {
 
     private final List<Animation> animations;
     private Animation currentAnimation;
