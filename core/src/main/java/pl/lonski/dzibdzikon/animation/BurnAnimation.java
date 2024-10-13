@@ -1,84 +1,63 @@
 package pl.lonski.dzibdzikon.animation;
 
+import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import java.util.function.Supplier;
 import pl.lonski.dzibdzikon.Debouncer;
+import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.map.TextureId;
 
-import java.util.List;
-
-import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
-
 public class BurnAnimation implements Animation {
 
-    private final Debouncer debouncer = new Debouncer(0.01f);
-    private final List<Point> points;
-    private boolean done = false;
-    private float speed = 0.1f;
-    private TextureRegion texture;
-    private float alpha = 0;
-    private boolean appearing = true;
+    private final Debouncer debouncer = new Debouncer(0.05f);
+    private final Supplier<Point> coords;
+    private final TextureRegion[] frames;
+    private int frameIndex = 0;
 
-    public BurnAnimation(List<Point> points) {
-        this.points = points;
-        texture = getGameResources().textures.get(TextureId.SPELL_EFFECT_BURN);
+    public BurnAnimation(Supplier<Point> coords) {
+        this.coords = coords;
+        this.frames = getGameResources()
+                .textures
+                .get(TextureId.ANIMATION_BURN)
+                .split(Dzibdzikon.TILE_WIDTH, Dzibdzikon.TILE_HEIGHT)[0];
     }
 
     @Override
     public void update(float delta, World world) {
-        if (isDone()) {
-            return;
-        }
-
-        if (!appearing && alpha <= 0.0f) {
-            finish();
-            return;
-        }
-
-        if (appearing && alpha < 1.0f) {
-            alpha += speed;
-        } else if (appearing) {
-            appearing = false;
-        } else {
-            alpha -= speed;
+        if (debouncer.debounce(delta)) {
+            frameIndex = (frameIndex + 1) % frames.length;
         }
     }
 
     @Override
     public void render() {
-        if (isDone()) {
-            return;
-        }
-
+        TextureRegion texture = frames[frameIndex];
         float originX = texture.getRegionWidth() / 2f;
         float originY = texture.getRegionHeight() / 2f;
-        getGameResources().batch.setColor(1, 1, 1, alpha);
-        for (Point point : points) {
-            getGameResources()
-                    .batch
-                    .draw(
-                            texture,
-                            point.toPixels().x() - originX,
-                            point.toPixels().y() - originY,
-                            originX,
-                            originY,
-                            texture.getRegionWidth(),
-                            texture.getRegionHeight(),
-                            1.0f,
-                            1.0f,
-                            0);
-        }
-        getGameResources().batch.setColor(1, 1, 1, 1);
+        var pos = coords.get();
+        getGameResources()
+                .batch
+                .draw(
+                        texture,
+                        pos.toPixels().x() - originX,
+                        pos.toPixels().y() - originY,
+                        originX,
+                        originY,
+                        texture.getRegionWidth(),
+                        texture.getRegionHeight(),
+                        1.0f,
+                        1.0f,
+                        0);
     }
 
     @Override
     public boolean isDone() {
-        return done;
+        return false;
     }
 
     @Override
-    public void finish() {
-        done = true;
-    }
+    public void finish() {}
 }

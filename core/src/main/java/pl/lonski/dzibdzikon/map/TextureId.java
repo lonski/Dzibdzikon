@@ -42,7 +42,9 @@ public enum TextureId {
     SPELL_EFFECT_ACID_PUDDLE("spell/acid_puddle.png"),
 
     POTION_RED("potion/red.png"),
-    POTION_LIGHT_GREEN("potion/light_green.png");
+    POTION_LIGHT_GREEN("potion/light_green.png"),
+
+    ANIMATION_BURN("animation/burn/burn.png");
 
     private String filename;
 
