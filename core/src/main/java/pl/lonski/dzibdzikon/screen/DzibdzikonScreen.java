@@ -22,11 +22,11 @@ public class DzibdzikonScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        float aspectRatio = (float) width / (float) height;
-        getGameResources().camera.setToOrtho(false, Gdx.graphics.getWidth() * aspectRatio, Gdx.graphics.getHeight());
-        getGameResources().camera.viewportWidth = Gdx.graphics.getWidth();
-        getGameResources().camera.viewportHeight = Gdx.graphics.getHeight();
-        getGameResources().camera.update();
+//        float aspectRatio = (float) width / (float) height;
+//        getGameResources().camera.setToOrtho(false, Gdx.graphics.getWidth() * aspectRatio, Gdx.graphics.getHeight());
+//        getGameResources().camera.viewportWidth = Gdx.graphics.getWidth();
+//        getGameResources().camera.viewportHeight = Gdx.graphics.getHeight();
+//        getGameResources().camera.update();
     }
 
     @Override

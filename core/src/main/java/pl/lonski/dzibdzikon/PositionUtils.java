@@ -1,12 +1,6 @@
 package pl.lonski.dzibdzikon;
 
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.math.Vector3;
-
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
-import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -44,12 +38,8 @@ public class PositionUtils {
             dpos = new Point(1, -1);
         }
 
-        if (dpos.isZero() && key.click() != null) {
-            int tx = key.click().x();
-            int ty = key.click().y();
-            var t = getGameResources().camera.unproject(new Vector3(tx, ty, 0));
-            var tCoord = new Point(Math.round(t.x / (float) TILE_WIDTH), Math.round(t.y / (float) TILE_HEIGHT));
-            Point dd = tCoord.sub(myCoords);
+        if (dpos.isZero() && key.touchCoords() != null) {
+            Point dd = key.touchCoords().sub(myCoords);
             if (!dd.isZero()) {
                 dpos = new Point(Math.min(1, Math.max(-1, dd.x())), Math.min(1, Math.max(-1, dd.y())));
             }

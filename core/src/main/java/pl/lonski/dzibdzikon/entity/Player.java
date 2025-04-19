@@ -139,7 +139,7 @@ public class Player extends Entity {
         }
 
         public void resetClick() {
-            if (this.key.click() != null) {
+            if (this.key.touchCoords() != null) {
                 reset();
             }
         }
