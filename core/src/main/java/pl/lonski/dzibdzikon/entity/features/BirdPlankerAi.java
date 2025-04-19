@@ -1,7 +1,7 @@
 package pl.lonski.dzibdzikon.entity.features;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import pl.lonski.dzibdzikon.DzibdziRandom;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
@@ -63,8 +63,7 @@ public class BirdPlankerAi extends RangeAttackerAi {
         // tree on neighour tile - take plank
         var neighbourTree = MapUtils.getNeighbourPositions(myPos.getCoords()).stream()
                 .map(p -> world.getCurrentLevel().getEntityAt(p, FeatureType.PTAKODRZEWO))
-                .filter(Optional::isPresent)
-                .flatMap(Optional::stream)
+                .filter(Objects::nonNull)
                 .findFirst();
         if (neighbourTree.isPresent()) {
             if (hpPercent(neighbourTree.get()) < 0.3) {

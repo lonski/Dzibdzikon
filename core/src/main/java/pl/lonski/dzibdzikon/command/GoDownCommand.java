@@ -17,9 +17,7 @@ public class GoDownCommand implements Command {
     @Override
     public void execute(Player player, World world) {
         var myPos = player.<Position>getFeature(FeatureType.POSITION);
-        if (world.getCurrentLevel()
-                .getEntityAt(myPos.getCoords(), FeatureType.DOWNSTAIRS)
-                .isPresent()) {
+        if (world.getCurrentLevel().getEntityAt(myPos.getCoords(), FeatureType.DOWNSTAIRS) != null) {
             Hud.addMessage("Schodzenie w dół...");
             world.nextLevel();
         } else {

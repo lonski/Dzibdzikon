@@ -44,15 +44,14 @@ public class RollingRockAi extends MonsterAi {
         var map = level.getMap();
 
         // if on next rock position is a mob
-        var mobOpt = level.getEntityAt(newPos, FeatureType.ATTACKABLE);
-        if (mobOpt.isPresent()) {
-            var mob = mobOpt.get();
+        var mob = level.getEntityAt(newPos, FeatureType.ATTACKABLE);
+        if (mob != null) {
             var mobPos = mob.<Position>getFeature(FeatureType.POSITION);
 
             // try to push back mob
             var nextRollingRockPos = newPos.add(direction);
             if (!level.isObstacle(nextRollingRockPos, true)) {
-                mobPos.setCoords(nextRollingRockPos);
+                mobPos.setCoords(nextRollingRockPos, entity, level);
                 return new ChainAction(List.of(new MoveAction(entity, newPos), new AttackAction(entity, mob, false)));
             }
 
@@ -73,10 +72,9 @@ public class RollingRockAi extends MonsterAi {
 
         // if on next rock position is a openable
         // - it has to be 'obstacle' because of check above at line 39
-        var openableOpt = level.getEntityAt(newPos, FeatureType.OPENABLE);
-        if (openableOpt.isPresent()) {
+        var openable = level.getEntityAt(newPos, FeatureType.OPENABLE);
+        if (openable != null) {
             return new ChainAction(List.of(new MoveAction(entity, newPos), new CustomAction(w -> {
-                var openable = openableOpt.get();
                 level.removeEntity(openable);
                 Hud.addMessage("Głaz niszczy " + openable.getName().toLowerCase() + "!", Color.ORANGE);
             })));

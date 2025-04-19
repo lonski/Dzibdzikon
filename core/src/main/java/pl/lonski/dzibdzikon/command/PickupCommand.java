@@ -17,8 +17,9 @@ public class PickupCommand implements Command {
     @Override
     public void execute(Player player, World world) {
         var pos = player.<Position>getFeature(FeatureType.POSITION).getCoords();
-        world.getCurrentLevel()
-                .getEntityAt(pos, FeatureType.PICKABLE)
-                .ifPresent(item -> player.takeAction(new PickupAction(player, item)));
+        var item = world.getCurrentLevel().getEntityAt(pos, FeatureType.PICKABLE);
+        if (item != null) {
+            player.takeAction(new PickupAction(player, item));
+        }
     }
 }

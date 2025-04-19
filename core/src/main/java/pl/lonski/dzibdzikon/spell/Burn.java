@@ -23,7 +23,11 @@ public class Burn extends SpellBase {
 
     @Override
     public SpellDescription getDescription() {
-        return new SpellDescription("Podpala wybrany cel na 5 tur zadając 2 punkty obrażeń w każdej turze.", "wróg", "pojedynczy wróg", "3 MP");
+        return new SpellDescription(
+                "Podpala wybrany cel na 5 tur zadając 2 punkty obrażeń w każdej turze.",
+                "wróg",
+                "pojedynczy wróg",
+                "3 MP");
     }
 
     @Override
@@ -43,12 +47,11 @@ public class Burn extends SpellBase {
 
     @Override
     public void cast(World world, Entity caster, Point target) {
-        var targetEntityOpt = world.getCurrentLevel().getEntityAt(target, FeatureType.ATTACKABLE);
-        if (targetEntityOpt.isEmpty()) {
+        var targetEntity = world.getCurrentLevel().getEntityAt(target, FeatureType.ATTACKABLE);
+        if (targetEntity == null) {
             return;
         }
 
-        var targetEntity = targetEntityOpt.get();
         targetEntity.applyEffect(new BurnEffect(2, 5));
 
         consumeResources(caster);

@@ -31,15 +31,14 @@ public class CloseAction implements Action {
 
     @Override
     public void update(float delta, World world) {
-        var toCloseOpt = world.getCurrentLevel().getEntityAt(toCloseCoords, null);
+        var toClose = world.getCurrentLevel().getEntityAt(toCloseCoords, null);
 
-        if (toCloseOpt.isEmpty()) {
+        if (toClose == null) {
             log("Tutaj nie ma nic do zamknięcia");
             done = true;
             return;
         }
 
-        var toClose = toCloseOpt.get();
         Position openablePos = toClose.getFeature(FeatureType.POSITION);
 
         if (toClose.getFeature(FeatureType.OPENABLE) == null) {

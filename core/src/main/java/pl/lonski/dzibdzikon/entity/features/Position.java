@@ -4,7 +4,9 @@ package pl.lonski.dzibdzikon.entity.features;
 import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
 import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
 
+import pl.lonski.dzibdzikon.Level;
 import pl.lonski.dzibdzikon.Point;
+import pl.lonski.dzibdzikon.entity.Entity;
 
 public class Position implements EntityFeature {
 
@@ -45,7 +47,8 @@ public class Position implements EntityFeature {
         return coords;
     }
 
-    public void setCoords(Point coords) {
+    public void setCoords(Point coords, Entity entity, Level level) {
+        level.updateEntityPos(entity, this.coords, coords);
         this.coords = coords;
         this.renderPosition = new Point(coords.x() * TILE_WIDTH, coords.y() * TILE_HEIGHT);
     }
@@ -56,9 +59,5 @@ public class Position implements EntityFeature {
 
     public Point getRenderPosition() {
         return renderPosition;
-    }
-
-    public void move(Point dpos) {
-        setCoords(new Point(coords.x() + dpos.x(), coords.y() + dpos.y()));
     }
 }

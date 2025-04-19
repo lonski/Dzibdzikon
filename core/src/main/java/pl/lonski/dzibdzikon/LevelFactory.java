@@ -1,21 +1,20 @@
 package pl.lonski.dzibdzikon;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Supplier;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.EntityFactory;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.map.CircleRoom;
-import pl.lonski.dzibdzikon.map.PtakodrzewoRoom;
 import pl.lonski.dzibdzikon.map.MapUtils;
+import pl.lonski.dzibdzikon.map.PtakodrzewoRoom;
 import pl.lonski.dzibdzikon.map.Room;
 import pl.lonski.dzibdzikon.map.RoomMapBuilder;
 import pl.lonski.dzibdzikon.map.RoomType;
 import pl.lonski.dzibdzikon.map.TileGrid;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Supplier;
 
 public class LevelFactory {
 
@@ -86,7 +85,7 @@ public class LevelFactory {
 
     private static boolean noDoorsNearby(int x, int y, Level level) {
         for (Point neighbourPosition : MapUtils.getNeighbourPositions(new Point(x, y))) {
-            if (level.getEntityAt(neighbourPosition, FeatureType.OPENABLE).isPresent()) {
+            if (level.getEntityAt(neighbourPosition, FeatureType.OPENABLE) != null) {
                 return false;
             }
         }
@@ -170,7 +169,7 @@ public class LevelFactory {
                 int mobsCountInRoom = DzibdziRandom.nextInt(minMobsPerRoom, maxMobsPerRoom + 1);
                 while (mobsCountInRoom-- > 0) {
                     var pos = room.getRandomPosition();
-                    if (level.getEntityAt(pos, null).isEmpty()) {
+                    if (level.getEntityAt(pos, null) == null) {
                         Entity mob = mobGenerateFn.get();
                         if (room.acceptsEntity(mob)) {
                             mob.addFeature(FeatureType.POSITION, new Position(pos, 0, 10));
@@ -194,7 +193,7 @@ public class LevelFactory {
                 int maxItemsInRoom = DzibdziRandom.nextInt(minItemsPerRoom, maxItemsPerRoom + 1);
                 while (maxItemsInRoom-- > 0) {
                     var pos = room.getRandomPosition();
-                    if (level.getEntityAt(pos, null).isEmpty()) {
+                    if (level.getEntityAt(pos, null) == null) {
                         Entity item = itemGenerateFn.get();
                         if (room.acceptsEntity(item)) {
                             item.addFeature(FeatureType.POSITION, new Position(pos, 0, 10));
@@ -216,7 +215,7 @@ public class LevelFactory {
                     var doorInRoom = DzibdziRandom.nextInt(1, possibleDoors.size() + 1);
                     for (int i = 0; i < doorInRoom; i++) {
                         var possiblePos = possibleDoors.get(i);
-                        if (level.getEntityAt(possiblePos, null).isEmpty()) {
+                        if (level.getEntityAt(possiblePos, null) == null) {
                             var door = EntityFactory.createDoor(DzibdziRandom.nextDouble() < openedDoorPercentage);
                             door.addFeature(FeatureType.POSITION, new Position(possiblePos, 0, 1));
                             level.addEntity(door);

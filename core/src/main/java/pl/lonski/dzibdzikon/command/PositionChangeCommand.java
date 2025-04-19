@@ -43,17 +43,16 @@ public class PositionChangeCommand implements Command {
         } else {
 
             // Check fight possibility
-            world.getCurrentLevel()
-                    .getEntityAt(targetPos, FeatureType.ATTACKABLE)
-                    .ifPresentOrElse(
-                            mob -> player.takeAction(new AttackAction(player, mob)),
-                            // check openable
-                            () -> world.getCurrentLevel()
-                                    .getEntityAt(targetPos, FeatureType.OPENABLE)
-                                    .ifPresent(openable -> {
-                                        player.takeAction(new OpenAction(player, openable));
-                                        player.getInputListener().reset();
-                                    }));
+            var mob = world.getCurrentLevel().getEntityAt(targetPos, FeatureType.ATTACKABLE);
+            if (mob != null) {
+                player.takeAction(new AttackAction(player, mob));
+            } else {
+                var openable = world.getCurrentLevel().getEntityAt(targetPos, FeatureType.OPENABLE);
+                if (openable != null) {
+                    player.takeAction(new OpenAction(player, openable));
+                    player.getInputListener().reset();
+                }
+            }
         }
     }
 }

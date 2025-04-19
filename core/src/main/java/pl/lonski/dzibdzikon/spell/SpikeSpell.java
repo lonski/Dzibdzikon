@@ -44,12 +44,11 @@ public class SpikeSpell extends SpellBase {
 
     @Override
     public void cast(World world, Entity caster, Point target) {
-        var targetEntityOpt = world.getCurrentLevel().getEntityAt(target, FeatureType.ATTACKABLE);
-        if (targetEntityOpt.isEmpty()) {
+        var targetEntity = world.getCurrentLevel().getEntityAt(target, FeatureType.ATTACKABLE);
+        if (targetEntity == null) {
             return;
         }
 
-        var targetEntity = targetEntityOpt.get();
         var damage = DzibdziRandom.nextInt(2, 6);
         targetEntity.applyEffect(new DamageEffect(damage));
 

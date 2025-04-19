@@ -37,12 +37,12 @@ public class MoveAction implements Action {
 
     private void finishMove(World world) {
         Position pos = entity.getFeature(FeatureType.POSITION);
-        pos.setCoords(target);
+        pos.setCoords(target, entity, world.getCurrentLevel());
         if (entity instanceof Player) {
-            world.getCurrentLevel()
-                    .getEntityAt(target, FeatureType.PICKABLE)
-                    .ifPresent(item ->
-                            Hud.addMessage("Leży tutaj " + item.getName().toLowerCase()));
+            var item = world.getCurrentLevel().getEntityAt(target, FeatureType.PICKABLE);
+            if (item != null) {
+                Hud.addMessage("Leży tutaj " + item.getName().toLowerCase());
+            }
         }
         done = true;
     }

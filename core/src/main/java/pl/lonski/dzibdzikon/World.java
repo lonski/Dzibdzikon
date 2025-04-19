@@ -53,6 +53,10 @@ public class World {
         while (currentLevel.getEntities().indexOf(currentEntity)
                 < currentLevel.getEntities().size()) {
 
+//            // store start pos
+//            var entityPos = currentEntity.<Position>getFeature(FeatureType.POSITION);
+//            var startCoords = entityPos.getCoords();
+
             // take new turn
             if (currentEntity.getCurrentAction() == null) {
 
@@ -113,12 +117,19 @@ public class World {
                     });
                     currentLevel.setTileEffects(remainedTileEffects);
                 }
+
+//                // update entity pos map
+//                if (!entityPos.getCoords().equals(startCoords)) {
+//                    currentLevel.updateEntityPos(currentEntity, startCoords, entityPos.getCoords());
+//                }
                 proceedToNextEntity();
             }
         }
 
         // update all entities animations
-        currentLevel.getEntities().forEach(e -> e.updateAnimation(delta, this));
+        for (Entity entity : currentLevel.getEntities()) {
+            entity.updateAnimation(delta, this);
+        }
 
         // update map visibility & fov
         currentLevel.getVisible().clear();
@@ -152,7 +163,7 @@ public class World {
         while (maxTries-- > 0) {
             var pos = currentLevel.getMap().getRandomRoom().getCenter();
             if (currentLevel.getEntitiesAt(pos, null).isEmpty() && !currentLevel.isObstacle(pos)) {
-                player.<Position>getFeature(FeatureType.POSITION).setCoords(pos);
+                player.<Position>getFeature(FeatureType.POSITION).setCoords(pos, player, currentLevel);
                 player.setCameraPosition(new Point(pos.x() * TILE_WIDTH, pos.y() * TILE_HEIGHT));
                 break;
             }

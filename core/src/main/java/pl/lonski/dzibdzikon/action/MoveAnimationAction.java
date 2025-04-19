@@ -47,7 +47,7 @@ public class MoveAnimationAction implements Action {
 
         // move instantly if not in player view
         if (!world.getCurrentLevel().getVisible().contains(targetCoords) && !world.getCurrentLevel().getVisible().contains(pos.getCoords())) {
-            finishMove();
+            finishMove(world);
             return;
         }
 
@@ -59,14 +59,14 @@ public class MoveAnimationAction implements Action {
                 pos.getRenderPosition().y() + posDiff.y()));
 
             if (pos.getRenderPosition().equals(new Point(targetRenderPosition.x(), targetRenderPosition.y()))) {
-                finishMove();
+                finishMove(world);
             }
         }
     }
 
-    private void finishMove() {
+    private void finishMove(World world) {
         if (backToOriginalPosition) {
-            entity.<Position>getFeature(FeatureType.POSITION).setCoords(originalPosition);
+            entity.<Position>getFeature(FeatureType.POSITION).setCoords(originalPosition, entity, world.getCurrentLevel());
         }
         done = true;
     }
