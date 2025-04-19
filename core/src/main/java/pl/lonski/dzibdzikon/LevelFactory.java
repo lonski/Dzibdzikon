@@ -1,9 +1,9 @@
 package pl.lonski.dzibdzikon;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.EntityFactory;
 import pl.lonski.dzibdzikon.entity.FeatureType;
@@ -78,9 +78,8 @@ public class LevelFactory {
     }
 
     private static List<Point> findPossibleDoorPositions(Level level, Room room) {
-        return new ArrayList<>(room.getEntrances(level.getMap()).stream()
-                .filter(p -> noDoorsNearby(p.x(), p.y(), level))
-                .toList());
+        return room.getEntrances(level.getMap()).stream()
+            .filter(p -> noDoorsNearby(p.x(), p.y(), level)).collect(Collectors.toList());
     }
 
     private static boolean noDoorsNearby(int x, int y, Level level) {

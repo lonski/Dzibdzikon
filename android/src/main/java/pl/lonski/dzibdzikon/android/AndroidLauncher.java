@@ -1,4 +1,4 @@
-package io.github.some_example_name.android;
+package pl.lonski.dzibdzikon.android;
 
 import android.os.Bundle;
 import com.badlogic.gdx.backends.android.AndroidApplication;

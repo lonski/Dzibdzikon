@@ -1,8 +1,14 @@
 package pl.lonski.dzibdzikon.ui.window;
 
+import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
+
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import pl.lonski.dzibdzikon.Debouncer;
 import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.Point;
@@ -12,13 +18,6 @@ import pl.lonski.dzibdzikon.entity.Player;
 import pl.lonski.dzibdzikon.entity.features.Inventory;
 import pl.lonski.dzibdzikon.map.TextureId;
 import pl.lonski.dzibdzikon.screen.Hud;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
 
 public class InventoryWindow extends WindowAdapter {
 
@@ -50,7 +49,7 @@ public class InventoryWindow extends WindowAdapter {
                     .values()
                     .stream()
                     .map(StackedItem::new)
-                    .toList();
+                    .collect(Collectors.toList());
 
             if (key != null && debouncer.debounce(delta)) {
                 if (key.isUpKey()) {

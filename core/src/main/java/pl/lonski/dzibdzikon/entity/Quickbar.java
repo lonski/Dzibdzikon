@@ -1,5 +1,6 @@
 package pl.lonski.dzibdzikon.entity;
 
+import java.util.stream.Collectors;
 import pl.lonski.dzibdzikon.action.Action;
 import pl.lonski.dzibdzikon.action.ChainAction;
 import pl.lonski.dzibdzikon.action.CustomAction;
@@ -23,7 +24,7 @@ public class Quickbar {
     }
 
     public List<SlotIcon> getSlotIcons() {
-        return slots.values().stream().map(Slot::icon).toList();
+        return slots.values().stream().map(Slot::icon).collect(Collectors.toList());
     }
 
     public void setSlot(SlotType slotType, TextureId textureId, Supplier<Action> actionSupplier) {

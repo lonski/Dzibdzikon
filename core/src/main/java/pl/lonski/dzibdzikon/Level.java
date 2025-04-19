@@ -172,7 +172,7 @@ public class Level {
     public List<Entity> getEntitiesAt(Point targetPos, FeatureType featureType) {
         return getEntitiesAt(targetPos).stream()
                 .filter(e -> featureType == null || e.getFeature(featureType) != null)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public List<Entity> getEntitiesAtCircle(Point center, int radius, FeatureType featureType) {
