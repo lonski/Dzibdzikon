@@ -18,6 +18,7 @@ public class Level {
 
     private final TileGrid map;
     private final HashSet[][] entityMap;
+    private final boolean[][] openableMap;
     private final List<Entity> entities = new ArrayList<>();
     private final Set<Point> visited = new HashSet<>();
     private final Set<Point> visible = new HashSet<>();
@@ -26,6 +27,7 @@ public class Level {
     public Level(TileGrid map) {
         this.map = map;
         this.entityMap = new HashSet[map.getWidth()][map.getHeight()];
+        this.openableMap = new boolean[map.getWidth()][map.getHeight()];
     }
 
     public void updateEntityPos(Entity entity, Point prevPos, Point newPos) {
@@ -54,6 +56,11 @@ public class Level {
             entityMap[newPos.x()][newPos.y()] = newEntities;
         }
         newEntities.add(entity);
+
+        if (entity.getFeature(FeatureType.OPENABLE) != null) {
+            openableMap[prevPos.x()][prevPos.y()] = false;
+            openableMap[newPos.x()][newPos.y()] = true;
+        }
     }
 
     public void addEntity(Entity entity) {
@@ -70,6 +77,10 @@ public class Level {
         }
         posEntities.add(entity);
         entities.add(entity);
+
+        if (entity.getFeature(FeatureType.OPENABLE) != null) {
+            openableMap[pos.getCoords().x()][pos.getCoords().y()] = true;
+        }
     }
 
     public List<Entity> getEntities() {
@@ -134,10 +145,10 @@ public class Level {
         }
 
         // openables
-        var entityAtPos = getEntityAt(pos, FeatureType.OPENABLE);
-        if (entityAtPos != null
-                && entityAtPos.<Openable>getFeature(FeatureType.OPENABLE).opaque()) {
-            return true;
+        if (openableMap[pos.x()][pos.y()]) {
+            return getEntityAt(pos, FeatureType.OPENABLE)
+                    .<Openable>getFeature(FeatureType.OPENABLE)
+                    .opaque();
         }
 
         return map.getTile(pos).isWall();
@@ -186,5 +197,9 @@ public class Level {
         var pos = entity.<Position>getFeature(FeatureType.POSITION);
         getEntitiesAt(pos.getCoords()).remove(entity);
         entities.remove(entity);
+
+        if (entity.getFeature(FeatureType.OPENABLE) != null) {
+            openableMap[pos.getCoords().x()][pos.getCoords().y()] = false;
+        }
     }
 }
