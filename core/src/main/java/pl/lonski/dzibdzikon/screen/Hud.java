@@ -71,8 +71,10 @@ public class Hud {
     }
 
     public void render(float delta) {
-        var camera = getGameResources().camera;
+        var camera = getGameResources().uiCamera;
         var batch = getGameResources().batch;
+
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
         // render messages

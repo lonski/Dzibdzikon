@@ -18,6 +18,7 @@ import pl.lonski.dzibdzikon.screen.WindowManager;
 public class GameResources {
 
     public OrthographicCamera camera;
+    public OrthographicCamera uiCamera;
     public Viewport viewport;
     public SpriteBatch batch;
     public ShapeRenderer shapeRenderer;
@@ -43,8 +44,11 @@ public class GameResources {
         }
 
         camera = new OrthographicCamera();
-        viewport = new ScalingViewport(Scaling.fit, 800, 480, camera);
+        viewport = new ScalingViewport(Scaling.fit, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        uiCamera = new OrthographicCamera();
+        uiCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     public void dispose() {

@@ -64,8 +64,11 @@ public class InventoryWindow extends WindowAdapter {
     @Override
     public void render(float delta) {
         if (visible()) {
+            var camera = getGameResources().uiCamera;
+            var batch = getGameResources().batch;
             var shapeRenderer = getGameResources().shapeRenderer;
 
+            shapeRenderer.setProjectionMatrix(camera.combined);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(Window.FRAME_COLOR);
             shapeRenderer.rect(position.x(), position.y(), windowWidth, windowHeight);
@@ -73,7 +76,8 @@ public class InventoryWindow extends WindowAdapter {
             shapeRenderer.rect(position.x() + 4, position.y() + 4, windowWidth - 8, windowHeight - 8);
             shapeRenderer.end();
 
-            var batch = getGameResources().batch;
+
+            batch.setProjectionMatrix(camera.combined);
             batch.begin();
 
             var itemFont = getGameResources().fontItalic20;

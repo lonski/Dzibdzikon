@@ -49,6 +49,7 @@ public class GameScreen extends DzibdzikonScreen {
                         world.getPlayer().getCameraPosition().y(),
                         0);
         getGameResources().camera.update();
+        getGameResources().uiCamera.update();
         hud.update(world);
     }
 

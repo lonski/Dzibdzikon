@@ -47,16 +47,16 @@ public abstract class WindowAdapter implements Window, DzibdziInput.DzibdziInput
     }
 
     protected void positionWindowInCenter(int windowWidth, int windowHeight) {
-        var bottomLeftCorner = CameraUtils.getBottomLeftCorner(getGameResources().camera);
-        var heightRem = getGameResources().camera.viewportHeight - windowHeight;
-        var widthRem = getGameResources().camera.viewportWidth - windowWidth;
+        var bottomLeftCorner = CameraUtils.getBottomLeftCorner(getGameResources().uiCamera);
+        var heightRem = getGameResources().uiCamera.viewportHeight - windowHeight;
+        var widthRem = getGameResources().uiCamera.viewportWidth - windowWidth;
 
         position = new Point((int) (bottomLeftCorner.x + widthRem / 2f), (int) (bottomLeftCorner.y + heightRem / 2f));
     }
 
     protected void positionWindowInCenterLeft(int windowWidth, int windowHeight) {
-        var bottomLeftCorner = CameraUtils.getBottomLeftCorner(getGameResources().camera);
-        var heightRem = getGameResources().camera.viewportHeight - windowHeight;
+        var bottomLeftCorner = CameraUtils.getBottomLeftCorner(getGameResources().uiCamera);
+        var heightRem = getGameResources().uiCamera.viewportHeight - windowHeight;
 
         position = new Point((int) (bottomLeftCorner.x + 10), (int) (bottomLeftCorner.y + heightRem / 2f));
     }

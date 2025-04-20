@@ -42,7 +42,10 @@ public class SpellBookWindow extends WindowAdapter implements DzibdziInput.Dzibd
     @Override
     public void render(float delta) {
         if (visible()) {
+            var camera = getGameResources().uiCamera;
             var batch = getGameResources().batch;
+
+            batch.setProjectionMatrix(camera.combined);
             batch.begin();
             var textures = getGameResources().textures;
             var font = getGameResources().fontItalic20;
