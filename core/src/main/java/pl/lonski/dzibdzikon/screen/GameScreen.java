@@ -24,9 +24,10 @@ public class GameScreen extends DzibdzikonScreen {
     public GameScreen(Dzibdzikon dzibdzikon) {
         super(dzibdzikon);
         world = new World();
-        hud = new Hud();
+        hud = new Hud(world);
         getGameResources().windowManager.init(world);
         Gdx.input.setInputProcessor(new InputMultiplexer(
+            hud,
                 new GestureDetector(new DzibdziInput.GestureHandler()), new DzibdziInput.InputHandler()));
     }
 
@@ -50,7 +51,8 @@ public class GameScreen extends DzibdzikonScreen {
                         0);
         getGameResources().camera.update();
         getGameResources().uiCamera.update();
-        hud.update(world);
+//        hud.update(world);
+        hud.update(delta, world);
     }
 
     @Override
@@ -144,5 +146,12 @@ public class GameScreen extends DzibdzikonScreen {
         getGameResources().windowManager.render(delta);
 
         hud.render(delta);
+//        hud.render(delta);
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        hud.getViewport().update(width, height, true);
     }
 }

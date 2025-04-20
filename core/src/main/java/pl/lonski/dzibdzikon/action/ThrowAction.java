@@ -19,11 +19,11 @@ public class ThrowAction implements Action {
     private Animation effectAnimation;
     private boolean done = false;
 
-    public ThrowAction(Entity thrower, Position throwerPos, Entity throwItem, Point target) {
+    public ThrowAction(Entity thrower, Entity throwItem, Point target) {
         this.thrower = thrower;
         this.throwItem = throwItem;
         this.target = target;
-        this.throwerPos = throwerPos;
+        this.throwerPos = thrower.getPosition();
         var myPosPix = throwerPos.getRenderPosition();
         this.throwAnimation = new ThrowAnimation(throwItem.getGlyph(), myPosPix, target.toPixels());
         thrower.addAnimation(throwAnimation);

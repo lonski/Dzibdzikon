@@ -40,13 +40,14 @@ public class DzibdziInput {
             if (zooming) {
                 return false;
             }
-            var pos = getGameResources().camera.unproject(new Vector3(x, y, 0f));
-            var coords = new Point(Math.round(pos.x / 32.f), Math.round(pos.y / 32.f));
 
-            var listenersCopy = new HashSet<>(listeners);
-            for (DzibdziInputListener listener : listenersCopy) {
-                listener.onInput(new DzibdziKey(-1, false, coords));
-            }
+                var pos = getGameResources().camera.unproject(new Vector3(x, y, 0f));
+                var coords = new Point(Math.round(pos.x / 32.f), Math.round(pos.y / 32.f));
+
+                var listenersCopy = new HashSet<>(listeners);
+                for (DzibdziInputListener listener : listenersCopy) {
+                    listener.onInput(new DzibdziKey(-1, false, coords));
+                }
 
             return true;
         }
@@ -92,7 +93,7 @@ public class DzibdziInput {
     }
 
     public interface DzibdziInputListener {
-        void onInput(DzibdziKey key);
+        boolean onInput(DzibdziKey key);
     }
 
     public record DzibdziKey(int keyCode, boolean released, Point touchCoords) {

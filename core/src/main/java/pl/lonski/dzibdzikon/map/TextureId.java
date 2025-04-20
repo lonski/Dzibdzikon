@@ -19,6 +19,7 @@ public enum TextureId {
     DOWNSTAIRS("downstairs.png"),
     PLANK("plank.png"),
     SPELLBOOK_PAGE("spellbook_page.png"),
+    SPELLBOOK("spellbook.png"),
 
     WND_SPELLBOOK("window/spellbook.png"),
 

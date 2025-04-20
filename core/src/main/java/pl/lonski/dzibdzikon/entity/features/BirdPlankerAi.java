@@ -38,7 +38,7 @@ public class BirdPlankerAi extends RangeAttackerAi {
         }
 
         if (seesPlayer(world)) {
-            if (rangeAttack(world)) {
+            if (rangeAttack()) {
                 entity.setGlyph(hasPlank ? TextureId.MOB_BIRD_PLANKER : TextureId.MOB_BIRD_PLANKER_EMPTY);
                 return;
             }
@@ -117,12 +117,12 @@ public class BirdPlankerAi extends RangeAttackerAi {
     }
 
     @Override
-    protected boolean rangeAttack(World world) {
+    protected boolean rangeAttack() {
         if (!hasPlank) {
             return false;
         }
 
-        if (super.rangeAttack(world)) {
+        if (super.rangeAttack()) {
             hasPlank = false;
             return true;
         }
@@ -131,7 +131,7 @@ public class BirdPlankerAi extends RangeAttackerAi {
     }
 
     @Override
-    protected boolean takeRangeAttackAction(World world) {
+    protected boolean takeRangeAttackAction() {
         entity.takeAction(new ChainAction(List.of(new RangeAttackAction(entity, player), new CustomAction(w -> {
             if (DzibdziRandom.nextDouble() > 0.75) {
                 player.applyEffect(new KnockDownEffect(1));

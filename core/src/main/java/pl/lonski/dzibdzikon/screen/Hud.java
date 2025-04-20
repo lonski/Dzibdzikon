@@ -4,9 +4,20 @@ import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
 import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
 import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -14,33 +25,63 @@ import pl.lonski.dzibdzikon.CameraUtils;
 import pl.lonski.dzibdzikon.FontUtils;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
+import pl.lonski.dzibdzikon.command.CastSpellCommand;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Quickbar;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.MagicUser;
 import pl.lonski.dzibdzikon.map.TextureId;
-import pl.lonski.dzibdzikon.ui.ProgressBar;
 
-public class Hud {
+public class Hud extends Stage {
 
     private static final int MAX_MESSAGES = 5;
     private static final List<Message> messages = new ArrayList<>();
     private static String actionMessage = "";
-    private final ProgressBar hpBar;
-    private final ProgressBar mpBar;
     private static final List<Point> targets = new ArrayList<>();
     public static final List<Point> debugHighlight = new ArrayList<>();
     private final List<Quickbar.SlotIcon> quickBarIcons = new ArrayList<>();
 
-    public Hud() {
-        this.hpBar = new ProgressBar(100, 10, new Color(0x880000ff), Color.RED);
-        this.mpBar = new ProgressBar(100, 10, new Color(0x000e88ff), Color.BLUE);
-        messages.clear();
-    }
+    private final ProgressBar mpBar;
+    private final ProgressBar hpBar;
+    private final Skin skin;
 
-    public static void setTargets(List<Point> newTargets) {
-        targets.clear();
-        targets.addAll(newTargets);
+    private final World world;
+
+    public Hud(World world) {
+        super(new ScalingViewport( Scaling.fill, 800, 480));
+        this.world = world;
+        skin = new Skin(Gdx.files.internal("ui/flat/skin.json"));
+
+        var mpBarStyle = new ProgressBar.ProgressBarStyle();
+        mpBarStyle.background = skin.getDrawable("progressHorizontal");
+        mpBarStyle.knob = skin.getDrawable("progressHorizontalKnobMP");
+        mpBarStyle.knobBefore = skin.getDrawable("progressHorizontalKnobMP");
+
+        mpBar = new ProgressBar(0, 1, 1, false, mpBarStyle);
+        addActor(mpBar);
+
+        var hpBarStyle = new ProgressBar.ProgressBarStyle();
+        hpBarStyle.background = skin.getDrawable("progressHorizontal");
+        hpBarStyle.knob = skin.getDrawable("progressHorizontalKnobHP");
+        hpBarStyle.knobBefore = skin.getDrawable("progressHorizontalKnobHP");
+
+        hpBar = new ProgressBar(0, 1, 1, false, hpBarStyle);
+        hpBar.setPosition(mpBar.getX(), mpBar.getY() + mpBar.getHeight());
+        addActor(hpBar);
+
+        var btn = new ImageButton(skin);
+        btn.setPosition(10, hpBar.getY() + hpBar.getHeight() * 2);
+        btn.getStyle().imageUp = new TextureRegionDrawable(getGameResources().textures.get(TextureId.SPELLBOOK));
+        btn.getStyle().imageDown = new TextureRegionDrawable(getGameResources().textures.get(TextureId.SPELLBOOK));
+        addActor(btn);
+        btn.addListener(new InputListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                new CastSpellCommand().execute(world.getPlayer(), world);
+                return true;
+            }
+        });
+
     }
 
     public static void addMessage(String message) {
@@ -59,25 +100,38 @@ public class Hud {
         actionMessage = message;
     }
 
-    public void update(World world) {
+    public static void setTargets(List<Point> newTargets) {
+        targets.clear();
+        targets.addAll(newTargets);
+    }
+
+    public void update(float delta, World world) {
+        // update messages
         messages.removeIf(message -> message.ttl <= 0);
+
+        // update progress bars
         Attackable playerAttackable = world.getPlayer().getFeature(FeatureType.ATTACKABLE);
-        hpBar.setProgress((float) playerAttackable.getHp() / playerAttackable.getMaxHp());
+        hpBar.setRange(0, playerAttackable.getMaxHp());
+        hpBar.setValue(playerAttackable.getHp());
         MagicUser playerMagicUser = world.getPlayer().getFeature(FeatureType.MAGIC_USER);
-        mpBar.setProgress((float) playerMagicUser.getMana() / playerMagicUser.getManaMax());
+        mpBar.setRange(0, playerMagicUser.getManaMax());
+        mpBar.setValue(playerMagicUser.getMana());
+
+        // update quickbar
         quickBarIcons.clear();
         quickBarIcons.addAll(world.getPlayer().getQuickbar().getSlotIcons());
         quickBarIcons.sort(Comparator.comparingInt(Quickbar.SlotIcon::getNum));
+
+        // update stage
+        act(delta);
     }
 
     public void render(float delta) {
-        var camera = getGameResources().uiCamera;
+        // render messages
         var batch = getGameResources().batch;
-
+        var camera = getCamera();
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-
-        // render messages
         var messagePos = CameraUtils.getTopLeftCorner(camera);
         for (int i = 0; i < messages.size(); i++) {
             var message = messages.get(i);
@@ -89,29 +143,9 @@ public class Hud {
         if (!actionMessage.isEmpty()) {
             var bottomLeft = CameraUtils.getBottomCenter(camera);
             var textWidth = FontUtils.getTextWidth(getGameResources().fontItalic15, actionMessage);
-            var actionMessagePos = new Vector2(bottomLeft.x - textWidth / 2, bottomLeft.y + 25);
+            var actionMessagePos = new Vector2(bottomLeft.x - textWidth / 2, bottomLeft.y + (actionMessage.contains("\n") ? 50 : 25));
             getGameResources().fontItalic15.setColor(Color.GOLD);
             getGameResources().fontItalic15.draw(batch, actionMessage, actionMessagePos.x, actionMessagePos.y);
-        }
-
-        // debug render
-        if (!debugHighlight.isEmpty()) {
-            var texture = getGameResources().textures.get(TextureId.HIGHLIGHT_YELLOW);
-            float originX = texture.getRegionWidth() / 2f;
-            float originY = texture.getRegionHeight() / 2f;
-            for (Point point : debugHighlight) {
-                batch.draw(texture, point.x() * TILE_WIDTH - originX, point.y() * TILE_HEIGHT - originY);
-            }
-        }
-
-        // render targeting
-        if (!targets.isEmpty()) {
-            var texture = getGameResources().textures.get(TextureId.TARGET);
-            float originX = texture.getRegionWidth() / 2f;
-            float originY = texture.getRegionHeight() / 2f;
-            for (Point point : targets) {
-                batch.draw(texture, point.x() * TILE_WIDTH - originX, point.y() * TILE_HEIGHT - originY);
-            }
         }
 
         // renader quickbar
@@ -134,17 +168,31 @@ public class Hud {
 
         batch.end();
 
-        // render hp bar
-        var shapeRenderer = getGameResources().shapeRenderer;
-        var bottomLeft = CameraUtils.getBottomLeftCorner(camera);
-        var mpBarPos = new Vector2(bottomLeft.x + 10, bottomLeft.y + 10);
-        var hpBarPos = new Vector2(mpBarPos.x, mpBarPos.y + mpBar.getHeight());
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        hpBar.render(hpBarPos, shapeRenderer);
-        mpBar.render(mpBarPos, shapeRenderer);
+        batch.setProjectionMatrix(getGameResources().camera.combined);
+        batch.begin();
+        // debug render
+        if (!debugHighlight.isEmpty()) {
+            var texture = getGameResources().textures.get(TextureId.HIGHLIGHT_YELLOW);
+            float originX = texture.getRegionWidth() / 2f;
+            float originY = texture.getRegionHeight() / 2f;
+            for (Point point : debugHighlight) {
+                batch.draw(texture, point.x() * TILE_WIDTH - originX, point.y() * TILE_HEIGHT - originY);
+            }
+        }
 
-        shapeRenderer.end();
+        // render targeting
+        if (!targets.isEmpty()) {
+            var texture = getGameResources().textures.get(TextureId.TARGET);
+            float originX = texture.getRegionWidth() / 2f;
+            float originY = texture.getRegionHeight() / 2f;
+            for (Point point : targets) {
+                batch.draw(texture, point.x() * TILE_WIDTH - originX, point.y() * TILE_HEIGHT - originY);
+            }
+        }
+        batch.end();
+
+        // draw stage
+        draw();
     }
 
     private static class Message {

@@ -115,12 +115,13 @@ public class Player extends Entity {
         DzibdziInput.DzibdziKey key;
 
         @Override
-        public void onInput(DzibdziInput.DzibdziKey key) {
+        public boolean onInput(DzibdziInput.DzibdziKey key) {
             if (key.released()) {
                 this.key = null;
-                return;
+                return true;
             }
             this.key = key;
+            return true;
         }
 
         public void reset() {

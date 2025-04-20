@@ -1,5 +1,6 @@
 package pl.lonski.dzibdzikon;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 
@@ -11,13 +12,13 @@ public class CameraUtils {
         return new Vector2(camera.position.x - halfWidth, camera.position.y - halfHeight);
     }
 
-    public static Vector2 getBottomRightCorner(OrthographicCamera camera) {
+    public static Vector2 getBottomRightCorner(Camera camera) {
         float halfWidth = camera.viewportWidth * 0.5f;
         float halfHeight = camera.viewportHeight * 0.5f;
         return new Vector2(camera.position.x + halfWidth, camera.position.y - halfHeight);
     }
 
-    public static Vector2 getTopLeftCorner(OrthographicCamera camera) {
+    public static Vector2 getTopLeftCorner(Camera camera) {
         float halfWidth = camera.viewportWidth * 0.5f;
         float halfHeight = camera.viewportHeight * 0.5f;
         return new Vector2(camera.position.x - halfWidth, camera.position.y + halfHeight);
@@ -29,7 +30,7 @@ public class CameraUtils {
         return new Vector2(camera.position.x + halfWidth, camera.position.y + halfHeight);
     }
 
-    public static Vector2 getBottomCenter(OrthographicCamera camera) {
+    public static Vector2 getBottomCenter(Camera camera) {
         float halfWidth = camera.viewportWidth * 0.5f;
         float halfHeight = camera.viewportHeight * 0.5f;
         return new Vector2(camera.position.x, camera.position.y - halfHeight);

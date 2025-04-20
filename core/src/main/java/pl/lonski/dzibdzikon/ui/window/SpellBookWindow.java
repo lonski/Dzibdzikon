@@ -34,7 +34,7 @@ public class SpellBookWindow extends WindowAdapter implements DzibdziInput.Dzibd
     @Override
     public void update(float delta) {
         if (visible()) {
-            Hud.setActionMessage("Wybierz czar to rzucenia lub wciśnij 1..5 aby przypisać do panelu podręcznego.");
+            Hud.setActionMessage("Wybierz czar to rzucenia \nlub wciśnij 1..5 aby przypisać do panelu podręcznego.");
             positionWindowInCenter(windowTexture.getRegionWidth(), windowTexture.getRegionHeight());
         }
     }
@@ -102,9 +102,9 @@ public class SpellBookWindow extends WindowAdapter implements DzibdziInput.Dzibd
     }
 
     @Override
-    public void onInput(DzibdziInput.DzibdziKey key) {
+    public boolean onInput(DzibdziInput.DzibdziKey key) {
         if (!visible() || key.released()) {
-            return;
+            return false;
         }
 
         var spells = getSpells();
@@ -137,6 +137,8 @@ public class SpellBookWindow extends WindowAdapter implements DzibdziInput.Dzibd
                 hide();
             }
         }
+
+        return true;
     }
 
     @Override

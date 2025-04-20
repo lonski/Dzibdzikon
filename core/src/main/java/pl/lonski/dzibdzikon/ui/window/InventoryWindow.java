@@ -76,7 +76,6 @@ public class InventoryWindow extends WindowAdapter {
             shapeRenderer.rect(position.x() + 4, position.y() + 4, windowWidth - 8, windowHeight - 8);
             shapeRenderer.end();
 
-
             batch.setProjectionMatrix(camera.combined);
             batch.begin();
 
@@ -137,10 +136,10 @@ public class InventoryWindow extends WindowAdapter {
     }
 
     @Override
-    public void onInput(DzibdziInput.DzibdziKey key) {
+    public boolean onInput(DzibdziInput.DzibdziKey key) {
         if (!visible() || key.released()) {
             this.key = null;
-            return;
+            return false;
         }
 
         this.key = key;
@@ -157,6 +156,8 @@ public class InventoryWindow extends WindowAdapter {
             }
             hide();
         }
+
+        return true;
     }
 
     @Override

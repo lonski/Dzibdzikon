@@ -26,6 +26,9 @@ public class ThrowAnimation extends BaseAnimation {
 
     public ThrowAnimation(TextureId textureId, Point startPix, Point endPix, int speed) {
         this.texture = getGameResources().textures.get(textureId);
+        if (texture == null) {
+            throw new IllegalArgumentException("Texture not found: " + textureId);
+        }
         this.currentPosPix = startPix;
         this.line = Line.calculate(startPix, endPix);
         this.speed = speed;

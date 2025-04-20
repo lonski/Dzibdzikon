@@ -21,7 +21,7 @@ public class ThrowerAi extends RangeAttackerAi {
     }
 
     @Override
-    protected boolean rangeAttack(World world) {
+    protected boolean rangeAttack() {
         if (ammo <= 0) { // out of ammo
             renewRemainingTurns -= 1;
             if (renewRemainingTurns <= 0) {
@@ -30,11 +30,12 @@ public class ThrowerAi extends RangeAttackerAi {
             return false;
         }
 
-        return super.rangeAttack(world);
+        return super.rangeAttack();
     }
 
-    protected boolean takeRangeAttackAction(Position throwerPos) {
-        entity.takeAction(new ThrowAction(entity, throwerPos, toThrow, playerPos.getCoords()));
+    @Override
+    protected boolean takeRangeAttackAction() {
+        entity.takeAction(new ThrowAction(entity, toThrow, playerPos.getCoords()));
         renewRemainingTurns = renewTurns;
         ammo -= 1;
         return true;

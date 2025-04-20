@@ -48,7 +48,7 @@ public class GameResources {
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         uiCamera = new OrthographicCamera();
-        uiCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        uiCamera.setToOrtho(false, 1200, 720);
     }
 
     public void dispose() {

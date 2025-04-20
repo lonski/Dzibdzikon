@@ -1,6 +1,5 @@
 package pl.lonski.dzibdzikon.entity.features;
 
-import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.map.TextureId;
 
@@ -11,8 +10,8 @@ public class RzucoptakAi extends ThrowerAi {
     }
 
     @Override
-    protected boolean rangeAttack(World world) {
-        var attacked = super.rangeAttack(world);
+    protected boolean rangeAttack() {
+        var attacked = super.rangeAttack();
 
         if (ammo == 0) {
             entity.setGlyph(TextureId.MOB_BIRD_THROWER_0BOTTLE);
