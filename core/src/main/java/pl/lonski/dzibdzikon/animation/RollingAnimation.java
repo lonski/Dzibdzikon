@@ -2,8 +2,7 @@ package pl.lonski.dzibdzikon.animation;
 
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.Entity;
-import pl.lonski.dzibdzikon.entity.FeatureType;
-import pl.lonski.dzibdzikon.entity.features.Position;
+import pl.lonski.dzibdzikon.map.Position;
 
 public class RollingAnimation extends BaseAnimation {
 
@@ -18,7 +17,7 @@ public class RollingAnimation extends BaseAnimation {
 
     @Override
     public void update(float delta, World world) {
-        Position pos = entity.getFeature(FeatureType.POSITION);
+        Position pos = entity.getPosition();
 
         // not in player view, skip
         if (!world.getCurrentLevel().getVisible().contains(pos.getCoords())) {
@@ -42,7 +41,5 @@ public class RollingAnimation extends BaseAnimation {
     }
 
     @Override
-    public void finish() {
-
-    }
+    public void finish() {}
 }

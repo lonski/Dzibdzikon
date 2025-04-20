@@ -1,9 +1,8 @@
 package pl.lonski.dzibdzikon;
 
-import pl.lonski.dzibdzikon.map.Line;
-
 import java.util.ArrayList;
 import java.util.List;
+import pl.lonski.dzibdzikon.map.Line;
 
 public class ExplosionSimulator {
 

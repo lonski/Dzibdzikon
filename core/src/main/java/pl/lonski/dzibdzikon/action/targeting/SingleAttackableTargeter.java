@@ -39,7 +39,7 @@ public class SingleAttackableTargeter implements Action {
         }
 
         this.possibleTargets =
-            new ArrayList<>(player.<FieldOfView>getFeature(FeatureType.FOV).getHostiles());
+                new ArrayList<>(player.<FieldOfView>getFeature(FeatureType.FOV).getHostiles());
 
         if (possibleTargets.isEmpty()) {
             done = true;

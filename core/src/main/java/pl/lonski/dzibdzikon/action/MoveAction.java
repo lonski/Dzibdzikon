@@ -5,7 +5,6 @@ import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
-import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.screen.Hud;
 
 public class MoveAction implements Action {
@@ -26,9 +25,7 @@ public class MoveAction implements Action {
     public void update(float delta, World world) {
         moveAnimation.update(delta, world);
         if (entity.getFeature(FeatureType.PLAYER) != null) {
-            world.getPlayer()
-                    .setCameraPosition(
-                            entity.<Position>getFeature(FeatureType.POSITION).getRenderPosition());
+            world.getPlayer().setCameraPosition(entity.getPosition().getRenderPosition());
         }
         if (moveAnimation.isDone()) {
             finishMove(world);
@@ -36,8 +33,7 @@ public class MoveAction implements Action {
     }
 
     private void finishMove(World world) {
-        Position pos = entity.getFeature(FeatureType.POSITION);
-        pos.setCoords(target, entity, world.getCurrentLevel());
+        world.getCurrentLevel().moveEntity(entity, target);
         if (entity instanceof Player) {
             var item = world.getCurrentLevel().getEntityAt(target, FeatureType.PICKABLE);
             if (item != null) {

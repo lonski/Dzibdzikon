@@ -46,12 +46,11 @@ public class RollingRockAi extends MonsterAi {
         // if on next rock position is a mob
         var mob = level.getEntityAt(newPos, FeatureType.ATTACKABLE);
         if (mob != null) {
-            var mobPos = mob.<Position>getFeature(FeatureType.POSITION);
 
             // try to push back mob
             var nextRollingRockPos = newPos.add(direction);
             if (!level.isObstacle(nextRollingRockPos, true)) {
-                mobPos.setCoords(nextRollingRockPos, entity, level);
+                level.moveEntity(mob, nextRollingRockPos);
                 return new ChainAction(List.of(new MoveAction(entity, newPos), new AttackAction(entity, mob, false)));
             }
 

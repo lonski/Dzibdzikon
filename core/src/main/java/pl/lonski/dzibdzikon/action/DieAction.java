@@ -10,7 +10,9 @@ public class DieAction implements Action {
 
     public DieAction(Entity entity) {
         action = new ChainAction(List.of(
-                new FallAnimationAction(entity), new RemoveEntityAction(entity), new CustomAction(entity::onAfterDeath)));
+                new FallAnimationAction(entity.getPosition()),
+                new RemoveEntityAction(entity),
+                new CustomAction(entity::onAfterDeath)));
     }
 
     @Override

@@ -1,11 +1,15 @@
 package pl.lonski.dzibdzikon;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.HashMap;
 import java.util.Map;
 import pl.lonski.dzibdzikon.map.TextureId;
@@ -14,6 +18,7 @@ import pl.lonski.dzibdzikon.screen.WindowManager;
 public class GameResources {
 
     public OrthographicCamera camera;
+    public Viewport viewport;
     public SpriteBatch batch;
     public ShapeRenderer shapeRenderer;
     public BitmapFont fontItalic12;
@@ -38,7 +43,8 @@ public class GameResources {
         }
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
+        viewport = new ScalingViewport(Scaling.fit, 800, 480, camera);
+        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     public void dispose() {

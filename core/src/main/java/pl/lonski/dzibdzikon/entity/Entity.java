@@ -12,6 +12,7 @@ import pl.lonski.dzibdzikon.animation.Animation;
 import pl.lonski.dzibdzikon.effect.Effect;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.EntityFeature;
+import pl.lonski.dzibdzikon.map.Position;
 import pl.lonski.dzibdzikon.map.TextureId;
 
 public class Entity {
@@ -27,10 +28,15 @@ public class Entity {
     private double energy = 0.0;
     private boolean flying = false;
     private BiConsumer<Entity, World> onAfterDeath;
+    private final Position position = new Position();
 
     public Entity(String name, TextureId glyph) {
         this.name = name;
         this.glyph = glyph;
+    }
+
+    public Position getPosition() {
+        return position;
     }
 
     public void setSpeed(double speed) {

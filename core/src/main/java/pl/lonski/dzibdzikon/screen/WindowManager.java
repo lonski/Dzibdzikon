@@ -17,8 +17,8 @@ public class WindowManager {
 
     public void init(World world) {
         this.player = world.getPlayer();
-        windows.put(WindowType.SPELL_BOOK, new SpellBookWindow(world.getPlayer()));
-        windows.put(WindowType.INVENTORY, new InventoryWindow(world.getPlayer()));
+        windows.put(WindowType.SPELL_BOOK, new SpellBookWindow(player));
+        windows.put(WindowType.INVENTORY, new InventoryWindow(player));
     }
 
     public void show(WindowType type) {

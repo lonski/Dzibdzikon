@@ -9,7 +9,6 @@ import pl.lonski.dzibdzikon.effect.DamageEffect;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
-import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.entity.features.RangeAttackable;
 
 public class RangeAttackAction implements Action {
@@ -25,8 +24,8 @@ public class RangeAttackAction implements Action {
 
         var ammoTex = attacker.<RangeAttackable>getFeature(FeatureType.RANGE_ATTACKABLE)
                 .getAmmo();
-        var myPosPix = attacker.<Position>getFeature(FeatureType.POSITION).getRenderPosition();
-        var targetPosPix = target.<Position>getFeature(FeatureType.POSITION).getRenderPosition();
+        var myPosPix = attacker.getPosition().getRenderPosition();
+        var targetPosPix = target.getPosition().getRenderPosition();
         this.animation = new ThrowAnimation(ammoTex, myPosPix, targetPosPix);
         attacker.addAnimation(this.animation);
     }
@@ -37,15 +36,15 @@ public class RangeAttackAction implements Action {
             animation.update(delta, world);
         }
         if (animation == null || animation.isDone()) {
-            doRangeAttack();
+            doRangeAttack(world);
             done = true;
         }
     }
 
-    private void doRangeAttack() {
+    private void doRangeAttack(World world) {
         RangeAttackable attacking = attacker.getFeature(FeatureType.RANGE_ATTACKABLE);
         Attackable defending = target.getFeature(FeatureType.ATTACKABLE);
-        var targetPos = target.<Position>getFeature(FeatureType.POSITION).getCoords();
+        var targetPos = target.getPosition().getCoords();
         var result = attacking.attack(defending);
 
         if (result.hit()) {

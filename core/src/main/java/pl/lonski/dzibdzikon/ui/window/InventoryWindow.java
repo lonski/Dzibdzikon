@@ -145,8 +145,12 @@ public class InventoryWindow extends WindowAdapter {
             result = null;
             hide();
         } else if (key.isEnterKey()) {
-            result = new InventoryWindowResult(
-                    items.get(selectedItemIdx).entities().get(0), ItemAction.USE);
+            if (selectedItemIdx < items.size() && selectedItemIdx >= 0) {
+                result = new InventoryWindowResult(
+                        items.get(selectedItemIdx).entities().get(0), ItemAction.USE);
+            } else {
+                result = null;
+            }
             hide();
         }
     }

@@ -1,9 +1,8 @@
 package pl.lonski.dzibdzikon.action;
 
-import pl.lonski.dzibdzikon.World;
-
 import java.util.ArrayList;
 import java.util.List;
+import pl.lonski.dzibdzikon.World;
 
 public class ChainAction implements Action {
 

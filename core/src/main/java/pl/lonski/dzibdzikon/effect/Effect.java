@@ -5,7 +5,7 @@ import pl.lonski.dzibdzikon.entity.Entity;
 
 public interface Effect {
 
-    default boolean stackable()  {
+    default boolean stackable() {
         return true;
     }
 

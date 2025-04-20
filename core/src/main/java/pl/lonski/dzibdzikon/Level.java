@@ -11,84 +11,33 @@ import pl.lonski.dzibdzikon.effect.tile.TileEffect;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Openable;
-import pl.lonski.dzibdzikon.entity.features.Position;
+import pl.lonski.dzibdzikon.map.EntityMap;
+import pl.lonski.dzibdzikon.map.Position;
 import pl.lonski.dzibdzikon.map.TileGrid;
 
 public class Level {
 
     private final TileGrid map;
-    private final HashSet[][] entityMap;
-    private final boolean[][] openableMap;
-    private final List<Entity> entities = new ArrayList<>();
     private final Set<Point> visited = new HashSet<>();
     private final Set<Point> visible = new HashSet<>();
     private Map<Point, List<TileEffect>> tileEffects = new HashMap<>();
+    private final EntityMap entityMap;
 
     public Level(TileGrid map) {
         this.map = map;
-        this.entityMap = new HashSet[map.getWidth()][map.getHeight()];
-        this.openableMap = new boolean[map.getWidth()][map.getHeight()];
-    }
-
-    public void updateEntityPos(Entity entity, Point prevPos, Point newPos) {
-        if (entity == null) {
-            throw new IllegalArgumentException("entity is null");
-        }
-
-        if (prevPos.equals(newPos)) {
-            return;
-        }
-
-        if (!map.inBounds(prevPos) || !map.inBounds(newPos)) {
-            throw new IllegalArgumentException("Position out of bounds");
-        }
-
-        // remove entity from previous position
-        var prevEntities = entityMap[prevPos.x()][prevPos.y()];
-        if (prevEntities != null) {
-            prevEntities.remove(entity);
-        }
-
-        // add entity to new position
-        var newEntities = entityMap[newPos.x()][newPos.y()];
-        if (newEntities == null) {
-            newEntities = new HashSet<>();
-            entityMap[newPos.x()][newPos.y()] = newEntities;
-        }
-        newEntities.add(entity);
-
-        if (entity.getFeature(FeatureType.OPENABLE) != null) {
-            openableMap[prevPos.x()][prevPos.y()] = false;
-            openableMap[newPos.x()][newPos.y()] = true;
-        }
-    }
-
-    public void addEntity(Entity entity) {
-        var pos = entity.<Position>getFeature(FeatureType.POSITION);
-        if (pos == null) {
-            throw new IllegalStateException("entity has no pos");
-        }
-
-        var coords = pos.getCoords();
-        var posEntities = entityMap[coords.x()][coords.y()];
-        if (posEntities == null) {
-            posEntities = new HashSet<>();
-            entityMap[coords.x()][coords.y()] = posEntities;
-        }
-        posEntities.add(entity);
-        entities.add(entity);
-
-        if (entity.getFeature(FeatureType.OPENABLE) != null) {
-            openableMap[pos.getCoords().x()][pos.getCoords().y()] = true;
-        }
-    }
-
-    public List<Entity> getEntities() {
-        return entities;
+        this.entityMap = new EntityMap(map.getWidth(), map.getHeight());
     }
 
     public TileGrid getMap() {
         return map;
+    }
+
+    public List<Entity> getEntities() {
+        return entityMap.getEntities();
+    }
+
+    public Set<Map.Entry<Entity, Position>> getEntitiesWithPosition() {
+        return entityMap.getEntitiesWithPosition();
     }
 
     public Set<Point> getVisited() {
@@ -130,9 +79,10 @@ public class Level {
         }
 
         // openables
-        var entityAtPos = getEntityAt(pos, FeatureType.OPENABLE);
-        if (entityAtPos != null
-                && entityAtPos.<Openable>getFeature(FeatureType.OPENABLE).obstacle()) {
+        if (entityMap.isOpenable(pos)
+                && getEntityAt(pos, FeatureType.OPENABLE)
+                        .<Openable>getFeature(FeatureType.OPENABLE)
+                        .obstacle()) {
             return true;
         }
 
@@ -145,7 +95,7 @@ public class Level {
         }
 
         // openables
-        if (openableMap[pos.x()][pos.y()]) {
+        if (entityMap.isOpenable(pos)) {
             return getEntityAt(pos, FeatureType.OPENABLE)
                     .<Openable>getFeature(FeatureType.OPENABLE)
                     .opaque();
@@ -154,23 +104,23 @@ public class Level {
         return map.getTile(pos).isWall();
     }
 
-    public HashSet<Entity> getEntitiesAt(Point targetPos) {
-        var entitiesAt = entityMap[targetPos.x()][targetPos.y()];
-        if (entitiesAt == null) {
-            return new HashSet<>();
-        }
-        return entitiesAt;
+    public void addEntity(Entity entity, Point coords) {
+        entityMap.addEntity(entity, coords);
     }
 
     public Entity getEntityAt(Point pos, FeatureType featureType) {
-        return getEntitiesAt(pos).stream()
+        return entityMap.getEntitiesAt(pos).stream()
                 .filter(e -> featureType == null || e.getFeature(featureType) != null)
                 .findFirst()
                 .orElse(null);
     }
 
+    public void moveEntity(Entity entity, Point newCoords) {
+        entityMap.moveEntity(entity, newCoords);
+    }
+
     public List<Entity> getEntitiesAt(Point targetPos, FeatureType featureType) {
-        return getEntitiesAt(targetPos).stream()
+        return entityMap.getEntitiesAt(targetPos).stream()
                 .filter(e -> featureType == null || e.getFeature(featureType) != null)
                 .collect(Collectors.toList());
     }
@@ -181,25 +131,19 @@ public class Level {
 
         return points.stream()
                 .filter(map::inBounds)
-                .flatMap(p -> getEntitiesAt(p).stream())
+                .flatMap(p -> entityMap.getEntitiesAt(p).stream())
                 .filter(e -> featureType == null || e.getFeature(featureType) != null)
                 .collect(Collectors.toList());
     }
 
     public List<Entity> getEntitiesAt(Set<Point> points, FeatureType featureType) {
         return points.stream()
-                .flatMap(p -> getEntitiesAt(p).stream())
+                .flatMap(p -> entityMap.getEntitiesAt(p).stream())
                 .filter(e -> featureType == null || e.getFeature(featureType) != null)
                 .collect(Collectors.toList());
     }
 
     public void removeEntity(Entity entity) {
-        var pos = entity.<Position>getFeature(FeatureType.POSITION);
-        getEntitiesAt(pos.getCoords()).remove(entity);
-        entities.remove(entity);
-
-        if (entity.getFeature(FeatureType.OPENABLE) != null) {
-            openableMap[pos.getCoords().x()][pos.getCoords().y()] = false;
-        }
+        entityMap.removeEntity(entity);
     }
 }

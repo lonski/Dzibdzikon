@@ -3,8 +3,6 @@ package pl.lonski.dzibdzikon.effect;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.animation.BurnAnimation;
 import pl.lonski.dzibdzikon.entity.Entity;
-import pl.lonski.dzibdzikon.entity.FeatureType;
-import pl.lonski.dzibdzikon.entity.features.Position;
 
 public class BurnEffect implements Effect {
 
@@ -23,8 +21,7 @@ public class BurnEffect implements Effect {
 
     @Override
     public void apply(Entity target) {
-        var anim = new BurnAnimation(
-                () -> target.<Position>getFeature(FeatureType.POSITION).getCoords());
+        var anim = new BurnAnimation(() -> target.getPosition().getCoords());
         anim.setOwner(this);
         target.addAnimation(anim);
     }

@@ -5,9 +5,7 @@ import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.animation.Animation;
 import pl.lonski.dzibdzikon.entity.Entity;
-import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
-import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.screen.Hud;
 import pl.lonski.dzibdzikon.spell.Spell;
 
@@ -25,9 +23,8 @@ public class CastSpellAction implements Action {
         this.caster = caster;
         this.target = target;
         this.spell = spell;
-        var pos = caster.<Position>getFeature(FeatureType.POSITION);
-        this.animation =
-                spell.getAnimation(pos.getRenderPosition(), target.toPixels()).orElse(null);
+        this.animation = spell.getAnimation(caster.getPosition().getRenderPosition(), target.toPixels())
+                .orElse(null);
 
         if (spell.hasResources(caster)) {
             caster.addAnimation(animation);

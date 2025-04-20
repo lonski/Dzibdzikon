@@ -1,6 +1,5 @@
 package pl.lonski.dzibdzikon.entity.features;
 
-
 import pl.lonski.dzibdzikon.World;
 
 public interface Openable extends EntityFeature {

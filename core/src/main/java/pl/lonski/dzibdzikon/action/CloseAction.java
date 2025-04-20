@@ -7,7 +7,7 @@ import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.Openable;
-import pl.lonski.dzibdzikon.entity.features.Position;
+import pl.lonski.dzibdzikon.map.Position;
 import pl.lonski.dzibdzikon.screen.Hud;
 
 public class CloseAction implements Action {
@@ -39,7 +39,7 @@ public class CloseAction implements Action {
             return;
         }
 
-        Position openablePos = toClose.getFeature(FeatureType.POSITION);
+        Position openablePos = toClose.getPosition();
 
         if (toClose.getFeature(FeatureType.OPENABLE) == null) {
             log("Nie można zamknąć " + toClose.getName() + " - nieotwieralne.");

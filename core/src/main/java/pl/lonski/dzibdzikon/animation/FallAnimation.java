@@ -1,9 +1,7 @@
 package pl.lonski.dzibdzikon.animation;
 
 import pl.lonski.dzibdzikon.World;
-import pl.lonski.dzibdzikon.entity.Entity;
-import pl.lonski.dzibdzikon.entity.FeatureType;
-import pl.lonski.dzibdzikon.entity.features.Position;
+import pl.lonski.dzibdzikon.map.Position;
 
 public class FallAnimation extends BaseAnimation {
 
@@ -14,8 +12,8 @@ public class FallAnimation extends BaseAnimation {
     private boolean done = false;
     private int updatesCounter = 0;
 
-    public FallAnimation(Entity entity) {
-        this.entityPos = entity.getFeature(FeatureType.POSITION);
+    public FallAnimation(Position entityPos) {
+        this.entityPos = entityPos;
     }
 
     @Override

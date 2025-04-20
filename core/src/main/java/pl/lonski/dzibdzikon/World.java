@@ -1,8 +1,6 @@
 package pl.lonski.dzibdzikon;
 
 import static pl.lonski.dzibdzikon.Dzibdzikon.SHOW_WHOLE_LEVEL;
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +10,6 @@ import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
 import pl.lonski.dzibdzikon.entity.features.FieldOfView;
-import pl.lonski.dzibdzikon.entity.features.Position;
 
 public class World {
 
@@ -38,7 +35,7 @@ public class World {
     }
 
     public boolean visible(Entity entity) {
-        var entityPos = entity.<Position>getFeature(FeatureType.POSITION).getCoords();
+        var entityPos = entity.getPosition().getCoords();
         return SHOW_WHOLE_LEVEL
                 || getCurrentLevel().getVisible().contains(entityPos)
                 || (getCurrentLevel().getVisited().contains(entityPos) && entity.isVisibleInFog());
@@ -53,9 +50,9 @@ public class World {
         while (currentLevel.getEntities().indexOf(currentEntity)
                 < currentLevel.getEntities().size()) {
 
-//            // store start pos
-//            var entityPos = currentEntity.<Position>getFeature(FeatureType.POSITION);
-//            var startCoords = entityPos.getCoords();
+            //            // store start pos
+            //            var entityPos = currentEntity.<Position>getFeature(FeatureType.POSITION);
+            //            var startCoords = entityPos.getCoords();
 
             // take new turn
             if (currentEntity.getCurrentAction() == null) {
@@ -118,10 +115,11 @@ public class World {
                     currentLevel.setTileEffects(remainedTileEffects);
                 }
 
-//                // update entity pos map
-//                if (!entityPos.getCoords().equals(startCoords)) {
-//                    currentLevel.updateEntityPos(currentEntity, startCoords, entityPos.getCoords());
-//                }
+                //                // update entity pos map
+                //                if (!entityPos.getCoords().equals(startCoords)) {
+                //                    currentLevel.updateEntityPos(currentEntity, startCoords,
+                // entityPos.getCoords());
+                //                }
                 proceedToNextEntity();
             }
         }
@@ -158,13 +156,12 @@ public class World {
 
     public void nextLevel() {
         currentLevel = LevelFactory.generate();
-        currentLevel.addEntity(player);
         int maxTries = 5;
         while (maxTries-- > 0) {
-            var pos = currentLevel.getMap().getRandomRoom().getCenter();
-            if (currentLevel.getEntitiesAt(pos, null).isEmpty() && !currentLevel.isObstacle(pos)) {
-                player.<Position>getFeature(FeatureType.POSITION).setCoords(pos, player, currentLevel);
-                player.setCameraPosition(new Point(pos.x() * TILE_WIDTH, pos.y() * TILE_HEIGHT));
+            var coords = currentLevel.getMap().getRandomRoom().getCenter();
+            if (currentLevel.getEntitiesAt(coords, null).isEmpty() && !currentLevel.isObstacle(coords)) {
+                currentLevel.addEntity(player, coords);
+                player.setCameraPosition(player.getPosition().getRenderPosition());
                 break;
             }
         }

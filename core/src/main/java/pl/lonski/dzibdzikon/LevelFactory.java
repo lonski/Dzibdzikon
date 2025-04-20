@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.EntityFactory;
 import pl.lonski.dzibdzikon.entity.FeatureType;
-import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.map.CircleRoom;
 import pl.lonski.dzibdzikon.map.MapUtils;
 import pl.lonski.dzibdzikon.map.PtakodrzewoRoom;
@@ -79,7 +78,8 @@ public class LevelFactory {
 
     private static List<Point> findPossibleDoorPositions(Level level, Room room) {
         return room.getEntrances(level.getMap()).stream()
-            .filter(p -> noDoorsNearby(p.x(), p.y(), level)).collect(Collectors.toList());
+                .filter(p -> noDoorsNearby(p.x(), p.y(), level))
+                .collect(Collectors.toList());
     }
 
     private static boolean noDoorsNearby(int x, int y, Level level) {
@@ -171,8 +171,8 @@ public class LevelFactory {
                     if (level.getEntityAt(pos, null) == null) {
                         Entity mob = mobGenerateFn.get();
                         if (room.acceptsEntity(mob)) {
-                            mob.addFeature(FeatureType.POSITION, new Position(pos, 0, 10));
-                            level.addEntity(mob);
+                            level.addEntity(mob, pos);
+                            mob.getPosition().setzLevel(10);
                         }
                     }
                 }
@@ -183,8 +183,8 @@ public class LevelFactory {
                     .forEach(dzibdziDrzewoRoom -> {
                         var center = dzibdziDrzewoRoom.getCenter();
                         Entity mob = EntityFactory.createPtakodrzewo();
-                        mob.addFeature(FeatureType.POSITION, new Position(center, 0, 10));
-                        level.addEntity(mob);
+                        level.addEntity(mob, center);
+                        mob.getPosition().setzLevel(10);
                     });
 
             // spawn items
@@ -195,8 +195,8 @@ public class LevelFactory {
                     if (level.getEntityAt(pos, null) == null) {
                         Entity item = itemGenerateFn.get();
                         if (room.acceptsEntity(item)) {
-                            item.addFeature(FeatureType.POSITION, new Position(pos, 0, 10));
-                            level.addEntity(item);
+                            level.addEntity(item, pos);
+                            item.getPosition().setzLevel(10);
                         }
                     }
                 }
@@ -216,8 +216,8 @@ public class LevelFactory {
                         var possiblePos = possibleDoors.get(i);
                         if (level.getEntityAt(possiblePos, null) == null) {
                             var door = EntityFactory.createDoor(DzibdziRandom.nextDouble() < openedDoorPercentage);
-                            door.addFeature(FeatureType.POSITION, new Position(possiblePos, 0, 1));
-                            level.addEntity(door);
+                            level.addEntity(door, possiblePos);
+                            door.getPosition().setzLevel(1);
                         }
                     }
                 }
@@ -234,8 +234,7 @@ public class LevelFactory {
                         .get(DzibdziRandom.nextInt(map.getRooms().size()))
                         .getCenter();
             }
-            downstairs.addFeature(FeatureType.POSITION, new Position(downstairsPos));
-            level.addEntity(downstairs);
+            level.addEntity(downstairs, downstairsPos);
 
             return level;
         }

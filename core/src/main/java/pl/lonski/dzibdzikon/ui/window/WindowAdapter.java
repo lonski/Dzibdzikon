@@ -1,13 +1,12 @@
 package pl.lonski.dzibdzikon.ui.window;
 
+import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
+
+import java.util.function.Consumer;
 import pl.lonski.dzibdzikon.CameraUtils;
 import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.entity.Player;
-
-import java.util.function.Consumer;
-
-import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
 
 public abstract class WindowAdapter implements Window, DzibdziInput.DzibdziInputListener {
 

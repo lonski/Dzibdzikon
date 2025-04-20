@@ -6,8 +6,7 @@ import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.Entity;
-import pl.lonski.dzibdzikon.entity.FeatureType;
-import pl.lonski.dzibdzikon.entity.features.Position;
+import pl.lonski.dzibdzikon.map.Position;
 
 public class MoveAnimationAction implements Action {
 
@@ -30,7 +29,7 @@ public class MoveAnimationAction implements Action {
         this.entity = entity;
         this.targetCoords = targetCoords;
         this.targetRenderPosition = targetRenderPosition;
-        this.originalPosition = new Point(entity.<Position>getFeature(FeatureType.POSITION).getCoords());
+        this.originalPosition = new Point(entity.getPosition().getCoords());
     }
 
     public void setMoveTime(float moveTime) {
@@ -43,10 +42,11 @@ public class MoveAnimationAction implements Action {
 
     @Override
     public void update(float delta, World world) {
-        Position pos = entity.getFeature(FeatureType.POSITION);
+        Position pos = entity.getPosition();
 
         // move instantly if not in player view
-        if (!world.getCurrentLevel().getVisible().contains(targetCoords) && !world.getCurrentLevel().getVisible().contains(pos.getCoords())) {
+        if (!world.getCurrentLevel().getVisible().contains(targetCoords)
+                && !world.getCurrentLevel().getVisible().contains(pos.getCoords())) {
             finishMove(world);
             return;
         }
@@ -55,8 +55,9 @@ public class MoveAnimationAction implements Action {
         if (time >= moveTime) {
             time = 0;
             Point posDiff = getRenderPositionDiff(pos.getRenderPosition());
-            pos.setRenderPosition(new Point(pos.getRenderPosition().x() + posDiff.x(),
-                pos.getRenderPosition().y() + posDiff.y()));
+            pos.setRenderPosition(new Point(
+                    pos.getRenderPosition().x() + posDiff.x(),
+                    pos.getRenderPosition().y() + posDiff.y()));
 
             if (pos.getRenderPosition().equals(new Point(targetRenderPosition.x(), targetRenderPosition.y()))) {
                 finishMove(world);
@@ -66,7 +67,7 @@ public class MoveAnimationAction implements Action {
 
     private void finishMove(World world) {
         if (backToOriginalPosition) {
-            entity.<Position>getFeature(FeatureType.POSITION).setCoords(originalPosition, entity, world.getCurrentLevel());
+            world.getCurrentLevel().moveEntity(entity, originalPosition);
         }
         done = true;
     }

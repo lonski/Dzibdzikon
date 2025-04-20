@@ -1,14 +1,13 @@
 package pl.lonski.dzibdzikon.animation;
 
+import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import java.util.List;
 import pl.lonski.dzibdzikon.Debouncer;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.map.TextureId;
-
-import java.util.List;
-
-import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
 
 public class AreaBurnAnimation extends BaseAnimation {
 

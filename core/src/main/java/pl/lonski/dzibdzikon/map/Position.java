@@ -1,12 +1,10 @@
-package pl.lonski.dzibdzikon.entity.features;
-
+package pl.lonski.dzibdzikon.map;
 
 import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
 import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
 
-import pl.lonski.dzibdzikon.Level;
 import pl.lonski.dzibdzikon.Point;
-import pl.lonski.dzibdzikon.entity.Entity;
+import pl.lonski.dzibdzikon.entity.features.EntityFeature;
 
 public class Position implements EntityFeature {
 
@@ -15,6 +13,10 @@ public class Position implements EntityFeature {
     private float rotation = 0;
 
     private int zLevel = 0;
+
+    public Position() {
+        this(new Point(0, 0), 0, 0);
+    }
 
     public Position(Point pos) {
         this(pos, 0, 0);
@@ -47,8 +49,7 @@ public class Position implements EntityFeature {
         return coords;
     }
 
-    public void setCoords(Point coords, Entity entity, Level level) {
-        level.updateEntityPos(entity, this.coords, coords);
+    void setCoords(Point coords) {
         this.coords = coords;
         this.renderPosition = new Point(coords.x() * TILE_WIDTH, coords.y() * TILE_HEIGHT);
     }

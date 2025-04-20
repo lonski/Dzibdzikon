@@ -9,7 +9,7 @@ import pl.lonski.dzibdzikon.action.MoveAction;
 import pl.lonski.dzibdzikon.action.OpenAction;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
-import pl.lonski.dzibdzikon.entity.features.Position;
+import pl.lonski.dzibdzikon.map.Position;
 
 public class PositionChangeCommand implements Command {
     private Point dPos = new Point(0, 0);
@@ -21,7 +21,7 @@ public class PositionChangeCommand implements Command {
 
     @Override
     public boolean accept(DzibdziInput.DzibdziKey key) {
-        var pos = player.<Position>getFeature(FeatureType.POSITION);
+        var pos = player.getPosition();
         dPos = PositionUtils.getPositionChange(pos.getCoords(), key);
         if (!dPos.isZero()) {
             player.getInputListener().resetClick();
@@ -31,7 +31,7 @@ public class PositionChangeCommand implements Command {
 
     @Override
     public void execute(Player player, World world) {
-        Position pos = player.getFeature(FeatureType.POSITION);
+        Position pos = player.getPosition();
         Point targetPos =
                 new Point(pos.getCoords().x() + dPos.x(), pos.getCoords().y() + dPos.y());
 

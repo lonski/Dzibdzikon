@@ -46,8 +46,8 @@ public class Regeneration implements EntityFeature {
             hpRegenCooldown = hpRegenRateTurns;
             if (attackable.getHp() < attackable.getMaxHp()) {
                 attackable.setHp(Math.min(attackable.getHp() + 1, attackable.getMaxHp()));
-                entity.addAnimation(new TextFlowUpAnimation(
-                        "+1", entity.<Position>getFeature(FeatureType.POSITION).getCoords(), Color.CHARTREUSE));
+                entity.addAnimation(
+                        new TextFlowUpAnimation("+1", entity.getPosition().getCoords(), Color.CHARTREUSE));
             }
         }
 
@@ -56,8 +56,8 @@ public class Regeneration implements EntityFeature {
             mpRegenCooldown = mpRegenRateTurns;
             if (manaUser.getMana() < manaUser.getManaMax()) {
                 manaUser.modMana(1);
-                entity.addAnimation(new TextFlowUpAnimation(
-                        "+1", entity.<Position>getFeature(FeatureType.POSITION).getCoords(), Color.BLUE));
+                entity.addAnimation(
+                        new TextFlowUpAnimation("+1", entity.getPosition().getCoords(), Color.BLUE));
             }
         }
 

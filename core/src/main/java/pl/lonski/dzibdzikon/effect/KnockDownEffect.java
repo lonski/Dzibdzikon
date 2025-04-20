@@ -4,8 +4,6 @@ import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.animation.FallAnimation;
 import pl.lonski.dzibdzikon.animation.ZeroifyRotationAnimation;
 import pl.lonski.dzibdzikon.entity.Entity;
-import pl.lonski.dzibdzikon.entity.FeatureType;
-import pl.lonski.dzibdzikon.entity.features.Position;
 
 public class KnockDownEffect implements Effect {
 
@@ -17,12 +15,7 @@ public class KnockDownEffect implements Effect {
 
     @Override
     public void apply(Entity target) {
-        var pos = target.<Position>getFeature(FeatureType.POSITION);
-        if (pos == null) {
-            return;
-        }
-
-        target.addAnimation(new FallAnimation(target));
+        target.addAnimation(new FallAnimation(target.getPosition()));
     }
 
     @Override

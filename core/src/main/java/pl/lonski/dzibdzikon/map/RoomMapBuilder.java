@@ -1,13 +1,10 @@
 package pl.lonski.dzibdzikon.map;
 
-import pl.lonski.dzibdzikon.DzibdziRandom;
-import pl.lonski.dzibdzikon.Dzibdzikon;
-import pl.lonski.dzibdzikon.Point;
-
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import pl.lonski.dzibdzikon.DzibdziRandom;
+import pl.lonski.dzibdzikon.Point;
 
 public class RoomMapBuilder {
 

@@ -1,15 +1,14 @@
 package pl.lonski.dzibdzikon.spell;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.targeting.TargetingMode;
 import pl.lonski.dzibdzikon.animation.Animation;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.map.TextureId;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public interface Spell {
 

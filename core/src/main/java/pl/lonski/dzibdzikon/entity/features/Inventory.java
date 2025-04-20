@@ -1,10 +1,9 @@
 package pl.lonski.dzibdzikon.entity.features;
 
-import pl.lonski.dzibdzikon.entity.Entity;
-import pl.lonski.dzibdzikon.entity.FeatureType;
-
 import java.util.ArrayList;
 import java.util.List;
+import pl.lonski.dzibdzikon.entity.Entity;
+import pl.lonski.dzibdzikon.entity.FeatureType;
 
 public class Inventory implements EntityFeature {
 

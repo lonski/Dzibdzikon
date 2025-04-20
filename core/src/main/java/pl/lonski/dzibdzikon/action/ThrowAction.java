@@ -6,23 +6,25 @@ import pl.lonski.dzibdzikon.animation.Animation;
 import pl.lonski.dzibdzikon.animation.ThrowAnimation;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
-import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.entity.features.SpellEffect;
+import pl.lonski.dzibdzikon.map.Position;
 
 public class ThrowAction implements Action {
 
     private final Entity thrower;
+    private final Position throwerPos;
     private final Entity throwItem;
     private final Point target;
     private final Animation throwAnimation;
     private Animation effectAnimation;
     private boolean done = false;
 
-    public ThrowAction(Entity thrower, Entity throwItem, Point target) {
+    public ThrowAction(Entity thrower, Position throwerPos, Entity throwItem, Point target) {
         this.thrower = thrower;
         this.throwItem = throwItem;
         this.target = target;
-        var myPosPix = thrower.<Position>getFeature(FeatureType.POSITION).getRenderPosition();
+        this.throwerPos = throwerPos;
+        var myPosPix = throwerPos.getRenderPosition();
         this.throwAnimation = new ThrowAnimation(throwItem.getGlyph(), myPosPix, target.toPixels());
         thrower.addAnimation(throwAnimation);
     }
@@ -67,7 +69,7 @@ public class ThrowAction implements Action {
         }
 
         var spell = spellEffect.getSpell();
-        var myPosPix = thrower.<Position>getFeature(FeatureType.POSITION).getRenderPosition();
+        var myPosPix = throwerPos.getRenderPosition();
         spell.getAnimation(myPosPix, target.toPixels()).ifPresent(a -> {
             this.effectAnimation = a;
             thrower.addAnimation(a);

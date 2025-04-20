@@ -1,6 +1,7 @@
 package pl.lonski.dzibdzikon.entity.features;
 
 import com.badlogic.gdx.graphics.Color;
+import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
@@ -16,7 +17,7 @@ public class LearnSpellUseable extends Useable {
     }
 
     @Override
-    public void use(Entity user, Entity target) {
+    public void use(Entity user, Entity target, World world) {
         final MagicUser magicUser = user.getFeature(FeatureType.MAGIC_USER);
         if (magicUser == null) {
             return;

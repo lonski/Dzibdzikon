@@ -1,7 +1,9 @@
 package pl.lonski.dzibdzikon.entity.features;
 
+import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.ThrowAction;
 import pl.lonski.dzibdzikon.entity.Entity;
+import pl.lonski.dzibdzikon.map.Position;
 
 public class ThrowerAi extends RangeAttackerAi {
 
@@ -19,7 +21,7 @@ public class ThrowerAi extends RangeAttackerAi {
     }
 
     @Override
-    protected boolean rangeAttack() {
+    protected boolean rangeAttack(World world) {
         if (ammo <= 0) { // out of ammo
             renewRemainingTurns -= 1;
             if (renewRemainingTurns <= 0) {
@@ -28,11 +30,11 @@ public class ThrowerAi extends RangeAttackerAi {
             return false;
         }
 
-        return super.rangeAttack();
+        return super.rangeAttack(world);
     }
 
-    protected boolean takeRangeAttackAction() {
-        entity.takeAction(new ThrowAction(entity, toThrow, playerPos.getCoords()));
+    protected boolean takeRangeAttackAction(Position throwerPos) {
+        entity.takeAction(new ThrowAction(entity, throwerPos, toThrow, playerPos.getCoords()));
         renewRemainingTurns = renewTurns;
         ammo -= 1;
         return true;

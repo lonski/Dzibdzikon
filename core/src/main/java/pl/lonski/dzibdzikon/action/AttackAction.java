@@ -7,7 +7,6 @@ import pl.lonski.dzibdzikon.effect.DamageEffect;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
-import pl.lonski.dzibdzikon.entity.features.Position;
 
 public class AttackAction implements Action {
 
@@ -23,9 +22,9 @@ public class AttackAction implements Action {
     public AttackAction(Entity attacker, Entity target, boolean withAnimation) {
         this.attacker = attacker;
         this.target = target;
-        var targetCoords = target.<Position>getFeature(FeatureType.POSITION).getCoords();
         if (withAnimation) {
-            this.animation = new AttackAnimationAction(attacker, targetCoords);
+            this.animation =
+                    new AttackAnimationAction(attacker, target.getPosition().getCoords());
         } else {
             this.animation = null;
         }
@@ -45,7 +44,7 @@ public class AttackAction implements Action {
     private void doFight(World world) {
         Attackable attacking = attacker.getFeature(FeatureType.ATTACKABLE);
         Attackable defending = target.getFeature(FeatureType.ATTACKABLE);
-        var targetPos = target.<Position>getFeature(FeatureType.POSITION).getCoords();
+        var targetPos = target.getPosition().getCoords();
 
         var result = attacking.attack(defending);
 

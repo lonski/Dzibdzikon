@@ -1,8 +1,13 @@
 package pl.lonski.dzibdzikon.ui.window;
 
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
+import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
+
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import java.util.List;
+import java.util.Optional;
 import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.action.CastSpellAction;
 import pl.lonski.dzibdzikon.action.targeting.TargetConsumer;
@@ -14,12 +19,6 @@ import pl.lonski.dzibdzikon.entity.features.MagicUser;
 import pl.lonski.dzibdzikon.map.TextureId;
 import pl.lonski.dzibdzikon.screen.Hud;
 import pl.lonski.dzibdzikon.spell.Spell;
-
-import java.util.List;
-import java.util.Optional;
-
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
-import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
 
 public class SpellBookWindow extends WindowAdapter implements DzibdziInput.DzibdziInputListener {
 
@@ -81,7 +80,7 @@ public class SpellBookWindow extends WindowAdapter implements DzibdziInput.Dzibd
 
                     descriptionFontBold.setColor(Color.BLUE);
                     descriptionFontBold.draw(
-                        batch, "Koszt: " + spell.getDescription().cost(), spellDescX, posY - 40);
+                            batch, "Koszt: " + spell.getDescription().cost(), spellDescX, posY - 40);
                 }
             }
 

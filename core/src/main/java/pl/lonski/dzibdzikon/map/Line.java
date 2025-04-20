@@ -1,12 +1,10 @@
 package pl.lonski.dzibdzikon.map;
 
-import pl.lonski.dzibdzikon.Point;
-
 import java.util.ArrayList;
 import java.util.List;
+import pl.lonski.dzibdzikon.Point;
 
 public class Line {
-
 
     public static List<Point> calculate(Point start, Point end) {
         return calculate(start.x(), end.x(), start.y(), end.y());

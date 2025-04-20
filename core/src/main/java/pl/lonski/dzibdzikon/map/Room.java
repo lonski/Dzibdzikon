@@ -1,14 +1,13 @@
 package pl.lonski.dzibdzikon.map;
 
-import pl.lonski.dzibdzikon.DzibdziRandom;
-import pl.lonski.dzibdzikon.Point;
-import pl.lonski.dzibdzikon.entity.Entity;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import pl.lonski.dzibdzikon.DzibdziRandom;
+import pl.lonski.dzibdzikon.Point;
+import pl.lonski.dzibdzikon.entity.Entity;
 
 public class Room {
 
@@ -80,8 +79,7 @@ public class Room {
     }
 
     public Point getRandomPosition() {
-        return new Point(
-                x + (int) (DzibdziRandom.nextDouble() * w), y + (int) (DzibdziRandom.nextDouble() * h));
+        return new Point(x + (int) (DzibdziRandom.nextDouble() * w), y + (int) (DzibdziRandom.nextDouble() * h));
     }
 
     public Point getRandomNonCornerPerimeterPosition() {

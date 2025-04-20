@@ -1,8 +1,15 @@
 package pl.lonski.dzibdzikon.screen;
 
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
+import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import pl.lonski.dzibdzikon.CameraUtils;
 import pl.lonski.dzibdzikon.FontUtils;
 import pl.lonski.dzibdzikon.Point;
@@ -13,14 +20,6 @@ import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.MagicUser;
 import pl.lonski.dzibdzikon.map.TextureId;
 import pl.lonski.dzibdzikon.ui.ProgressBar;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
-import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
 
 public class Hud {
 

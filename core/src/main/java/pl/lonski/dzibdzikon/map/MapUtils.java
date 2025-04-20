@@ -1,7 +1,5 @@
 package pl.lonski.dzibdzikon.map;
 
-import pl.lonski.dzibdzikon.Point;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -11,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Set;
+import pl.lonski.dzibdzikon.Point;
 
 public class MapUtils {
 

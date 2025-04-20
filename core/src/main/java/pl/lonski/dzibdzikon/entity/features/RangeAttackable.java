@@ -1,7 +1,6 @@
 package pl.lonski.dzibdzikon.entity.features;
 
 import pl.lonski.dzibdzikon.DzibdziRandom;
-import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.map.TextureId;
 
 public class RangeAttackable implements EntityFeature {

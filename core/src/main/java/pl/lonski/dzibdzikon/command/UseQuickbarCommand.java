@@ -19,8 +19,7 @@ public class UseQuickbarCommand implements Command {
             case Input.Keys.NUM_3 -> Quickbar.SlotType.NUM_3;
             case Input.Keys.NUM_4 -> Quickbar.SlotType.NUM_4;
             case Input.Keys.NUM_5 -> Quickbar.SlotType.NUM_5;
-            default -> null;
-        };
+            default -> null;};
 
         clearSlotCommand = DzibdziInput.isShiftDown;
 

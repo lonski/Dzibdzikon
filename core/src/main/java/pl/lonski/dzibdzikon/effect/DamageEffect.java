@@ -7,7 +7,6 @@ import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
-import pl.lonski.dzibdzikon.entity.features.Position;
 
 public class DamageEffect implements Effect {
 
@@ -20,7 +19,7 @@ public class DamageEffect implements Effect {
     @Override
     public void apply(Entity target) {
         var attackable = target.<Attackable>getFeature(FeatureType.ATTACKABLE);
-        var pos = target.<Position>getFeature(FeatureType.POSITION);
+        var pos = target.getPosition();
         var newHp = attackable.getHp() - damage;
         attackable.setHp(newHp);
         target.addAnimation(new TextFlowUpAnimation("-" + damage, pos.getCoords(), Color.SCARLET));

@@ -21,7 +21,7 @@ public class MagicUser implements EntityFeature {
     }
 
     public boolean knowsSpell(Spell spell) {
-       return getSpells().stream().anyMatch(s -> s.getName().equals(spell.getName()));
+        return getSpells().stream().anyMatch(s -> s.getName().equals(spell.getName()));
     }
 
     public int getManaMax() {

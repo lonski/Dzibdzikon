@@ -1,3 +1,7 @@
+plugins {
+  id "com.diffplug.spotless" version "7.0.3"
+}
+
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 eclipse.project.name = appName + '-core'
 
@@ -11,4 +15,10 @@ dependencies {
 
 test {
   useJUnitPlatform()
+}
+
+spotless {
+  java {
+    palantirJavaFormat()
+  }
 }

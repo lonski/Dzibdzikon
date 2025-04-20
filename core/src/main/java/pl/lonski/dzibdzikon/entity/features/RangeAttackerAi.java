@@ -25,7 +25,7 @@ public class RangeAttackerAi extends MonsterAi {
                 return;
             }
 
-            if (rangeAttack()) {
+            if (rangeAttack(world)) {
                 return;
             }
         }
@@ -37,7 +37,7 @@ public class RangeAttackerAi extends MonsterAi {
         mindlessWander(world);
     }
 
-    protected boolean rangeAttack() {
+    protected boolean rangeAttack(World world) {
         var rangeAttackable = entity.<RangeAttackable>getFeature(FeatureType.RANGE_ATTACKABLE);
 
         if (rangeAttackable == null) {
@@ -55,10 +55,10 @@ public class RangeAttackerAi extends MonsterAi {
             return false;
         }
 
-        return takeRangeAttackAction();
+        return takeRangeAttackAction(world);
     }
 
-    protected boolean takeRangeAttackAction() {
+    protected boolean takeRangeAttackAction(World world) {
         entity.takeAction(new RangeAttackAction(entity, player));
         return true;
     }

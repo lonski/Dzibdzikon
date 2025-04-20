@@ -13,7 +13,6 @@ import pl.lonski.dzibdzikon.entity.features.LearnSpellUseable;
 import pl.lonski.dzibdzikon.entity.features.MagicUser;
 import pl.lonski.dzibdzikon.entity.features.MonsterAi;
 import pl.lonski.dzibdzikon.entity.features.Pickable;
-import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.entity.features.PtakodrzewoAi;
 import pl.lonski.dzibdzikon.entity.features.RangeAttackable;
 import pl.lonski.dzibdzikon.entity.features.Regeneration;
@@ -21,6 +20,7 @@ import pl.lonski.dzibdzikon.entity.features.RollingRockAi;
 import pl.lonski.dzibdzikon.entity.features.RollingRockAttackable;
 import pl.lonski.dzibdzikon.entity.features.RzucoptakAi;
 import pl.lonski.dzibdzikon.entity.features.SpellEffect;
+import pl.lonski.dzibdzikon.map.Position;
 import pl.lonski.dzibdzikon.map.TextureId;
 import pl.lonski.dzibdzikon.spell.AcidPuddle;
 
@@ -84,10 +84,9 @@ public class EntityFactory {
         ptakodrzewo.setOnAfterDeath((e, world) -> {
             MagicUser magicUser = world.getPlayer().getFeature(FeatureType.MAGIC_USER);
             if (!magicUser.knowsSpell(new AcidPuddle())) {
-                Position pos = e.getFeature(FeatureType.POSITION);
+                Position pos = e.getPosition();
                 Entity acidPuddleSpellbookPage = EntityFactory.createAcidPuddleSpellbookPage();
-                acidPuddleSpellbookPage.addFeature(FeatureType.POSITION, new Position(pos.getCoords()));
-                world.getCurrentLevel().addEntity(acidPuddleSpellbookPage);
+                world.getCurrentLevel().addEntity(acidPuddleSpellbookPage, pos.getCoords());
             }
         });
         return ptakodrzewo;

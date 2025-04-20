@@ -1,10 +1,9 @@
 package pl.lonski.dzibdzikon.screen;
 
-import com.badlogic.gdx.Gdx;
+import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
+
 import com.badlogic.gdx.Screen;
 import pl.lonski.dzibdzikon.Dzibdzikon;
-
-import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
 
 public class DzibdzikonScreen implements Screen {
 
@@ -22,11 +21,13 @@ public class DzibdzikonScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-//        float aspectRatio = (float) width / (float) height;
-//        getGameResources().camera.setToOrtho(false, Gdx.graphics.getWidth() * aspectRatio, Gdx.graphics.getHeight());
-//        getGameResources().camera.viewportWidth = Gdx.graphics.getWidth();
-//        getGameResources().camera.viewportHeight = Gdx.graphics.getHeight();
-//        getGameResources().camera.update();
+        getGameResources().viewport.update(width, height);
+        //        float aspectRatio = (float) width / (float) height;
+        //        getGameResources().camera.setToOrtho(false, Gdx.graphics.getWidth() * aspectRatio,
+        // Gdx.graphics.getHeight());
+        //        getGameResources().camera.viewportWidth = Gdx.graphics.getWidth();
+        //        getGameResources().camera.viewportHeight = Gdx.graphics.getHeight();
+        //        getGameResources().camera.update();
     }
 
     @Override

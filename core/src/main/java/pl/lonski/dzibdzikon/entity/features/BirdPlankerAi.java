@@ -38,7 +38,7 @@ public class BirdPlankerAi extends RangeAttackerAi {
         }
 
         if (seesPlayer(world)) {
-            if (rangeAttack()) {
+            if (rangeAttack(world)) {
                 entity.setGlyph(hasPlank ? TextureId.MOB_BIRD_PLANKER : TextureId.MOB_BIRD_PLANKER_EMPTY);
                 return;
             }
@@ -97,7 +97,7 @@ public class BirdPlankerAi extends RangeAttackerAi {
             return false; // tree is too weak to take plank
         }
 
-        var treePos = tree.<Position>getFeature(FeatureType.POSITION);
+        var treePos = tree.getPosition();
         pathToTree = MapUtils.pathfind(myPos.getCoords(), treePos.getCoords(), p -> !world.getCurrentLevel()
                 .isObstacle(p));
 
@@ -117,12 +117,12 @@ public class BirdPlankerAi extends RangeAttackerAi {
     }
 
     @Override
-    protected boolean rangeAttack() {
+    protected boolean rangeAttack(World world) {
         if (!hasPlank) {
             return false;
         }
 
-        if (super.rangeAttack()) {
+        if (super.rangeAttack(world)) {
             hasPlank = false;
             return true;
         }
@@ -131,7 +131,7 @@ public class BirdPlankerAi extends RangeAttackerAi {
     }
 
     @Override
-    protected boolean takeRangeAttackAction() {
+    protected boolean takeRangeAttackAction(World world) {
         entity.takeAction(new ChainAction(List.of(new RangeAttackAction(entity, player), new CustomAction(w -> {
             if (DzibdziRandom.nextDouble() > 0.75) {
                 player.applyEffect(new KnockDownEffect(1));

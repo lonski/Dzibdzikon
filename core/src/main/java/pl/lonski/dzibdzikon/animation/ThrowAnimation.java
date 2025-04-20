@@ -1,15 +1,14 @@
 package pl.lonski.dzibdzikon.animation;
 
+import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import java.util.List;
 import pl.lonski.dzibdzikon.Debouncer;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.map.Line;
 import pl.lonski.dzibdzikon.map.TextureId;
-
-import java.util.List;
-
-import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
 
 public class ThrowAnimation extends BaseAnimation {
 
@@ -65,17 +64,19 @@ public class ThrowAnimation extends BaseAnimation {
 
         float originX = texture.getRegionWidth() / 2f;
         float originY = texture.getRegionHeight() / 2f;
-        getGameResources().batch.draw(
-            texture,
-            currentPosPix.x() - originX,
-            currentPosPix.y() - originY,
-            originX,
-            originY,
-            texture.getRegionWidth(),
-            texture.getRegionHeight(),
-            1.0f,
-            1.0f,
-            rotation);
+        getGameResources()
+                .batch
+                .draw(
+                        texture,
+                        currentPosPix.x() - originX,
+                        currentPosPix.y() - originY,
+                        originX,
+                        originY,
+                        texture.getRegionWidth(),
+                        texture.getRegionHeight(),
+                        1.0f,
+                        1.0f,
+                        rotation);
     }
 
     @Override

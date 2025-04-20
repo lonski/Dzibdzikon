@@ -1,6 +1,5 @@
 package pl.lonski.dzibdzikon.entity.features;
 
-
 import pl.lonski.dzibdzikon.DzibdziRandom;
 
 public class Attackable implements EntityFeature {
@@ -50,6 +49,5 @@ public class Attackable implements EntityFeature {
         return new FightResult(false, 0);
     }
 
-    public record FightResult(boolean hit, int damage) {
-    }
+    public record FightResult(boolean hit, int damage) {}
 }

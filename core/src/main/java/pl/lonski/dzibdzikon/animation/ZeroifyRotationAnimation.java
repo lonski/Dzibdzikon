@@ -2,8 +2,7 @@ package pl.lonski.dzibdzikon.animation;
 
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.entity.Entity;
-import pl.lonski.dzibdzikon.entity.FeatureType;
-import pl.lonski.dzibdzikon.entity.features.Position;
+import pl.lonski.dzibdzikon.map.Position;
 
 public class ZeroifyRotationAnimation extends BaseAnimation {
 
@@ -15,7 +14,7 @@ public class ZeroifyRotationAnimation extends BaseAnimation {
     private int updatesCounter = 0;
 
     public ZeroifyRotationAnimation(Entity entity) {
-        this.entityPos = entity.getFeature(FeatureType.POSITION);
+        this.entityPos = entity.getPosition();
     }
 
     @Override

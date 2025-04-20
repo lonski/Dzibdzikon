@@ -3,11 +3,9 @@ package pl.lonski.dzibdzikon.command;
 import com.badlogic.gdx.Input;
 import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.World;
-import pl.lonski.dzibdzikon.action.targeting.DirectionTargeter;
 import pl.lonski.dzibdzikon.action.CloseAction;
-import pl.lonski.dzibdzikon.entity.FeatureType;
+import pl.lonski.dzibdzikon.action.targeting.DirectionTargeter;
 import pl.lonski.dzibdzikon.entity.Player;
-import pl.lonski.dzibdzikon.entity.features.Position;
 
 public class CloseCommand implements Command {
     @Override
@@ -18,9 +16,7 @@ public class CloseCommand implements Command {
     @Override
     public void execute(Player player, World world) {
         player.takeAction(new DirectionTargeter(dir -> {
-            var openablePos = player.<Position>getFeature(FeatureType.POSITION)
-                    .getCoords()
-                    .add(dir);
+            var openablePos = player.getPosition().getCoords().add(dir);
 
             return new CloseAction(player, openablePos);
         }));

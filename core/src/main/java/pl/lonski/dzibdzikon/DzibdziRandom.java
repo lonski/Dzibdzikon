@@ -4,7 +4,7 @@ import java.security.SecureRandom;
 
 public class DzibdziRandom {
 
-    private final static SecureRandom RANDOM = new SecureRandom();
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     public static int nextInt(int low, int high) {
         return RANDOM.nextInt(high - low) + low;

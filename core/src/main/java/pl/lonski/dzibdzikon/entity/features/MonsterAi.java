@@ -1,5 +1,8 @@
 package pl.lonski.dzibdzikon.entity.features;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import pl.lonski.dzibdzikon.DzibdziRandom;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
@@ -8,10 +11,7 @@ import pl.lonski.dzibdzikon.action.MoveAction;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.map.MapUtils;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import pl.lonski.dzibdzikon.map.Position;
 
 public class MonsterAi implements EntityFeature {
 
@@ -59,9 +59,9 @@ public class MonsterAi implements EntityFeature {
             return false;
         }
 
-        myPos = entity.getFeature(FeatureType.POSITION);
+        myPos = entity.getPosition();
         player = world.getPlayer();
-        playerPos = player.getFeature(FeatureType.POSITION);
+        playerPos = player.getPosition();
 
         if (path != null && path.isEmpty()) {
             path = null;
@@ -90,13 +90,13 @@ public class MonsterAi implements EntityFeature {
 
             if (path == null || (seesPlayer && !Objects.equals(lastSeenPlayerPos, playerPos.getCoords()))) {
                 path = MapUtils.pathfind(myPos.getCoords(), playerPos.getCoords(), p -> !world.getCurrentLevel()
-                    .isObstacle(p));
+                        .isObstacle(p));
             }
 
             if (path.isEmpty() && seesPlayer) {
                 // try to find path without considering entites
                 path = MapUtils.pathfind(myPos.getCoords(), playerPos.getCoords(), p -> !world.getCurrentLevel()
-                    .isObstacle(p, false));
+                        .isObstacle(p, false));
             }
 
             if (!path.isEmpty()) {
@@ -119,7 +119,7 @@ public class MonsterAi implements EntityFeature {
     }
 
     protected void mindlessWander(World world) {
-        var pos = entity.<Position>getFeature(FeatureType.POSITION);
+        var pos = entity.getPosition();
 
         // wander
         var dx = DzibdziRandom.nextInt(-1, 2);

@@ -1,20 +1,20 @@
 package pl.lonski.dzibdzikon.screen;
 
 import static com.badlogic.gdx.graphics.glutils.HdpiUtils.glViewport;
+import static pl.lonski.dzibdzikon.Dzibdzikon.SHOW_WHOLE_LEVEL;
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
+import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
+import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.utils.ScreenUtils;
 import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.animation.Animation;
-import pl.lonski.dzibdzikon.entity.FeatureType;
-import pl.lonski.dzibdzikon.entity.features.Position;
-
-import static pl.lonski.dzibdzikon.Dzibdzikon.SHOW_WHOLE_LEVEL;
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_HEIGHT;
-import static pl.lonski.dzibdzikon.Dzibdzikon.TILE_WIDTH;
-import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
 
 public class GameScreen extends DzibdzikonScreen {
 
@@ -26,7 +26,8 @@ public class GameScreen extends DzibdzikonScreen {
         world = new World();
         hud = new Hud();
         getGameResources().windowManager.init(world);
-        Gdx.input.setInputProcessor(new DzibdziInput.InputHandler());
+        Gdx.input.setInputProcessor(new InputMultiplexer(
+                new GestureDetector(new DzibdziInput.GestureHandler()), new DzibdziInput.InputHandler()));
     }
 
     private void update(float delta) {
@@ -109,16 +110,16 @@ public class GameScreen extends DzibdzikonScreen {
             }
         }));
 
-        world.getCurrentLevel().getEntities().stream()
-                .filter(e -> e.getFeature(FeatureType.POSITION) != null)
-                .filter(world::visible)
+        world.getCurrentLevel().getEntitiesWithPosition().stream()
+                .filter(e -> world.visible(e.getKey()))
                 .sorted((e1, e2) -> {
-                    var p1 = e1.<Position>getFeature(FeatureType.POSITION);
-                    var p2 = e2.<Position>getFeature(FeatureType.POSITION);
+                    var p1 = e1.getValue();
+                    var p2 = e2.getValue();
                     return Integer.compare(p1.getzLevel(), p2.getzLevel());
                 })
-                .forEach(entity -> {
-                    var pos = entity.<Position>getFeature(FeatureType.POSITION);
+                .forEach(e -> {
+                    var pos = e.getValue();
+                    var entity = e.getKey();
                     var tex = textures.get(entity.getGlyph());
                     float originX = tex.getRegionWidth() / 2f;
                     float originY = tex.getRegionHeight() / 2f;

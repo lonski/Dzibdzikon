@@ -2,7 +2,6 @@ package pl.lonski.dzibdzikon.entity;
 
 public enum FeatureType {
     PLAYER,
-    POSITION,
     FOV,
     ATTACKABLE,
     RANGE_ATTACKABLE,

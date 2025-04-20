@@ -1,16 +1,13 @@
 package pl.lonski.dzibdzikon.action.targeting;
 
 import com.badlogic.gdx.Input;
+import java.util.List;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.PositionUtils;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.Action;
-import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
-import pl.lonski.dzibdzikon.entity.features.Position;
 import pl.lonski.dzibdzikon.screen.Hud;
-
-import java.util.List;
 
 public class CoordsTargeter implements Action {
 
@@ -24,7 +21,7 @@ public class CoordsTargeter implements Action {
     public CoordsTargeter(Player player, TargetConsumer targetConsumer) {
         this.targetConsumer = targetConsumer;
         this.input = player.getInputListener();
-        this.currentTarget = player.<Position>getFeature(FeatureType.POSITION).getCoords();
+        this.currentTarget = player.getPosition().getCoords();
     }
 
     @Override

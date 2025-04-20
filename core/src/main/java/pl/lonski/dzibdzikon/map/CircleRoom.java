@@ -1,12 +1,10 @@
 package pl.lonski.dzibdzikon.map;
 
-import pl.lonski.dzibdzikon.DzibdziRandom;
-import pl.lonski.dzibdzikon.Dzibdzikon;
-import pl.lonski.dzibdzikon.Point;
-import pl.lonski.dzibdzikon.PositionUtils;
-
 import java.util.ArrayList;
 import java.util.Comparator;
+import pl.lonski.dzibdzikon.DzibdziRandom;
+import pl.lonski.dzibdzikon.Point;
+import pl.lonski.dzibdzikon.PositionUtils;
 
 public class CircleRoom extends Room {
 

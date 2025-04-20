@@ -1,9 +1,8 @@
 package pl.lonski.dzibdzikon.ui.window;
 
 import com.badlogic.gdx.graphics.Color;
-import pl.lonski.dzibdzikon.Point;
-
 import java.util.function.Consumer;
+import pl.lonski.dzibdzikon.Point;
 
 public interface Window {
 

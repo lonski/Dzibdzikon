@@ -35,7 +35,7 @@ public class UseAction implements Action {
             return;
         }
 
-        useable.use(user, target);
+        useable.use(user, target, world);
         if (user instanceof Player) {
             Hud.addMessage("Używasz " + useableEntity.getName().toLowerCase());
         }

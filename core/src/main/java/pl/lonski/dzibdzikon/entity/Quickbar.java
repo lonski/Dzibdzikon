@@ -1,16 +1,15 @@
 package pl.lonski.dzibdzikon.entity;
 
-import java.util.stream.Collectors;
-import pl.lonski.dzibdzikon.action.Action;
-import pl.lonski.dzibdzikon.action.ChainAction;
-import pl.lonski.dzibdzikon.action.CustomAction;
-import pl.lonski.dzibdzikon.map.TextureId;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import pl.lonski.dzibdzikon.action.Action;
+import pl.lonski.dzibdzikon.action.ChainAction;
+import pl.lonski.dzibdzikon.action.CustomAction;
+import pl.lonski.dzibdzikon.map.TextureId;
 
 public class Quickbar {
 

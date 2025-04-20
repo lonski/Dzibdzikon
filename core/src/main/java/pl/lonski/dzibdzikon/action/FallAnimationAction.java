@@ -2,14 +2,14 @@ package pl.lonski.dzibdzikon.action;
 
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.animation.FallAnimation;
-import pl.lonski.dzibdzikon.entity.Entity;
+import pl.lonski.dzibdzikon.map.Position;
 
 public class FallAnimationAction implements Action {
 
-    private FallAnimation animation;
+    private final FallAnimation animation;
 
-    public FallAnimationAction(Entity entity) {
-        this.animation = new FallAnimation(entity);
+    public FallAnimationAction(Position entityPos) {
+        this.animation = new FallAnimation(entityPos);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package pl.lonski.dzibdzikon.entity.features;
 
 import com.badlogic.gdx.graphics.Color;
+import java.util.List;
+import java.util.stream.Collectors;
 import pl.lonski.dzibdzikon.DzibdziRandom;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.MoveAction;
@@ -9,9 +11,6 @@ import pl.lonski.dzibdzikon.entity.EntityFactory;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.map.MapUtils;
 import pl.lonski.dzibdzikon.screen.Hud;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class PtakodrzewoAi extends MonsterAi {
 
@@ -81,8 +80,7 @@ public class PtakodrzewoAi extends MonsterAi {
                 .filter(p -> !world.getCurrentLevel().isObstacle(p, true))
                 .collect(Collectors.toList());
         var birdPos = possiblePositions.get(DzibdziRandom.nextInt(possiblePositions.size()));
-        spawnedBird.addFeature(FeatureType.POSITION, new Position(myPos.getCoords()));
-        world.getCurrentLevel().addEntity(spawnedBird);
+        world.getCurrentLevel().addEntity(spawnedBird, myPos.getCoords());
 
         Hud.addMessage("Z drzewa wylatuje ptak, aby go bronić!", Color.ORANGE);
         entity.takeAction(new MoveAction(spawnedBird, birdPos));

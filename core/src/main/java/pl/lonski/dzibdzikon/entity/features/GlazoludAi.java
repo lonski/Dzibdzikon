@@ -2,14 +2,12 @@ package pl.lonski.dzibdzikon.entity.features;
 
 import com.badlogic.gdx.graphics.Color;
 import pl.lonski.dzibdzikon.DzibdziRandom;
-import pl.lonski.dzibdzikon.Dzibdzikon;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.MoveAction;
 import pl.lonski.dzibdzikon.animation.RollingAnimation;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.EntityFactory;
-import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.map.Line;
 import pl.lonski.dzibdzikon.screen.Hud;
 
@@ -65,8 +63,8 @@ public class GlazoludAi extends MonsterAi {
         var direction = new Point(line.get(1).sub(line.get(0)));
         var rock = EntityFactory.createRollingRock(direction);
         rock.addAnimation(new RollingAnimation(direction.x() < 0 ? 10 : -10, rock));
-        rock.addFeature(FeatureType.POSITION, new Position(myPos.getCoords(), 0, 200));
-        world.getCurrentLevel().addEntity(rock);
+        world.getCurrentLevel().addEntity(rock, myPos.getCoords());
+        rock.getPosition().setzLevel(200);
 
         Hud.addMessage("Głazolud rzuca ogromny głaz!", Color.ORANGE);
 

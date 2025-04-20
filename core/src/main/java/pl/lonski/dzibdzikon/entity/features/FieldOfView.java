@@ -31,7 +31,7 @@ public class FieldOfView implements EntityFeature {
     @Override
     public void update(float delta, World world) {
 
-        var pos = entity.<Position>getFeature(FeatureType.POSITION);
+        var pos = entity.getPosition();
 
         var x1 = pos.getCoords().x();
         var y1 = pos.getCoords().y();
