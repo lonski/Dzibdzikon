@@ -9,7 +9,8 @@ buildscript {
     maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
   }
   dependencies {
-    classpath "com.android.tools.build:gradle:8.1.4"
+    // Android Gradle plugin — only needed when building the android subproject
+    // classpath "com.android.tools.build:gradle:8.1.4"
   }
 }
 
@@ -26,7 +27,7 @@ allprojects {
   }
 }
 
-configure(subprojects - project(':android')) {
+configure(subprojects.findAll { it.name != 'android' && it.name != 'lwjgl3' }) {
   apply plugin: 'java-library'
   sourceCompatibility = 17
 
