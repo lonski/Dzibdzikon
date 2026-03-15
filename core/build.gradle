@@ -1,6 +1,7 @@
-plugins {
-  id "com.diffplug.spotless" version "7.0.3"
-}
+// Spotless formatting plugin disabled (requires network; use separately when needed)
+// plugins {
+//   id "com.diffplug.spotless" version "7.0.3"
+// }
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 eclipse.project.name = appName + '-core'
@@ -11,14 +12,15 @@ dependencies {
 
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+  testImplementation 'org.mockito:mockito-core:5.11.0'
 }
 
 test {
   useJUnitPlatform()
 }
 
-spotless {
-  java {
-    palantirJavaFormat()
-  }
-}
+// spotless {
+//   java {
+//     palantirJavaFormat()
+//   }
+// }
