@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import pl.lonski.dzibdzikon.DzibdziRandom;
 import pl.lonski.dzibdzikon.Point;
 
 public class TileGrid {
@@ -51,7 +52,7 @@ public class TileGrid {
     }
 
     public Room getRandomRoom() {
-        return getRooms().get((int) (Math.random() * rooms.size()));
+        return getRooms().get(DzibdziRandom.nextInt(getRooms().size()));
     }
 
     public void addRoom(Room room) {

@@ -1,6 +1,5 @@
 package pl.lonski.dzibdzikon;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -204,12 +203,23 @@ public class LevelFactory {
 
             // put doors
             var map = level.getMap();
-            Collections.shuffle(map.getRooms());
-            int minDoors = Math.round(map.getRooms().size() * minDoorPercentage);
-            int maxDoors = Math.round(map.getRooms().size() * maxDoorPercentage);
-            for (Room room : map.getRooms().subList(0, DzibdziRandom.nextInt(minDoors, maxDoors + 1))) {
+            var shuffledRooms = map.getRooms();
+            for (int i = shuffledRooms.size() - 1; i > 0; i--) {
+                int j = DzibdziRandom.nextInt(i + 1);
+                var tmp = shuffledRooms.get(i);
+                shuffledRooms.set(i, shuffledRooms.get(j));
+                shuffledRooms.set(j, tmp);
+            }
+            int minDoors = Math.round(shuffledRooms.size() * minDoorPercentage);
+            int maxDoors = Math.round(shuffledRooms.size() * maxDoorPercentage);
+            for (Room room : shuffledRooms.subList(0, DzibdziRandom.nextInt(minDoors, maxDoors + 1))) {
                 var possibleDoors = findPossibleDoorPositions(level, room);
-                Collections.shuffle(possibleDoors);
+                for (int i = possibleDoors.size() - 1; i > 0; i--) {
+                    int j = DzibdziRandom.nextInt(i + 1);
+                    var tmp = possibleDoors.get(i);
+                    possibleDoors.set(i, possibleDoors.get(j));
+                    possibleDoors.set(j, tmp);
+                }
                 if (!possibleDoors.isEmpty()) {
                     var doorInRoom = DzibdziRandom.nextInt(1, possibleDoors.size() + 1);
                     for (int i = 0; i < doorInRoom; i++) {

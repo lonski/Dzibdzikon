@@ -1,7 +1,6 @@
 package pl.lonski.dzibdzikon.map;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import pl.lonski.dzibdzikon.DzibdziRandom;
 import pl.lonski.dzibdzikon.Point;
@@ -98,7 +97,12 @@ public class RoomMapBuilder {
         }
 
         var unconnectedRooms = new ArrayList<>(map.getRooms());
-        Collections.shuffle(unconnectedRooms);
+        for (int i = unconnectedRooms.size() - 1; i > 0; i--) {
+            int j = DzibdziRandom.nextInt(i + 1);
+            var tmp = unconnectedRooms.get(i);
+            unconnectedRooms.set(i, unconnectedRooms.get(j));
+            unconnectedRooms.set(j, tmp);
+        }
         var currentRoom = unconnectedRooms.remove(0);
         while (!unconnectedRooms.isEmpty()) {
             // find closest room

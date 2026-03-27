@@ -23,7 +23,7 @@ public class DamageEffect implements Effect {
         var newHp = attackable.getHp() - damage;
         attackable.setHp(newHp);
         target.addAnimation(new TextFlowUpAnimation("-" + damage, pos.getCoords(), Color.SCARLET));
-        if (attackable.getHp() <= 0 && !(target instanceof Player)) {
+        if (attackable.getHp() <= 0 && !(target instanceof Player) && target.getCurrentAction() == null) {
             target.takeAction(new DieAction(target));
         }
     }

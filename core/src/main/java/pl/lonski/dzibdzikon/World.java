@@ -47,12 +47,10 @@ public class World {
 
     public void update(float delta) {
         // update all entities
-        while (currentLevel.getEntities().indexOf(currentEntity)
-                < currentLevel.getEntities().size()) {
-
-            //            // store start pos
-            //            var entityPos = currentEntity.<Position>getFeature(FeatureType.POSITION);
-            //            var startCoords = entityPos.getCoords();
+        var entities = currentLevel.getEntities();
+        int currentIdx = entities.indexOf(currentEntity);
+        while (currentIdx >= 0 && currentIdx < entities.size()) {
+            currentEntity = entities.get(currentIdx);
 
             // take new turn
             if (currentEntity.getCurrentAction() == null) {
@@ -60,7 +58,7 @@ public class World {
                 // cant take turn because has no energy, recharge energy and proceed to next entity
                 if (!currentEntity.hasEnergyForAction()) {
                     currentEntity.rechargeEnergy();
-                    proceedToNextEntity();
+                    currentIdx = proceedToNextEntity(currentIdx);
                     continue;
                 }
 
@@ -99,7 +97,7 @@ public class World {
 
             // check if entity can take another action, if not proceed to next entity
             if (!currentEntity.hasEnergyForAction()) {
-                if (isLastEntity()) {
+                if (isLastEntity(currentIdx, entities.size())) {
                     turn++;
                     // update tile effects
                     var remainedTileEffects = new HashMap<Point, List<TileEffect>>();
@@ -114,13 +112,7 @@ public class World {
                     });
                     currentLevel.setTileEffects(remainedTileEffects);
                 }
-
-                //                // update entity pos map
-                //                if (!entityPos.getCoords().equals(startCoords)) {
-                //                    currentLevel.updateEntityPos(currentEntity, startCoords,
-                // entityPos.getCoords());
-                //                }
-                proceedToNextEntity();
+                currentIdx = proceedToNextEntity(currentIdx);
             }
         }
 
@@ -137,21 +129,27 @@ public class World {
         });
     }
 
-    private void proceedToNextEntity() {
-        // calculate index to handle entities removed during update
-        var currentEntityIdx = currentLevel.getEntities().indexOf(currentEntity);
-        var nextEntityIdx = (currentEntityIdx + 1) % currentLevel.getEntities().size();
+    private int proceedToNextEntity(int currentIdx) {
+        var entities = currentLevel.getEntities();
+        // If current entity was removed during its turn, the next entity has slid into currentIdx,
+        // so we do not advance. Otherwise we step forward by one, wrapping around.
+        boolean currentEntityStillPresent = currentIdx < entities.size()
+                && entities.get(currentIdx) == currentEntity;
+        int nextIdx = currentEntityStillPresent
+                ? (currentIdx + 1) % entities.size()
+                : currentIdx % entities.size();
 
         // set next entity as current
-        currentEntity = currentLevel.getEntities().get(nextEntityIdx);
+        currentEntity = entities.get(nextIdx);
 
         // notify entity new turn started to eg. tick entity effects
         currentEntity.onTurnStarted(this);
+
+        return nextIdx;
     }
 
-    private boolean isLastEntity() {
-        var currentEntityIdx = currentLevel.getEntities().indexOf(currentEntity);
-        return currentEntityIdx == currentLevel.getEntities().size() - 1;
+    private boolean isLastEntity(int currentIdx, int size) {
+        return currentIdx == size - 1;
     }
 
     public void nextLevel() {

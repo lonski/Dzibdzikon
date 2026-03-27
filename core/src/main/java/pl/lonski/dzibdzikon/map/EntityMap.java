@@ -14,9 +14,10 @@ public class EntityMap {
 
     private final List<Entity> entities = new ArrayList<>();
     private final HashMap<Entity, Position> entityMap;
-    private final HashSet[][] tileMap;
+    private final HashSet<Entity>[][] tileMap;
     private final boolean[][] openableMap;
 
+    @SuppressWarnings("unchecked")
     public EntityMap(int width, int height) {
         entityMap = new HashMap<>();
         tileMap = new HashSet[width][height];

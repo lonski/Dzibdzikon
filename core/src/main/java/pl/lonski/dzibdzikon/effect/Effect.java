@@ -9,6 +9,10 @@ public interface Effect {
         return true;
     }
 
+    default String getId() {
+        return getClass().getSimpleName();
+    }
+
     void apply(Entity target);
 
     boolean isActive();

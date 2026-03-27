@@ -67,7 +67,7 @@ public class MonsterAi implements EntityFeature {
             path = null;
         }
 
-        if (lastSeenPlayerPos != null && lastSeenPlayerPos == myPos.getCoords()) {
+        if (lastSeenPlayerPos != null && lastSeenPlayerPos.equals(myPos.getCoords())) {
             lastSeenPlayerPos = null;
         }
 

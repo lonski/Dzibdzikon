@@ -57,7 +57,5 @@ public class FieldOfView implements EntityFeature {
                 }
             }
         }
-
-        var x = 1;
     }
 }

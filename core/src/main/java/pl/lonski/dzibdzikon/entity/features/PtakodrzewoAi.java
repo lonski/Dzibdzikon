@@ -79,6 +79,7 @@ public class PtakodrzewoAi extends MonsterAi {
         var possiblePositions = MapUtils.getNeighbourPositions(myPos.getCoords()).stream()
                 .filter(p -> !world.getCurrentLevel().isObstacle(p, true))
                 .collect(Collectors.toList());
+        if (possiblePositions.isEmpty()) return;
         var birdPos = possiblePositions.get(DzibdziRandom.nextInt(possiblePositions.size()));
         world.getCurrentLevel().addEntity(spawnedBird, myPos.getCoords());
 

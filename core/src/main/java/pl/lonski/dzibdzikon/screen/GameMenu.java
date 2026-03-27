@@ -37,7 +37,6 @@ public class GameMenu extends DzibdzikonScreen {
 
         // input
         if (Gdx.input.isTouched()) {
-            System.out.println("X: " + Gdx.input.getX() + " Y:" + Gdx.input.getY());
             dzibdzikon.startNewGame();
         }
 

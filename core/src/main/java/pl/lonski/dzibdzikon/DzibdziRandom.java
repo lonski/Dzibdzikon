@@ -1,24 +1,22 @@
 package pl.lonski.dzibdzikon;
 
-import java.security.SecureRandom;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class DzibdziRandom {
 
-    private static final SecureRandom RANDOM = new SecureRandom();
-
     public static int nextInt(int low, int high) {
-        return RANDOM.nextInt(high - low) + low;
+        return ThreadLocalRandom.current().nextInt(high - low) + low;
     }
 
     public static int nextInt(int bound) {
-        return RANDOM.nextInt(bound);
+        return ThreadLocalRandom.current().nextInt(bound);
     }
 
     public static boolean nextBoolean() {
-        return RANDOM.nextBoolean();
+        return ThreadLocalRandom.current().nextBoolean();
     }
 
     public static double nextDouble() {
-        return RANDOM.nextDouble();
+        return ThreadLocalRandom.current().nextDouble();
     }
 }

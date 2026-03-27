@@ -22,7 +22,7 @@ public class Regeneration implements EntityFeature {
     public Regeneration(int hpRegenRateTurns, int mpRegenRateTurns, Entity entity) {
         this.entity = entity;
         this.hpRegenRateTurns = hpRegenRateTurns;
-        this.mpRegenRateTurns = hpRegenRateTurns;
+        this.mpRegenRateTurns = mpRegenRateTurns;
         this.hpRegenCooldown = hpRegenRateTurns;
         this.mpRegenCooldown = mpRegenRateTurns;
     }

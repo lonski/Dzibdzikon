@@ -79,19 +79,6 @@ public class Player extends Entity {
         commands.forEach(c -> c.update(delta));
 
         if (!input.empty()) {
-            //            if (input.key.click() != null) {
-            //                var click = input.key.click();
-            //                var center = click.toCoords();
-            //                if (sim == null || !sim.hasMoreSteps()) {
-            //                    sim = new ExplosionSimulator(center, 3, world);
-            //                }
-            //
-            //                Hud.debugHighlight.clear();
-            //                Hud.debugHighlight.addAll(sim.step());
-            //                input.reset();
-            //                return;
-            //            }
-
             commands.stream()
                     .filter(c -> c.accept(input.key))
                     .findFirst()

@@ -47,16 +47,11 @@ public class Entity {
         if (!effect.stackable()) {
 
             activeEffects.stream()
-                    .filter(e -> e.getClass()
-                            .getSimpleName()
-                            .equals(effect.getClass().getSimpleName()))
+                    .filter(e -> e.getId().equals(effect.getId()))
                     .findFirst()
                     .ifPresent(e -> {
                         e.remove(this);
                         activeEffects.remove(e);
-                        System.out.println(
-                                "removed not stackable effect " + e.getClass().getSimpleName());
-                        System.out.println(activeEffects);
                     });
         }
 
@@ -74,13 +69,10 @@ public class Entity {
         }
 
         var remainedEffects = new ArrayList<Effect>();
-        System.out.println("### effects on " + name + " ###");
         for (Effect effect : activeEffects) {
-            System.out.println(effect.getClass().getSimpleName());
             effect.takeTurn(world, this);
             if (!effect.isActive()) {
                 effect.remove(this);
-                System.out.println("    Effect removed");
             } else {
                 remainedEffects.add(effect);
             }
@@ -190,7 +182,6 @@ public class Entity {
     public void useEnergyForAction() {
         energy -= 1.0;
         if (energy < 0.0) {
-            System.out.println("Energy dropped below 0.0: " + energy + " for " + name);
             energy = 0.0;
         }
     }

@@ -11,6 +11,7 @@ import pl.lonski.dzibdzikon.action.AttackAnimationAction;
 import pl.lonski.dzibdzikon.action.ChainAction;
 import pl.lonski.dzibdzikon.action.CustomAction;
 import pl.lonski.dzibdzikon.action.MoveAction;
+import pl.lonski.dzibdzikon.action.NoOpAction;
 import pl.lonski.dzibdzikon.action.RemoveEntityAction;
 import pl.lonski.dzibdzikon.entity.Entity;
 import pl.lonski.dzibdzikon.entity.FeatureType;
@@ -97,6 +98,6 @@ public class RollingRockAi extends MonsterAi {
             }
         }
 
-        return null;
+        return new NoOpAction();
     }
 }
