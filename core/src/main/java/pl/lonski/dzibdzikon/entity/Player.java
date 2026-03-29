@@ -78,9 +78,10 @@ public class Player extends Entity {
 
         commands.forEach(c -> c.update(delta));
 
-        if (!input.empty()) {
+        DzibdziInput.DzibdziKey currentKey = input.getKey();
+        if (currentKey != null) {
             commands.stream()
-                    .filter(c -> c.accept(input.key))
+                    .filter(c -> c.accept(currentKey))
                     .findFirst()
                     .ifPresent(command -> command.execute(this, world));
         }
