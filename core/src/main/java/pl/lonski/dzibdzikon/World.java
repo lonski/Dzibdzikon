@@ -96,8 +96,10 @@ public class World {
             currentEntity.clearAction();
 
             // check if entity can take another action, if not proceed to next entity
-            if (!currentEntity.hasEnergyForAction()) {
-                if (isLastEntity(currentIdx, entities.size())) {
+            // also proceed if entity removed itself during the action (e.g. rock hitting wall)
+            boolean entityRemoved = !entities.contains(currentEntity);
+            if (!currentEntity.hasEnergyForAction() || entityRemoved) {
+                if (!entityRemoved && isLastEntity(currentIdx, entities.size())) {
                     turn++;
                     // update tile effects
                     var remainedTileEffects = new HashMap<Point, List<TileEffect>>();
