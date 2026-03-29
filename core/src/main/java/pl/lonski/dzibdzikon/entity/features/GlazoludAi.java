@@ -68,7 +68,7 @@ public class GlazoludAi extends MonsterAi {
 
         Hud.addMessage("Głazolud rzuca ogromny głaz!", Color.ORANGE);
 
-        entity.takeAction(new MoveAction(rock, rockPos));
+        rock.takeAction(new MoveAction(rock, rockPos));
         rockRollCooldown = DzibdziRandom.nextInt(8, 16);
 
         return true;

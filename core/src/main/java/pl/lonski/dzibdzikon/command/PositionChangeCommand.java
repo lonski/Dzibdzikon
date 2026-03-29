@@ -23,9 +23,10 @@ public class PositionChangeCommand implements Command {
     public boolean accept(DzibdziInput.DzibdziKey key) {
         var pos = player.getPosition();
         dPos = PositionUtils.getPositionChange(pos.getCoords(), key);
-        if (!dPos.isZero()) {
-            player.getInputListener().resetClick();
-        }
+        // Always clear touch input — even when dPos is zero (e.g. player tapped their own tile).
+        // If not cleared, the key stays stuck after the rock pushes the player onto the tapped tile,
+        // causing dd=(0,0) every turn and permanently freezing input.
+        player.getInputListener().resetClick();
         return !dPos.isZero();
     }
 

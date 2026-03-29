@@ -62,7 +62,7 @@ public class MapUtils {
 
         while (!frontier.isEmpty()) {
             Point current = frontier.remove().pos();
-            if (current == end) {
+            if (current.equals(end)) {
                 break;
             }
             for (var next : getNeighbourPositions(current, allowDiagonal)) {
