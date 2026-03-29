@@ -6,6 +6,7 @@ import pl.lonski.dzibdzikon.PositionUtils;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.AttackAction;
 import pl.lonski.dzibdzikon.action.MoveAction;
+import pl.lonski.dzibdzikon.action.NoOpAction;
 import pl.lonski.dzibdzikon.action.OpenAction;
 import pl.lonski.dzibdzikon.action.PickupAction;
 import pl.lonski.dzibdzikon.entity.FeatureType;
@@ -45,7 +46,9 @@ public class PositionChangeCommand implements Command {
                 pl.lonski.dzibdzikon.screen.Hud.addMessage("Schodzenie w dół...");
                 world.nextLevel();
                 player.getInputListener().reset();
+                return;
             }
+            player.takeAction(new NoOpAction());
             return;
         }
 
