@@ -28,6 +28,7 @@ public class CoordsTargeter implements Action {
     public void update(float delta, World world) {
         if (consumerAction != null) {
             Hud.setActionMessage("");
+            Hud.showTargetingButtons(false);
             consumerAction.update(delta, world);
             done = consumerAction.isDone();
             succeeded = consumerAction.succeeded();
@@ -40,22 +41,35 @@ public class CoordsTargeter implements Action {
 
         Hud.setTargets(List.of(currentTarget));
         Hud.setActionMessage("Wybierz cel..");
+        Hud.showTargetingButtons(true);
         if (!input.empty()) {
+            var key = input.getKey();
 
-            if (input.getKey().isEnterKey()) {
+            if (key.isEnterKey()) {
+                Hud.showTargetingButtons(false);
                 consumerAction = targetConsumer.accept(currentTarget);
                 done = consumerAction == null || consumerAction.isDone();
                 succeeded = consumerAction != null && consumerAction.succeeded();
                 Hud.setTargets(List.of());
-            } else if (input.getKey().keyCode() == Input.Keys.ESCAPE) {
+            } else if (key.keyCode() == Input.Keys.ESCAPE) {
                 Hud.setActionMessage("");
                 Hud.setTargets(List.of());
+                Hud.showTargetingButtons(false);
                 consumerAction = null;
                 done = true;
                 succeeded = false;
-                Hud.setTargets(List.of());
+            } else if (key.touchCoords() != null) {
+                // Direct tap sets the target position
+                var tapped = key.touchCoords();
+                if (world.getCurrentLevel().getVisible().contains(tapped)
+                        && !world.getCurrentLevel().isObstacle(tapped, false)) {
+                    currentTarget = tapped;
+                    Hud.setTargets(List.of(currentTarget));
+                }
+                input.resetClick();
+                return;
             } else {
-                var dpos = PositionUtils.getPositionChange(currentTarget, input.getKey());
+                var dpos = PositionUtils.getPositionChange(currentTarget, key);
                 var newTarget = currentTarget.add(dpos);
                 if (world.getCurrentLevel().getVisible().contains(newTarget)
                         && !world.getCurrentLevel().isObstacle(newTarget, false)) {

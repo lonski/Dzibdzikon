@@ -7,6 +7,7 @@ import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.AttackAction;
 import pl.lonski.dzibdzikon.action.MoveAction;
 import pl.lonski.dzibdzikon.action.OpenAction;
+import pl.lonski.dzibdzikon.action.PickupAction;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Player;
 import pl.lonski.dzibdzikon.map.Position;
@@ -23,15 +24,25 @@ public class PositionChangeCommand implements Command {
     public boolean accept(DzibdziInput.DzibdziKey key) {
         var pos = player.getPosition();
         dPos = PositionUtils.getPositionChange(pos.getCoords(), key);
+        boolean isTapOnOwnTile = dPos.isZero() && key.touchCoords() != null;
         // Always clear touch input — even when dPos is zero (e.g. player tapped their own tile).
         // If not cleared, the key stays stuck after the rock pushes the player onto the tapped tile,
         // causing dd=(0,0) every turn and permanently freezing input.
         player.getInputListener().resetClick();
-        return !dPos.isZero();
+        return !dPos.isZero() || isTapOnOwnTile;
     }
 
     @Override
     public void execute(Player player, World world) {
+        if (dPos.isZero()) {
+            var pos = player.getPosition().getCoords();
+            var item = world.getCurrentLevel().getEntityAt(pos, FeatureType.PICKABLE);
+            if (item != null) {
+                player.takeAction(new PickupAction(player, item));
+            }
+            return;
+        }
+
         Position pos = player.getPosition();
         Point targetPos =
                 new Point(pos.getCoords().x() + dPos.x(), pos.getCoords().y() + dPos.y());

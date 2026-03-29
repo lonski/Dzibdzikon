@@ -32,6 +32,7 @@ public class SingleAttackableTargeter implements Action {
     public void update(float delta, World world) {
         if (consumerAction != null) {
             Hud.setActionMessage("");
+            Hud.showTargetingButtons(false);
             consumerAction.update(delta, world);
             done = consumerAction.isDone();
             succeeded = consumerAction.succeeded();
@@ -42,6 +43,7 @@ public class SingleAttackableTargeter implements Action {
                 new ArrayList<>(player.<FieldOfView>getFeature(FeatureType.FOV).getHostiles());
 
         if (possibleTargets.isEmpty()) {
+            Hud.showTargetingButtons(false);
             done = true;
             return;
         }
@@ -51,23 +53,40 @@ public class SingleAttackableTargeter implements Action {
         }
 
         Hud.setActionMessage("Wybierz cel..");
+        Hud.showTargetingButtons(true);
         if (!input.empty()) {
-            if (input.getKey().keyCode() == Input.Keys.TAB) {
+            var key = input.getKey();
+            if (key.touchCoords() != null) {
+                // Tap on a hostile entity selects it directly
+                for (int i = 0; i < possibleTargets.size(); i++) {
+                    if (possibleTargets.get(i).equals(key.touchCoords())) {
+                        currentTargetIdx = i;
+                        break;
+                    }
+                }
+                input.resetClick();
+            } else if (key.keyCode() == Input.Keys.TAB) {
                 currentTargetIdx = (currentTargetIdx + 1) % possibleTargets.size();
-            } else if (input.getKey().isEnterKey()) {
+                input.reset();
+            } else if (key.isEnterKey()) {
+                Hud.showTargetingButtons(false);
                 consumerAction = onTargetSelected.accept(possibleTargets.get(currentTargetIdx));
                 currentTargetIdx = -1;
                 done = consumerAction == null || consumerAction.isDone();
                 succeeded = consumerAction != null && consumerAction.succeeded();
-            } else if (input.getKey().keyCode() == Input.Keys.ESCAPE) {
+                input.reset();
+            } else if (key.keyCode() == Input.Keys.ESCAPE) {
                 Hud.setActionMessage("");
                 Hud.setTargets(List.of());
+                Hud.showTargetingButtons(false);
                 consumerAction = null;
                 done = true;
                 succeeded = false;
+                input.reset();
                 return;
+            } else {
+                input.reset();
             }
-            input.reset();
         }
 
         if (currentTargetIdx >= 0 && currentTargetIdx < possibleTargets.size()) {
