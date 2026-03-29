@@ -46,6 +46,9 @@ public class GameResources {
         camera = new OrthographicCamera();
         viewport = new ScalingViewport(Scaling.fit, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        // Show ~15 tiles across the screen at startup regardless of screen resolution.
+        // Larger screens (more pixels) get a smaller zoom value so tiles stay the same physical size.
+        camera.zoom = (15 * 32f) / Gdx.graphics.getWidth();
 
         uiCamera = new OrthographicCamera();
         uiCamera.setToOrtho(false, 1200, 720);

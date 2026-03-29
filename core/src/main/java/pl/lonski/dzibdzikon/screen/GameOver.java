@@ -20,13 +20,14 @@ public class GameOver extends DzibdzikonScreen {
     @Override
     public void render(float v) {
         // input
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.justTouched()) {
             dzibdzikon.gameMenu();
         }
 
         // update
         var batch = getGameResources().batch;
-        var camera = getGameResources().camera;
+        var camera = getGameResources().uiCamera;
+        camera.update();
 
         batch.setProjectionMatrix(camera.combined);
 
@@ -42,8 +43,8 @@ public class GameOver extends DzibdzikonScreen {
         batch.begin();
         getGameResources().bigFont.setColor(Color.SCARLET);
         getGameResources().bigFont.draw(batch, "Zostałeś zabity!", titlePos.x, titlePos.y);
-        getGameResources().fontItalic15.setColor(Color.LIGHT_GRAY);
-        getGameResources().fontItalic15.draw(batch, "Naciśnij <enter> aby wrócić do menu", msgPos.x, msgPos.y);
+        getGameResources().fontItalic20.setColor(Color.LIGHT_GRAY);
+        getGameResources().fontItalic20.draw(batch, "Dotknij ekranu lub naciśnij <enter>", msgPos.x, msgPos.y);
         batch.end();
     }
 }

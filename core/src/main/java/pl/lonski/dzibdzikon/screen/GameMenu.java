@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import java.util.List;
 import pl.lonski.dzibdzikon.CameraUtils;
@@ -33,13 +34,19 @@ public class GameMenu extends DzibdzikonScreen {
     @Override
     public void render(float delta) {
         var batch = getGameResources().batch;
-        var camera = getGameResources().camera;
+        var camera = getGameResources().uiCamera;
+        camera.update();
+
+        // calculate layout
+        var pos = CameraUtils.getTopLeftCorner(camera);
+        var marginLeft = camera.viewportWidth / 6;
+        var marginTop = camera.viewportHeight / 4;
+
+        var titlePos = new Vector2(pos.x + marginLeft + TILE_WIDTH * 1.2f, pos.y - marginTop + 24);
+        var msgPos = new Vector2(titlePos.x, titlePos.y - TILE_WIDTH * 2);
+        var msgYLineDiff = TILE_HEIGHT * 2f;
 
         // input
-        if (Gdx.input.isTouched()) {
-            dzibdzikon.startNewGame();
-        }
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)
                 || Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_2)
                 || Gdx.input.isKeyJustPressed(Input.Keys.J)) {
@@ -50,24 +57,29 @@ public class GameMenu extends DzibdzikonScreen {
             menuEntryIdx = Math.max(menuEntryIdx - 1, 0);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)
                 || Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_ENTER)) {
-            if (menuEntryIdx == 1) {
-                Gdx.app.exit();
-            } else if (menuEntryIdx == 0) {
-                dzibdzikon.startNewGame();
+            executeMenuItem(menuEntryIdx);
+        } else if (Gdx.input.justTouched()) {
+            var touch = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+            camera.unproject(touch);
+            int hitItem = -1;
+            float hitRadius = msgYLineDiff * 0.6f;
+            for (int i = 0; i < menuEntries.size(); i++) {
+                float itemY = msgPos.y - msgYLineDiff * i;
+                if (touch.y >= itemY - hitRadius && touch.y <= itemY + hitRadius * 0.5f) {
+                    hitItem = i;
+                    break;
+                }
+            }
+            if (hitItem >= 0 && hitItem == menuEntryIdx) {
+                executeMenuItem(menuEntryIdx);
+            } else if (hitItem >= 0) {
+                menuEntryIdx = hitItem;
             }
         }
 
-        // update
+        // update bounce animation
         batch.setProjectionMatrix(camera.combined);
         time += delta;
-
-        var pos = CameraUtils.getTopLeftCorner(camera);
-        var marginLeft = camera.viewportWidth / 6;
-        var marginTop = camera.viewportHeight / 4;
-
-        var titlePos = new Vector2(pos.x + marginLeft + TILE_WIDTH * 1.2f, pos.y - marginTop + 24);
-        var msgPos = new Vector2(titlePos.x, titlePos.y - TILE_WIDTH * 2);
-        var msgYLineDiff = TILE_HEIGHT;
 
         var logoPos =
                 new Vector2(msgPos.x - TILE_WIDTH * 1.2f, msgPos.y + logoBounce - 20 - msgYLineDiff * menuEntryIdx);
@@ -89,10 +101,19 @@ public class GameMenu extends DzibdzikonScreen {
         batch.draw(getGameResources().textures.get(TextureId.PLAYER), logoPos.x, logoPos.y);
         getGameResources().bigFont.setColor(Color.ORANGE);
         getGameResources().bigFont.draw(batch, "Dzibdzikon", titlePos.x, titlePos.y);
-        getGameResources().fontItalic15.setColor(Color.LIGHT_GRAY);
         for (int i = 0; i < menuEntries.size(); i++) {
-            getGameResources().fontItalic15.draw(batch, menuEntries.get(i), msgPos.x, msgPos.y - msgYLineDiff * i);
+            var font = getGameResources().fontItalic20;
+            font.setColor(i == menuEntryIdx ? Color.WHITE : Color.LIGHT_GRAY);
+            font.draw(batch, menuEntries.get(i), msgPos.x, msgPos.y - msgYLineDiff * i);
         }
         batch.end();
+    }
+
+    private void executeMenuItem(int idx) {
+        if (idx == 1) {
+            Gdx.app.exit();
+        } else if (idx == 0) {
+            dzibdzikon.startNewGame();
+        }
     }
 }
