@@ -89,10 +89,13 @@ public class Hud extends Stage {
 
         for (int i = 0; i < 5; i++) {
             final Quickbar.SlotType slotType = Quickbar.SlotType.values()[i];
-            var btn = new ImageButton(skin);
-            btn.getStyle().imageUp = new TextureRegionDrawable(
-                    getGameResources().textures.get(TextureId.ICON_BACKGROUND));
-            btn.getStyle().imageDown = btn.getStyle().imageUp;
+            var slotStyle = new ImageButton.ImageButtonStyle(skin.get(ImageButton.ImageButtonStyle.class));
+            slotStyle.up = null;
+            slotStyle.down = null;
+            slotStyle.over = null;
+            slotStyle.imageUp = new TextureRegionDrawable(getGameResources().textures.get(TextureId.ICON_BACKGROUND));
+            slotStyle.imageDown = slotStyle.imageUp;
+            var btn = new ImageButton(slotStyle);
             btn.addListener(new InputListener() {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -112,24 +115,41 @@ public class Hud extends Stage {
             bottomBar.add(btn).size(44, 40).pad(2);
         }
 
-        bottomBar.add().width(10);
+        bottomBar.add().expandX();
 
-        addActionButton(bottomBar, "SPELL", () -> new CastSpellCommand().execute(world.getPlayer(), world));
-        addActionButton(bottomBar, "INV", () -> new OpenInventoryCommand().execute(world.getPlayer(), world));
-
-        addActor(bottomBar);
-    }
-
-    private void addActionButton(Table table, String label, Runnable action) {
-        var btn = new TextButton(label, skin);
-        btn.addListener(new InputListener() {
+        var spellStyle = new ImageButton.ImageButtonStyle(skin.get(ImageButton.ImageButtonStyle.class));
+        spellStyle.up = null;
+        spellStyle.down = null;
+        spellStyle.over = null;
+        spellStyle.imageUp = new TextureRegionDrawable(getGameResources().textures.get(TextureId.SPELLBOOK));
+        spellStyle.imageDown = spellStyle.imageUp;
+        var spellBtn = new ImageButton(spellStyle);
+        spellBtn.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                action.run();
+                new CastSpellCommand().execute(world.getPlayer(), world);
                 return true;
             }
         });
-        table.add(btn).size(90, 40).pad(2);
+        bottomBar.add(spellBtn).size(44, 40).pad(2);
+
+        var invStyle = new ImageButton.ImageButtonStyle(skin.get(ImageButton.ImageButtonStyle.class));
+        invStyle.up = null;
+        invStyle.down = null;
+        invStyle.over = null;
+        invStyle.imageUp = new TextureRegionDrawable(getGameResources().textures.get(TextureId.BACKPACK));
+        invStyle.imageDown = invStyle.imageUp;
+        var invBtn = new ImageButton(invStyle);
+        invBtn.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                new OpenInventoryCommand().execute(world.getPlayer(), world);
+                return true;
+            }
+        });
+        bottomBar.add(invBtn).size(44, 40).pad(2);
+
+        addActor(bottomBar);
     }
 
     private void setupTargetingOverlay() {
