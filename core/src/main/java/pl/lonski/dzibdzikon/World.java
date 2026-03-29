@@ -83,6 +83,13 @@ public class World {
 
             // action not done yet, break to continue at the next update
             if (!currentEntity.getCurrentAction().isDone()) {
+                // If the entity removed itself mid-action (e.g. rock destroyed itself partway through
+                // a ChainAction that still has steps remaining), abandon the rest and advance.
+                if (!entities.contains(currentEntity)) {
+                    currentEntity.clearAction();
+                    currentIdx = proceedToNextEntity(currentIdx);
+                    continue;
+                }
                 break;
             }
 
