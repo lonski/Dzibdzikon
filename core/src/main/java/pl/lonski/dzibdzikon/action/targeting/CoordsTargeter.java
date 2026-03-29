@@ -59,14 +59,19 @@ public class CoordsTargeter implements Action {
                 done = true;
                 succeeded = false;
             } else if (key.touchCoords() != null) {
-                // Direct tap sets the target position
                 var tapped = key.touchCoords();
                 if (world.getCurrentLevel().getVisible().contains(tapped)
                         && !world.getCurrentLevel().isObstacle(tapped, false)) {
                     currentTarget = tapped;
-                    Hud.setTargets(List.of(currentTarget));
+                    Hud.showTargetingButtons(false);
+                    consumerAction = targetConsumer.accept(currentTarget);
+                    done = consumerAction == null || consumerAction.isDone();
+                    succeeded = consumerAction != null && consumerAction.succeeded();
+                    Hud.setTargets(List.of());
+                    input.reset();
+                } else {
+                    input.resetClick();
                 }
-                input.resetClick();
                 return;
             } else {
                 var dpos = PositionUtils.getPositionChange(currentTarget, key);

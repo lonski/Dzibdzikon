@@ -20,10 +20,15 @@ import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.EntityFeature;
 import pl.lonski.dzibdzikon.entity.features.FieldOfView;
 import pl.lonski.dzibdzikon.entity.features.Inventory;
+import pl.lonski.dzibdzikon.action.CastSpellAction;
+import pl.lonski.dzibdzikon.action.targeting.TargetConsumer;
+import pl.lonski.dzibdzikon.action.targeting.TargeterFactory;
 import pl.lonski.dzibdzikon.entity.features.MagicUser;
 import pl.lonski.dzibdzikon.entity.features.Regeneration;
 import pl.lonski.dzibdzikon.map.TextureId;
 import pl.lonski.dzibdzikon.spell.Burn;
+import pl.lonski.dzibdzikon.spell.Fireball;
+import pl.lonski.dzibdzikon.spell.Spell;
 import pl.lonski.dzibdzikon.spell.SpikeSpell;
 
 public class Player extends Entity {
@@ -49,8 +54,18 @@ public class Player extends Entity {
         addFeature(FeatureType.FOV, new FieldOfView(this, 8));
         addFeature(FeatureType.ATTACKABLE, new Attackable(20, 20, 5, 0));
         addFeature(FeatureType.REGENERATION, new Regeneration(10, 3, this));
-        addFeature(FeatureType.MAGIC_USER, new MagicUser(List.of(new SpikeSpell(), new Burn()), 100, 100));
+        List<Spell> startingSpells = List.of(new SpikeSpell(), new Burn(), new Fireball());
+        addFeature(FeatureType.MAGIC_USER, new MagicUser(startingSpells, 100, 100));
         addFeature(FeatureType.INVENTORY, new Inventory());
+        var slotTypes = Quickbar.SlotType.values();
+        for (int i = 0; i < startingSpells.size(); i++) {
+            var spell = startingSpells.get(i);
+            var slot = slotTypes[i];
+            quickbar.setSlot(slot, spell.getIcon(), () -> {
+                TargetConsumer onTargetSelected = target -> new CastSpellAction(this, target, spell);
+                return TargeterFactory.create(this, spell.getTargetingMode(), onTargetSelected);
+            });
+        }
         getPosition().setzLevel(100);
     }
 

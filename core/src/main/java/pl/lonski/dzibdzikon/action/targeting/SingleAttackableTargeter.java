@@ -57,10 +57,20 @@ public class SingleAttackableTargeter implements Action {
         if (!input.empty()) {
             var key = input.getKey();
             if (key.touchCoords() != null) {
-                // Tap on a hostile entity selects it directly
                 for (int i = 0; i < possibleTargets.size(); i++) {
                     if (possibleTargets.get(i).equals(key.touchCoords())) {
-                        currentTargetIdx = i;
+                        if (i == currentTargetIdx) {
+                            Hud.showTargetingButtons(false);
+                            Hud.setTargets(List.of());
+                            consumerAction = onTargetSelected.accept(possibleTargets.get(currentTargetIdx));
+                            currentTargetIdx = -1;
+                            done = consumerAction == null || consumerAction.isDone();
+                            succeeded = consumerAction != null && consumerAction.succeeded();
+                            input.reset();
+                            return;
+                        } else {
+                            currentTargetIdx = i;
+                        }
                         break;
                     }
                 }

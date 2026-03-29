@@ -99,8 +99,13 @@ public class Hud extends Stage {
             btn.addListener(new InputListener() {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                    world.getPlayer().getQuickbar().useSlot(slotType)
-                            .ifPresent(world.getPlayer()::takeAction);
+                    if (targetingButtonsVisible) {
+                        DzibdziInput.broadcast(
+                                new DzibdziInput.DzibdziKey(Input.Keys.ENTER, false, null, null, false));
+                    } else {
+                        world.getPlayer().getQuickbar().useSlot(slotType)
+                                .ifPresent(world.getPlayer()::takeAction);
+                    }
                     return true;
                 }
             });
@@ -158,16 +163,6 @@ public class Hud extends Stage {
         targetingOverlay.bottom().center();
         targetingOverlay.padBottom(48);
 
-        var confirmBtn = new TextButton("OK", skin);
-        confirmBtn.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                DzibdziInput.broadcast(
-                        new DzibdziInput.DzibdziKey(Input.Keys.ENTER, false, null, null, false));
-                return true;
-            }
-        });
-
         var cancelBtn = new TextButton("Cancel", skin);
         cancelBtn.addListener(new InputListener() {
             @Override
@@ -178,7 +173,6 @@ public class Hud extends Stage {
             }
         });
 
-        targetingOverlay.add(confirmBtn).size(80, 35).padRight(5);
         targetingOverlay.add(cancelBtn).size(80, 35);
         targetingOverlay.setVisible(false);
         addActor(targetingOverlay);
