@@ -9,8 +9,7 @@ buildscript {
     maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
   }
   dependencies {
-    // Android Gradle plugin — only needed when building the android subproject
-    // classpath "com.android.tools.build:gradle:8.1.4"
+    classpath "com.android.tools.build:gradle:8.3.2"
   }
 }
 

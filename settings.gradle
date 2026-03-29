@@ -3,4 +3,4 @@
 // if you want to temporarily disable a subproject.
 include 'core'
 include 'lwjgl3'
-// 'android' excluded here to avoid requiring platform-specific Gradle plugins during CI/test runs
+include 'android'
