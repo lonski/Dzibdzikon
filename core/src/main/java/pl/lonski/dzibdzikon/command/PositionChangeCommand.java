@@ -39,6 +39,12 @@ public class PositionChangeCommand implements Command {
             var item = world.getCurrentLevel().getEntityAt(pos, FeatureType.PICKABLE);
             if (item != null) {
                 player.takeAction(new PickupAction(player, item));
+                return;
+            }
+            if (world.getCurrentLevel().getEntityAt(pos, FeatureType.DOWNSTAIRS) != null) {
+                pl.lonski.dzibdzikon.screen.Hud.addMessage("Schodzenie w dół...");
+                world.nextLevel();
+                player.getInputListener().reset();
             }
             return;
         }

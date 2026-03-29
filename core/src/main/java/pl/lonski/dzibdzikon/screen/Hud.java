@@ -31,7 +31,6 @@ import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
 import pl.lonski.dzibdzikon.action.NoOpAction;
 import pl.lonski.dzibdzikon.command.CastSpellCommand;
-import pl.lonski.dzibdzikon.command.GoDownCommand;
 import pl.lonski.dzibdzikon.command.OpenInventoryCommand;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Quickbar;
@@ -119,7 +118,6 @@ public class Hud extends Stage {
         addActionButton(bottomBar, "SPELL", () -> new CastSpellCommand().execute(world.getPlayer(), world));
         addActionButton(bottomBar, "INV", () -> new OpenInventoryCommand().execute(world.getPlayer(), world));
         addActionButton(bottomBar, "WAIT", () -> world.getPlayer().takeAction(new NoOpAction()));
-        addActionButton(bottomBar, "DOWN", () -> new GoDownCommand().execute(world.getPlayer(), world));
 
         addActor(bottomBar);
     }
