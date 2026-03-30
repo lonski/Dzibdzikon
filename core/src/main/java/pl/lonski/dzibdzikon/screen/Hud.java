@@ -7,6 +7,8 @@ import static pl.lonski.dzibdzikon.Dzibdzikon.getGameResources;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -15,14 +17,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import pl.lonski.dzibdzikon.CameraUtils;
 import pl.lonski.dzibdzikon.DzibdziInput;
@@ -51,7 +53,8 @@ public class Hud extends Stage {
     private final Skin skin;
     private final World world;
     private final List<ImageButton> quickbarButtons = new ArrayList<>();
-    private Table targetingOverlay;
+    private final Set<Integer> highlightedSlots = new HashSet<>();
+    private ImageButton targetingOverlay;
 
     public Hud(World world) {
         super(new ScalingViewport(Scaling.stretch, 800, 480));
@@ -60,20 +63,26 @@ public class Hud extends Stage {
 
         var hpBarStyle = new ProgressBar.ProgressBarStyle();
         hpBarStyle.background = skin.getDrawable("progressHorizontal");
+        hpBarStyle.background.setMinHeight(12);
         hpBarStyle.knob = skin.getDrawable("progressHorizontalKnobHP");
+        hpBarStyle.knob.setMinHeight(12);
         hpBarStyle.knobBefore = skin.getDrawable("progressHorizontalKnobHP");
+        hpBarStyle.knobBefore.setMinHeight(12);
         hpBar = new ProgressBar(0, 1, 1, false, hpBarStyle);
-        hpBar.setSize(220, 18);
-        hpBar.setPosition(5, 458);
+        hpBar.setSize(150, 12);
+        hpBar.setPosition(800 - 150 - 5, 480 - 12 - 5);
         addActor(hpBar);
 
         var mpBarStyle = new ProgressBar.ProgressBarStyle();
         mpBarStyle.background = skin.getDrawable("progressHorizontal");
+        mpBarStyle.background.setMinHeight(12);
         mpBarStyle.knob = skin.getDrawable("progressHorizontalKnobMP");
+        mpBarStyle.knob.setMinHeight(12);
         mpBarStyle.knobBefore = skin.getDrawable("progressHorizontalKnobMP");
+        mpBarStyle.knobBefore.setMinHeight(12);
         mpBar = new ProgressBar(0, 1, 1, false, mpBarStyle);
-        mpBar.setSize(220, 18);
-        mpBar.setPosition(5, 437);
+        mpBar.setSize(150, 12);
+        mpBar.setPosition(800 - 150 - 5, 480 - 12 - 5 - 12 - 4);
         addActor(mpBar);
 
         setupBottomBar();
@@ -81,12 +90,7 @@ public class Hud extends Stage {
     }
 
     private void setupBottomBar() {
-        Table bottomBar = new Table();
-        bottomBar.setWidth(800);
-        bottomBar.setHeight(44);
-        bottomBar.setPosition(0, 0);
-        bottomBar.left();
-
+        // Quickbar — left column, Q5 at bottom (y=2), Q1 at top
         for (int i = 0; i < 5; i++) {
             final Quickbar.SlotType slotType = Quickbar.SlotType.values()[i];
             var slotStyle = new ImageButton.ImageButtonStyle(skin.get(ImageButton.ImageButtonStyle.class));
@@ -117,11 +121,12 @@ public class Hud extends Stage {
                 }
             });
             quickbarButtons.add(btn);
-            bottomBar.add(btn).size(44, 40).pad(2);
+            btn.setSize(44, 40);
+            btn.setPosition(2, 2 + (4 - i) * 44);
+            addActor(btn);
         }
 
-        bottomBar.add().expandX();
-
+        // Spellbook button — right column, mirrors Q4
         var spellStyle = new ImageButton.ImageButtonStyle(skin.get(ImageButton.ImageButtonStyle.class));
         spellStyle.up = null;
         spellStyle.down = null;
@@ -136,8 +141,11 @@ public class Hud extends Stage {
                 return true;
             }
         });
-        bottomBar.add(spellBtn).size(44, 40).pad(2);
+        spellBtn.setSize(44, 40);
+        spellBtn.setPosition(800 - 44 - 2, 2 + 44);
+        addActor(spellBtn);
 
+        // Inventory button — right column, mirrors Q5 (bottom)
         var invStyle = new ImageButton.ImageButtonStyle(skin.get(ImageButton.ImageButtonStyle.class));
         invStyle.up = null;
         invStyle.down = null;
@@ -152,19 +160,23 @@ public class Hud extends Stage {
                 return true;
             }
         });
-        bottomBar.add(invBtn).size(44, 40).pad(2);
-
-        addActor(bottomBar);
+        invBtn.setSize(44, 40);
+        invBtn.setPosition(800 - 44 - 2, 2);
+        addActor(invBtn);
     }
 
     private void setupTargetingOverlay() {
-        targetingOverlay = new Table();
-        targetingOverlay.setFillParent(true);
-        targetingOverlay.bottom().center();
-        targetingOverlay.padBottom(48);
-
-        var cancelBtn = new TextButton("Cancel", skin);
-        cancelBtn.addListener(new InputListener() {
+        var cancelDrawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("x.png"))));
+        var cancelStyle = new ImageButton.ImageButtonStyle(skin.get(ImageButton.ImageButtonStyle.class));
+        cancelStyle.up = null;
+        cancelStyle.down = null;
+        cancelStyle.over = null;
+        cancelStyle.imageUp = cancelDrawable;
+        cancelStyle.imageDown = cancelDrawable;
+        targetingOverlay = new ImageButton(cancelStyle);
+        targetingOverlay.setSize(40, 40);
+        targetingOverlay.setPosition(800 / 2f - 20, 44);
+        targetingOverlay.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 DzibdziInput.broadcast(
@@ -172,8 +184,6 @@ public class Hud extends Stage {
                 return true;
             }
         });
-
-        targetingOverlay.add(cancelBtn).size(80, 35);
         targetingOverlay.setVisible(false);
         addActor(targetingOverlay);
     }
@@ -215,6 +225,7 @@ public class Hud extends Stage {
         var slotIcons = world.getPlayer().getQuickbar().getSlotIcons();
         var slotMap = slotIcons.stream()
                 .collect(Collectors.toMap(Quickbar.SlotIcon::getNum, s -> s));
+        highlightedSlots.clear();
         for (int i = 0; i < quickbarButtons.size(); i++) {
             var btn = quickbarButtons.get(i);
             var slotIcon = slotMap.get(i + 1);
@@ -222,7 +233,9 @@ public class Hud extends Stage {
             var drawable = new TextureRegionDrawable(getGameResources().textures.get(texId));
             btn.getStyle().imageUp = drawable;
             btn.getStyle().imageDown = drawable;
-            btn.getStyle().imageChecked = slotIcon != null && slotIcon.isHighlight() ? drawable : null;
+            if (slotIcon != null && slotIcon.isHighlight()) {
+                highlightedSlots.add(i);
+            }
         }
 
         targetingOverlay.setVisible(targetingButtonsVisible);
@@ -277,6 +290,16 @@ public class Hud extends Stage {
         batch.end();
 
         draw();
+
+        if (!highlightedSlots.isEmpty()) {
+            var highlightTexture = getGameResources().textures.get(TextureId.HIGHLIGHT_YELLOW);
+            batch.setProjectionMatrix(getCamera().combined);
+            batch.begin();
+            for (int i : highlightedSlots) {
+                batch.draw(highlightTexture, 2, 2 + (4 - i) * 44, 44, 40);
+            }
+            batch.end();
+        }
     }
 
     private static class Message {
