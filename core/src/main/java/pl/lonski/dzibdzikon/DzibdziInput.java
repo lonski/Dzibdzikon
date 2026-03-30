@@ -62,7 +62,9 @@ public class DzibdziInput {
         @Override
         public boolean longPress(float x, float y) {
             var screenCoords = new Point(Math.round(x), Math.round(y));
-            broadcast(new DzibdziKey(Input.Keys.UNKNOWN, false, null, screenCoords, true));
+            var pos = getGameResources().camera.unproject(new Vector3(x, y, 0f));
+            var coords = new Point(Math.round(pos.x / 32.f), Math.round(pos.y / 32.f));
+            broadcast(new DzibdziKey(Input.Keys.UNKNOWN, false, coords, screenCoords, true));
             return true;
         }
     }
