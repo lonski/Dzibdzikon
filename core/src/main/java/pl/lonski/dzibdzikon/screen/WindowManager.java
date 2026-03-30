@@ -15,6 +15,14 @@ public class WindowManager {
     private final Map<WindowType, Window> windows = new HashMap<>();
     private Player player;
 
+    public WindowManager() {}
+
+    /** Package-private constructor for tests — injects pre-built windows. */
+    WindowManager(Player player, Map<WindowType, Window> windows) {
+        this.player = player;
+        this.windows.putAll(windows);
+    }
+
     public void init(World world) {
         this.player = world.getPlayer();
         windows.put(WindowType.SPELL_BOOK, new SpellBookWindow(player));
@@ -34,6 +42,21 @@ public class WindowManager {
             DzibdziInput.listeners.add(player.getInputListener());
         });
         wnd.show();
+    }
+
+    public void toggle(WindowType type, Consumer<Window> onWindow) {
+        Window wnd = windows.get(type);
+        if (wnd.visible()) {
+            wnd.onClose(w -> {});                              // clear stale onClose
+            wnd.hide();
+            DzibdziInput.listeners.add(player.getInputListener());
+        } else {
+            executeInWindow(type, onWindow);
+        }
+    }
+
+    public boolean isVisible(WindowType type) {
+        return windows.get(type).visible();
     }
 
     public void update(float delta) {
