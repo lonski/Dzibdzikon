@@ -109,12 +109,23 @@ class WindowManagerToggleTest {
         assertFalse(staleCallbackFired[0], "Stale onClose must be cleared on toggle-close");
     }
 
+    @Test
+    void toggle_hiddenWindow_onWindowCallbackFiredOnClose() {
+        boolean[] called = {false};
+        wm.toggle(WindowManager.WindowType.SPELL_BOOK, w -> called[0] = true);
+
+        // Simulate user closing the window normally (e.g. pressing Escape)
+        spellBookWnd.onClose.accept(spellBookWnd);
+
+        assertTrue(called[0], "onWindow callback must fire when window closes after toggle-open");
+    }
+
     // ── stub ─────────────────────────────────────────────────────────────────
 
     static class StubWindow implements Window {
 
         private boolean visible = false;
-        Consumer<Window> onClose = w -> {};
+        public Consumer<Window> onClose = w -> {};
 
         @Override public void show()  { visible = true; }
         @Override public void hide()  { visible = false; }
