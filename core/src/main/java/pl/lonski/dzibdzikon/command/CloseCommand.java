@@ -30,6 +30,7 @@ public class CloseCommand implements Command {
             var entity = world.getCurrentLevel().getEntityAt(touchTarget, FeatureType.OPENABLE);
             if (entity != null) {
                 Openable openable = entity.getFeature(FeatureType.OPENABLE);
+                // Touch path silently ignores closed doors; keyboard path defers to CloseAction which logs a message.
                 if (openable.opened()) {
                     player.takeAction(new CloseAction(player, touchTarget));
                 }
