@@ -41,7 +41,6 @@ import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.MagicUser;
 import pl.lonski.dzibdzikon.entity.features.Useable;
 import pl.lonski.dzibdzikon.map.TextureId;
-import pl.lonski.dzibdzikon.screen.WindowManager;
 import pl.lonski.dzibdzikon.ui.window.InventoryWindow;
 import pl.lonski.dzibdzikon.ui.window.SpellBookWindow;
 
