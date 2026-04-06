@@ -30,11 +30,13 @@ public class WindowManager {
     }
 
     public void show(WindowType type) {
+        closeAllExcept(type);
         windows.get(type).show();
         DzibdziInput.listeners.remove(player.getInputListener());
     }
 
     public void executeInWindow(WindowType type, Consumer<Window> onWindow) {
+        closeAllExcept(type);
         DzibdziInput.listeners.remove(player.getInputListener());
         Window wnd = windows.get(type);
         wnd.onClose(window -> {
@@ -42,6 +44,15 @@ public class WindowManager {
             DzibdziInput.listeners.add(player.getInputListener());
         });
         wnd.show();
+    }
+
+    private void closeAllExcept(WindowType keep) {
+        windows.forEach((type, wnd) -> {
+            if (type != keep && wnd.visible()) {
+                wnd.onClose(w -> {});
+                wnd.hide();
+            }
+        });
     }
 
     public void toggle(WindowType type, Consumer<Window> onWindow) {
