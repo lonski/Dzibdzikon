@@ -31,13 +31,19 @@ import pl.lonski.dzibdzikon.DzibdziInput;
 import pl.lonski.dzibdzikon.FontUtils;
 import pl.lonski.dzibdzikon.Point;
 import pl.lonski.dzibdzikon.World;
-import pl.lonski.dzibdzikon.command.CastSpellCommand;
-import pl.lonski.dzibdzikon.command.OpenInventoryCommand;
+import pl.lonski.dzibdzikon.action.CastSpellAction;
+import pl.lonski.dzibdzikon.action.UseAction;
+import pl.lonski.dzibdzikon.action.targeting.TargetConsumer;
+import pl.lonski.dzibdzikon.action.targeting.TargeterFactory;
 import pl.lonski.dzibdzikon.entity.FeatureType;
 import pl.lonski.dzibdzikon.entity.Quickbar;
 import pl.lonski.dzibdzikon.entity.features.Attackable;
 import pl.lonski.dzibdzikon.entity.features.MagicUser;
+import pl.lonski.dzibdzikon.entity.features.Useable;
 import pl.lonski.dzibdzikon.map.TextureId;
+import pl.lonski.dzibdzikon.screen.WindowManager;
+import pl.lonski.dzibdzikon.ui.window.InventoryWindow;
+import pl.lonski.dzibdzikon.ui.window.SpellBookWindow;
 
 public class Hud extends Stage {
 
@@ -137,7 +143,16 @@ public class Hud extends Stage {
         spellBtn.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                new CastSpellCommand().execute(world.getPlayer(), world);
+                var player = world.getPlayer();
+                getGameResources().windowManager.toggle(
+                        WindowManager.WindowType.SPELL_BOOK,
+                        window -> ((SpellBookWindow) window).takeSelectedSpell().ifPresent(spell -> {
+                            TargetConsumer onTargetSelected =
+                                    target -> new CastSpellAction(player, target, spell);
+                            player.takeAction(TargeterFactory.create(
+                                    player, spell.getTargetingMode(), onTargetSelected));
+                        }));
+                player.getInputListener().reset();
                 return true;
             }
         });
@@ -156,7 +171,20 @@ public class Hud extends Stage {
         invBtn.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                new OpenInventoryCommand().execute(world.getPlayer(), world);
+                var player = world.getPlayer();
+                getGameResources().windowManager.toggle(
+                        WindowManager.WindowType.INVENTORY,
+                        window -> ((InventoryWindow) window).getResult().ifPresent(result -> {
+                            if (result.action() == InventoryWindow.ItemAction.USE) {
+                                var useable = result.item().<Useable>getFeature(FeatureType.USEABLE);
+                                if (useable == null) {
+                                    Hud.addMessage(result.item().getName() + " - nie można użyć");
+                                    return;
+                                }
+                                player.takeAction(new UseAction(player, player, result.item()));
+                            }
+                        }));
+                player.getInputListener().reset();
                 return true;
             }
         });
@@ -291,12 +319,20 @@ public class Hud extends Stage {
 
         draw();
 
-        if (!highlightedSlots.isEmpty()) {
+        if (!highlightedSlots.isEmpty()
+                || getGameResources().windowManager.isVisible(WindowManager.WindowType.SPELL_BOOK)
+                || getGameResources().windowManager.isVisible(WindowManager.WindowType.INVENTORY)) {
             var highlightTexture = getGameResources().textures.get(TextureId.HIGHLIGHT_YELLOW);
             batch.setProjectionMatrix(getCamera().combined);
             batch.begin();
             for (int i : highlightedSlots) {
                 batch.draw(highlightTexture, 2, 2 + (4 - i) * 44, 44, 40);
+            }
+            if (getGameResources().windowManager.isVisible(WindowManager.WindowType.SPELL_BOOK)) {
+                batch.draw(highlightTexture, 800 - 44 - 2, 2 + 44, 44, 40);
+            }
+            if (getGameResources().windowManager.isVisible(WindowManager.WindowType.INVENTORY)) {
+                batch.draw(highlightTexture, 800 - 44 - 2, 2, 44, 40);
             }
             batch.end();
         }
