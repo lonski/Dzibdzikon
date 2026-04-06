@@ -105,7 +105,7 @@ class WindowManagerToggleTest {
         wm.toggle(WindowManager.WindowType.SPELL_BOOK, w -> {});
 
         // onClose was cleared before hide(); fire it again to confirm it's a no-op
-        spellBookWnd.onClose.accept(spellBookWnd);
+        spellBookWnd.triggerClose();
         assertFalse(staleCallbackFired[0], "Stale onClose must be cleared on toggle-close");
     }
 
@@ -115,7 +115,7 @@ class WindowManagerToggleTest {
         wm.toggle(WindowManager.WindowType.SPELL_BOOK, w -> called[0] = true);
 
         // Simulate user closing the window normally (e.g. pressing Escape)
-        spellBookWnd.onClose.accept(spellBookWnd);
+        spellBookWnd.triggerClose();
 
         assertTrue(called[0], "onWindow callback must fire when window closes after toggle-open");
     }
@@ -125,7 +125,7 @@ class WindowManagerToggleTest {
     static class StubWindow implements Window {
 
         private boolean visible = false;
-        public Consumer<Window> onClose = w -> {};
+        Consumer<Window> onClose = w -> {};
 
         @Override public void show()  { visible = true; }
         @Override public void hide()  { visible = false; }
@@ -134,5 +134,9 @@ class WindowManagerToggleTest {
         @Override public void render(float delta) {}
         @Override public void update(float delta) {}
         @Override public Point getPosition() { return new Point(0, 0); }
+
+        void triggerClose() {
+            onClose.accept(this);
+        }
     }
 }

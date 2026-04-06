@@ -151,7 +151,7 @@ public class Hud extends Stage {
                             player.takeAction(TargeterFactory.create(
                                     player, spell.getTargetingMode(), onTargetSelected));
                         }));
-                player.getInputListener().reset();
+                player.getInputListener().reset(); // clear pending input on both open and close paths
                 return true;
             }
         });
@@ -183,7 +183,7 @@ public class Hud extends Stage {
                                 player.takeAction(new UseAction(player, player, result.item()));
                             }
                         }));
-                player.getInputListener().reset();
+                player.getInputListener().reset(); // clear pending input on both open and close paths
                 return true;
             }
         });
